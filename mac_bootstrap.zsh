@@ -4,6 +4,7 @@
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
+YELLOW='\033[0;33m'
 NC='\033[0m' # No color (reset)
 
 # Function to display colored messages
@@ -33,6 +34,7 @@ if ! xcode-select -p &>/dev/null; then
 
     # Wait for Xcode Command Line Tools installation to complete
     until xcode-select -p &>/dev/null; do
+        color_echo $YELLOW "Waiting for Xcode Command Line Tools to complete installation..."
         sleep 30
     done
 
@@ -41,7 +43,7 @@ else
     color_echo $GREEN "Xcode Command Line Tools already installed."
 fi
 
-# Step 2: Install Homebrew and software from Brewfile
+# Step 2: Install Homebrew
 if ! command -v brew &>/dev/null; then
     color_echo $BLUE "Installing Homebrew..."
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" || { color_echo $RED "Failed to install Homebrew."; exit 1; }
@@ -49,20 +51,25 @@ else
     color_echo $GREEN "Homebrew already installed."
 fi
 
-color_echo $BLUE "Installing software from Brewfile..."
-brew bundle --file "$DOTFILES_DIR/Brewfile" || { color_echo $RED "Failed to install software from Brewfile."; exit 1; }
+# Step 3: Install Git (if not already installed by Xcode Command Line Tools)
+if ! command -v git &>/dev/null; then
+    color_echo $BLUE "Installing Git..."
+    brew install git || { color_echo $RED "Failed to install Git."; exit 1; }
+fi
 
-# -----------------------------------------------------------------------------
-
-# Clone .dotfiles repository if it doesn't exist
+# Step 4: Clone .dotfiles repository
 DOTFILES_DIR="$HOME/.dotfiles"
 if [ ! -d "$DOTFILES_DIR" ]; then
     color_echo $BLUE "Cloning .dotfiles repository..."
-    git_clone_fallback "git@github.com:av1155/.dotfiles.git" "https://github.com/av1155/.dotfiles.git" "$DOTFILES_DIR" || \
+    git clone "https://github.com/av1155/.dotfiles.git" "$DOTFILES_DIR" || \
         { color_echo $RED "Failed to clone .dotfiles repository."; exit 1; }
 else
     color_echo $GREEN ".dotfiles directory already exists. Skipping clone."
 fi
+
+# Step 5: Install software from Brewfile
+color_echo $BLUE "Installing software from Brewfile..."
+brew bundle --file "$DOTFILES_DIR/Brewfile" || { color_echo $RED "Failed to install software from Brewfile."; exit 1; }
 
 # Validate TMUX_CONFIG_DIR
 TMUX_CONFIG_DIR="$HOME/.config/tmux"
@@ -71,10 +78,9 @@ if [ ! -d "$TMUX_CONFIG_DIR" ]; then
     mkdir -p "$TMUX_CONFIG_DIR"
 fi
 
-# Step 3: Create symlinks (Idempotent) ----------------------------------------
+# Step 6: Create symlinks (Idempotent) ----------------------------------------
 color_echo $BLUE "Creating symlinks..."
 
-# Step 3: Create symlinks (Idempotent) ----------------------------------------
 create_symlink() {
     local source_file="$1"
     local target_file="$2"
@@ -85,19 +91,37 @@ create_symlink() {
     fi
 
     if [ -f "$target_file" ]; then
-        color_echo $BLUE "Backing up existing $(basename "$target_file") to $(basename "$target_file").bak"
-        mv "$target_file" "${target_file}.bak" || { color_echo $RED "Failed to backup $target_file"; exit 1; }
+        color_echo $YELLOW "Existing file found for $(basename "$target_file"). Do you want to overwrite it? (y/n)"
+        read -p "Enter choice: " choice
+        case "$choice" in
+            y|Y )
+                color_echo $BLUE "Backing up existing $(basename "$target_file") to $(basename "$target_file").bak"
+                mv "$target_file" "${target_file}.bak" || { color_echo $RED "Failed to backup $target_file"; exit 1; }
+                ;;
+            n|N )
+                color_echo $GREEN "Skipping $(basename "$target_file")."
+                return
+                ;;
+            * )
+                color_echo $RED "Invalid choice. Exiting."
+                exit 1
+                ;;
+        esac
     fi
+
     ln -sf "$source_file" "$target_file" || { color_echo $RED "Failed to create symlink for $(basename "$source_file")"; exit 1; }
 }
 
+# Symlinks go here:
+
+# create_symlink "$DOTFILES_DIR/configs/.original_file" "$HOME/.linked_file"
 create_symlink "$DOTFILES_DIR/configs/.zshrc" "$HOME/.zshrc"
 create_symlink "$DOTFILES_DIR/configs/.gitconfig" "$HOME/.gitconfig"
 create_symlink "$DOTFILES_DIR/configs/tmux.conf" "$HOME/.config/tmux/tmux.conf"
 
 color_echo $GREEN "Symlinks created."
 
-# -----------------------------------------------------------------------------
+# Installation of of software -----------------------------------------------
 
 # Install iTerm2
 if ! brew list --cask | grep -q iterm2; then
@@ -148,7 +172,7 @@ else
 fi
 
 # Manual Ollama Installation Note
-echo -e "${BLUE}NOTE:${NC} Ollama is not included in this automated script. To install Ollama, please visit the official website at https://ollama.ai and follow the manual installation instructions provided there."
+color_echo $YELLOW "NOTE: Ollama is not included in this automated script. To install Ollama, please visit the official website at https://ollama.ai and follow the manual installation instructions provided there."
 
 # -----------------------------------------------------------------------------
 
