@@ -13,18 +13,36 @@ personalized development experience.
 - [Contributing](#contributing)
 - [License](#license)
 
-## Installation
+## Steps to bootstrap a new Mac
 
-To use these dotfiles, clone the repository to your home directory:
+1. Install Apple's Command Line Tools, which are prerequisites for Git and
+   Homebrew.
 
-```bash
+```zsh
+xcode-select --install
+```
+
+2. Clone repo into new hidden directory.
+
+```zsh
+# Use SSH (if set up)...
+git clone git@github.com:av1155/.dotfiles.git ~/.dotfiles
+
+# ...or use HTTPS and switch remotes later.
 git clone https://github.com/av1155/.dotfiles.git ~/.dotfiles
 ```
 
-Then navigate to the `.dotfiles` directory:
+3. Create symlinks in the Home directory to the real files in the repo.
 
-```bash
+```zsh
+# Navigate to the .dotfiles directory
 cd ~/.dotfiles
+
+# Make the script executable
+chmod +x setup_mac.sh
+
+# Run the script
+./setup_mac.sh
 ```
 
 ### Usage
