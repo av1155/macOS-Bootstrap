@@ -18,13 +18,13 @@ personalized development experience.
 To use these dotfiles, clone the repository to your home directory:
 
 ```bash
-git clone https://github.com/av1155/dotfiles.git ~/dotfiles
+git clone https://github.com/av1155/.dotfiles.git ~/.dotfiles
 ```
 
 Then navigate to the `dotfiles` directory:
 
 ```bash
-cd ~/dotfiles
+cd ~/.dotfiles
 ```
 
 ### Usage
