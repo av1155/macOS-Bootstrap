@@ -13,6 +13,14 @@ color_echo() {
     echo -e "${color}${message}${NC}"
 }
 
+# Attempt to clone using SSH, fallback to HTTPS if SSH fails
+git_clone_fallback() {
+    local ssh_url="$1"
+    local https_url="$2"
+    local clone_directory="$3"
+    git clone "$ssh_url" "$clone_directory" || git clone "$https_url" "$clone_directory" || { color_echo $RED "Failed to clone repository."; exit 1; }
+}
+
 # Script for bootstrapping a new MacBook for development.
 # This script installs necessary tools and sets up symlinks for dotfiles.
 # Assumptions: macOS with internet access and standard file system structure.
@@ -22,6 +30,13 @@ color_echo() {
 if ! xcode-select -p &>/dev/null; then
     color_echo $RED "Installing Xcode Command Line Tools..."
     xcode-select --install || { color_echo $RED "Failed to install Xcode Command Line Tools."; exit 1; }
+
+    # Wait for Xcode Command Line Tools installation to complete
+    until xcode-select -p &>/dev/null; do
+        sleep 30
+    done
+
+    color_echo $GREEN "Xcode Command Line Tools installation complete."
 else
     color_echo $GREEN "Xcode Command Line Tools already installed."
 fi
@@ -174,14 +189,6 @@ color_echo $BLUE "Installing AstroNvim..."
 [ -d "$HOME/.local/share/nvim" ] && mv "$HOME/.local/share/nvim" "$HOME/.local/share/nvim.bak"
 [ -d "$HOME/.local/state/nvim" ] && mv "$HOME/.local/state/nvim" "$HOME/.local/state/nvim.bak"
 [ -d "$HOME/.cache/nvim" ] && mv "$HOME/.cache/nvim" "$HOME/.cache/nvim.bak"
-
-# Attempt to clone using SSH, fallback to HTTPS if SSH fails
-git_clone_fallback() {
-    local ssh_url="$1"
-    local https_url="$2"
-    local clone_directory="$3"
-    git clone "$ssh_url" "$clone_directory" || git clone "$https_url" "$clone_directory" || { color_echo $RED "Failed to clone repository."; exit 1; }
-}
 
 # Install AstroNvim user configuration
 git_clone_fallback "git@github.com:av1155/astronvim_config.git" "https://github.com/av1155/astronvim_config.git" "$HOME/.config/nvim/lua/user"
