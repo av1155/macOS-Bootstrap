@@ -5,6 +5,7 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
 YELLOW='\033[0;33m'
+PURPLE='\033[0;35m'
 NC='\033[0m' # No color (reset)
 
 # Function to display colored messages
@@ -53,8 +54,6 @@ else
     color_echo $GREEN "Homebrew already installed."
 fi
 
-echo "" # Print a blank line
-
 # Step 3: Install Git (if not already installed by Xcode Command Line Tools)
 if ! command -v git &>/dev/null; then
     color_echo $BLUE "Installing Git..."
@@ -70,7 +69,7 @@ if [ ! -d "$DOTFILES_DIR" ]; then
     git clone "https://github.com/av1155/.dotfiles.git" "$DOTFILES_DIR" || \
         { color_echo $RED "Failed to clone .dotfiles repository."; exit 1; }
 else
-    color_echo $GREEN ".dotfiles directory already exists. Skipping clone."
+    color_echo $GREEN "The .dotfiles directory already exists. Skipping clone of repository."
 fi
 
 echo "" # Print a blank line
@@ -79,16 +78,14 @@ echo "" # Print a blank line
 color_echo $BLUE "Installing software from Brewfile..."
 brew bundle --file "$DOTFILES_DIR/Brewfile" || { color_echo $RED "Failed to install software from Brewfile."; exit 1; }
 
-echo "" # Print a blank line
-
 # Validate TMUX_CONFIG_DIR
 TMUX_CONFIG_DIR="$HOME/.config/tmux"
 if [ ! -d "$TMUX_CONFIG_DIR" ]; then
     color_echo $BLUE "Creating tmux config directory..."
     mkdir -p "$TMUX_CONFIG_DIR"
+else
+    color_echo $GREEN "The tmux config directory already exists. Skipping configuration."
 fi
-
-echo "" # Print a blank line
 
 # Step 6: Create symlinks (Idempotent) ----------------------------------------
 color_echo $BLUE "Creating symlinks..."
@@ -223,7 +220,11 @@ echo "" # Print a blank line
 
 # Install Global npm Packages:
 color_echo $BLUE "Installing global npm packages..."
+
+color_echo $BLUE "tree-sitter-cli: "
 npm install -g tree-sitter-cli || { color_echo $RED "Failed to install tree-sitter-cli."; exit 1; }
+
+color_echo $BLUE "live-server: "
 npm install -g live-server || { color_echo $RED "Failed to install live-server."; exit 1; }
 
 echo "" # Print a blank line
@@ -303,7 +304,7 @@ fi
 
 echo "" # Print a blank line
 
-color_echo $GREEN "AstroNvim Configuration complete."
+color_echo $GREEN "<-------------- AstroNvim Configuration Complete -------------->"
 
 echo "" # Print a blank line
 
@@ -369,6 +370,10 @@ desktop_path="$HOME/Desktop/apps_to_download.txt"
 printf "%s\n" "${app_list[@]}" > "$desktop_path"
 
 # Print a message to inform the user
-echo "A list of apps to download has been created on your desktop: $desktop_path"
+color_echo $BLUE "A list of apps to download has been created on your desktop: $desktop_path"
+
+echo ""
+
+color_echo $PURPLE "🚀 Installation successful! Your development environment is now supercharged and ready for lift-off. Please restart your computer to finalize the setup. Happy coding! 🚀"
 
 # -----------------------------------------------------------------------------
