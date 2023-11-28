@@ -43,6 +43,8 @@ else
     color_echo $GREEN "Xcode Command Line Tools already installed."
 fi
 
+echo "" # Print a blank line
+
 # Step 2: Install Homebrew
 if ! command -v brew &>/dev/null; then
     color_echo $BLUE "Installing Homebrew..."
@@ -51,11 +53,15 @@ else
     color_echo $GREEN "Homebrew already installed."
 fi
 
+echo "" # Print a blank line
+
 # Step 3: Install Git (if not already installed by Xcode Command Line Tools)
 if ! command -v git &>/dev/null; then
     color_echo $BLUE "Installing Git..."
     brew install git || { color_echo $RED "Failed to install Git."; exit 1; }
 fi
+
+echo "" # Print a blank line
 
 # Step 4: Clone .dotfiles repository
 DOTFILES_DIR="$HOME/.dotfiles"
@@ -67,9 +73,13 @@ else
     color_echo $GREEN ".dotfiles directory already exists. Skipping clone."
 fi
 
+echo "" # Print a blank line
+
 # Step 5: Install software from Brewfile
 color_echo $BLUE "Installing software from Brewfile..."
 brew bundle --file "$DOTFILES_DIR/Brewfile" || { color_echo $RED "Failed to install software from Brewfile."; exit 1; }
+
+echo "" # Print a blank line
 
 # Validate TMUX_CONFIG_DIR
 TMUX_CONFIG_DIR="$HOME/.config/tmux"
@@ -77,6 +87,8 @@ if [ ! -d "$TMUX_CONFIG_DIR" ]; then
     color_echo $BLUE "Creating tmux config directory..."
     mkdir -p "$TMUX_CONFIG_DIR"
 fi
+
+echo "" # Print a blank line
 
 # Step 6: Create symlinks (Idempotent) ----------------------------------------
 color_echo $BLUE "Creating symlinks..."
@@ -121,6 +133,8 @@ create_symlink "$DOTFILES_DIR/configs/.gitconfig" "$HOME/.gitconfig"
 create_symlink "$DOTFILES_DIR/configs/tmux.conf" "$HOME/.config/tmux/tmux.conf"
 
 color_echo $GREEN "Symlink operations completed successfully."
+
+echo "" # Print a blank line
 
 # Installation of of software -----------------------------------------------
 
@@ -180,6 +194,7 @@ else
     color_echo $GREEN "Ollama already installed."
 fi
 
+echo "" # Print a blank line
 # -----------------------------------------------------------------------------
 
 # Check if NVM (Node Version Manager) is installed
@@ -193,6 +208,8 @@ else
     color_echo $GREEN "NVM already installed."
 fi
 
+echo "" # Print a blank line
+
 # Check if Node is installed
 if ! command -v node &>/dev/null; then
     # Install Node.js using NVM if it's not installed
@@ -202,10 +219,14 @@ else
     color_echo $GREEN "Node.js already installed."
 fi
 
+echo "" # Print a blank line
+
 # Install Global npm Packages:
 color_echo $BLUE "Installing global npm packages..."
 npm install -g tree-sitter-cli || { color_echo $RED "Failed to install tree-sitter-cli."; exit 1; }
 npm install -g live-server || { color_echo $RED "Failed to install live-server."; exit 1; }
+
+echo "" # Print a blank line
 
 # -----------------------------------------------------------------------------
 
@@ -220,6 +241,8 @@ curl -L https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/JetBrai
 unzip "$FONT_DIR/JetBrainsMono.zip" -d "$FONT_DIR" || { color_echo $RED "Failed to unzip JetBrainsMono Nerd Font."; exit 1; }
 rm "$FONT_DIR/JetBrainsMono.zip"
 color_echo $GREEN "JetBrainsMono Nerd Font installation complete."
+
+echo "" # Print a blank line
 
 # AstroNvim Installation ------------------------------------------------------
 
@@ -252,6 +275,8 @@ else
     git clone --depth 1 https://github.com/AstroNvim/AstroNvim ~/.config/nvim
 fi
 
+echo "" # Print a blank line
+
 # Check if ~/.config/nvim/lua/user exists
 if [ -d "$HOME/.config/nvim/lua/user" ]; then
     color_echo $YELLOW "AstroNvim user configuration directory already exists. Do you want to replace it with a new configuration? (y/n)"
@@ -276,7 +301,11 @@ else
     git_clone_fallback "git@github.com:av1155/astronvim_config.git" "https://github.com/av1155/astronvim_config.git" "$HOME/.config/nvim/lua/user"
 fi
 
-color_echo $GREEN "Configuration complete."
+echo "" # Print a blank line
+
+color_echo $GREEN "AstroNvim Configuration complete."
+
+echo "" # Print a blank line
 
 # -----------------------------------------------------------------------------
 
