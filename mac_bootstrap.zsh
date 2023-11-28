@@ -343,9 +343,3 @@ printf "%s\n" "${app_list[@]}" > "$desktop_path"
 echo "A list of apps to download has been created on your desktop: $desktop_path"
 
 # -----------------------------------------------------------------------------
-
-# Change to the home directory
-cd "$HOME"
-
-# Source the Zsh configuration to apply changes
-source ~/.zshrc
