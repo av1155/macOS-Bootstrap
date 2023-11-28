@@ -108,6 +108,25 @@ else
     color_echo $GREEN "Google Chrome already installed."
 fi
 
+# Install Visual Studio Code
+if ! brew list --cask | grep -q visual-studio-code; then
+    color_echo $BLUE "Installing Visual Studio Code..."
+    brew install --cask visual-studio-code || { color_echo $RED "Failed to install Visual Studio Code."; exit 1; }
+else
+    color_echo $GREEN "Visual Studio Code already installed."
+fi
+
+# Install JetBrains Toolbox
+if ! brew list --cask | grep -q jetbrains-toolbox; then
+    color_echo $BLUE "Installing JetBrains Toolbox..."
+    brew install --cask jetbrains-toolbox || { color_echo $RED "Failed to install JetBrains Toolbox."; exit 1; }
+else
+    color_echo $GREEN "JetBrains Toolbox already installed."
+fi
+
+# Manual Ollama Installation Note
+echo -e "${BLUE}NOTE:${NC} Ollama is not included in this automated script. To install Ollama, please visit the official website at https://ollama.ai and follow the manual installation instructions provided there."
+
 # -----------------------------------------------------------------------------
 
 # Install NVM (Node Version Manager)
@@ -159,6 +178,70 @@ git_clone_fallback() {
 # Install AstroNvim user configuration
 git_clone_fallback "git@github.com:av1155/astronvim_config.git" "https://github.com/av1155/astronvim_config.git" "$HOME/.config/nvim/lua/user"
 color_echo $GREEN "AstroNvim installation complete."
+
+# -----------------------------------------------------------------------------
+
+# Define the list of apps
+app_list=(
+    "zoom.us.app"
+    "WhatsApp.app"
+    "Warp.app"
+    "TickTick.app"
+    "The Unarchiver.app"
+    "Spotify.app"
+    "Shottr.app"
+    "Ryujinx.app"
+    "PS Remote Play.app"
+    "OnyX.app"
+    "OneMenu.app"
+    "Ollama.app"
+    "Notion.app"
+    "MonitorControl.app"
+    "MiddleClick.app"
+    "Microsoft Word.app"
+    "Microsoft Teams classic.app"
+    "Microsoft PowerPoint.app"
+    "Microsoft Outlook.app"
+    "Microsoft OneNote.app"
+    "Microsoft Excel.app"
+    "Microsoft Edge.app"
+    "Mathpix Snipping Tool.app"
+    "Magnet.app"
+    "Maccy.app"
+    "LockDown Browser.app"
+    "Latest.app"
+    "IINA.app"
+    "Grammarly for Safari.app"
+    "Grammarly Desktop.app"
+    "Goodnotes.app"
+    "Flycut.app"
+    "Encrypto.app"
+    "Dropover.app"
+    "Discord.app"
+    "Color Picker.app"
+    "CleanMyMac X.app"
+    "Cinebench.app"
+    "CheatSheet.app"
+    "CalcBar.app"
+    "BetterDisplay.app"
+    "Bartender 5.app"
+    "AppCleaner.app"
+    "Anki.app"
+    "AltTab.app"
+    "Alfred 5.app"
+    "AlDente.app"
+    "1Password.app"
+    "1Password for Safari.app"
+    "1Blocker.app"
+    "Adobe Creative Cloud"
+)
+
+# Create a text file on the desktop with the app list
+desktop_path="$HOME/Desktop/apps_to_download.txt"
+echo "${app_list[@]}" > "$desktop_path"
+
+# Print a message to inform the user
+echo "A list of apps to download has been created on your desktop: $desktop_path"
 
 # -----------------------------------------------------------------------------
 
