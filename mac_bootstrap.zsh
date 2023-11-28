@@ -24,12 +24,13 @@ fi
 echo "Installing software from Brewfile..."
 brew bundle --file "$DOTFILES_DIR/Brewfile" || { echo "Failed to install software from Brewfile."; exit 1; }
 
+# -----------------------------------------------------------------------------
+
 # Clone .dotfiles repository if it doesn't exist
 DOTFILES_DIR="$HOME/.dotfiles"
 if [ ! -d "$DOTFILES_DIR" ]; then
     echo "Cloning .dotfiles repository..."
-    git clone git@github.com:av1155/.dotfiles.git "$DOTFILES_DIR" || \
-        git clone https://github.com/av1155/.dotfiles.git "$DOTFILES_DIR" || \
+    git_clone_fallback "git@github.com:av1155/.dotfiles.git" "https://github.com/av1155/.dotfiles.git" "$DOTFILES_DIR" || \
         { echo "Failed to clone .dotfiles repository."; exit 1; }
 else
     echo ".dotfiles directory already exists. Skipping clone."
@@ -70,6 +71,14 @@ else
     echo "iTerm2 already installed."
 fi
 
+# Install Docker
+if ! command -v docker &>/dev/null; then
+    echo "Installing Docker..."
+    brew install --cask docker || { echo "Failed to install Docker."; exit 1; }
+else
+    echo "Docker already installed."
+fi
+
 # Install Miniforge3
 if ! command -v conda &>/dev/null; then
     echo "Installing Miniforge3..."
@@ -86,14 +95,24 @@ else
     echo "Google Chrome already installed."
 fi
 
-# Install NVM, Node.js, and tree-sitter-cli
-echo "Installing Node Version Manager (nvm), Node.js, and tree-sitter-cli..."
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash || { echo "Failed to install nvm."; exit 1; }
+# -----------------------------------------------------------------------------
+
+# Install NVM (Node Version Manager)
+echo "Installing Node Version Manager (nvm)..."
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash || { echo "Failed to install nvm."; exit 1; }
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+# Install Node.js using NVM
+echo "Installing Node.js..."
 nvm install node || { echo "Failed to install Node.js."; exit 1; }
+
+# Install Global npm Packages:
+echo "Installing global npm packages..."
 npm install -g tree-sitter-cli || { echo "Failed to install tree-sitter-cli."; exit 1; }
-echo "Node.js and tree-sitter-cli installation complete."
+npm install -g live-server || { echo "Failed to install live-server."; exit 1; }
+
+# -----------------------------------------------------------------------------
 
 # Install JetBrainsMono Nerd Font
 echo "Installing JetBrainsMono Nerd Font..."
@@ -106,6 +125,8 @@ curl -L https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/JetBrai
 unzip "$FONT_DIR/JetBrainsMono.zip" -d "$FONT_DIR" || { echo "Failed to unzip JetBrainsMono Nerd Font."; exit 1; }
 rm "$FONT_DIR/JetBrainsMono.zip"
 echo "JetBrainsMono Nerd Font installation complete."
+
+# -----------------------------------------------------------------------------
 
 # Install AstroNvim
 echo "Installing AstroNvim..."
@@ -125,6 +146,8 @@ git_clone_fallback() {
 # Install AstroNvim user configuration
 git_clone_fallback "git@github.com:av1155/astronvim_config.git" "https://github.com/av1155/astronvim_config.git" "$HOME/.config/nvim/lua/user"
 echo "AstroNvim installation complete."
+
+# -----------------------------------------------------------------------------
 
 # Change to the home directory
 cd "$HOME"
