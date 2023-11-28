@@ -83,6 +83,3 @@ please submit a Pull Request. Let's make these dotfiles even better together.
 
 This project is licensed under the MIT License - see the `LICENSE` file for
 details.
-
-```
-```
