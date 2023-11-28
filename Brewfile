@@ -40,8 +40,6 @@ brew "php"
 brew "pyinstaller"
 # Interpreted, interactive, object-oriented programming language
 brew "python@3.11"
-# Python interface to Tcl/Tk
-brew "python-tk@3.11"
 # Search tool like grep and The Silver Searcher
 brew "ripgrep"
 # Terminal multiplexer
