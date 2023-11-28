@@ -42,9 +42,10 @@ create_symlink() {
     fi
     ln -sf "$source_file" "$target_file" || { echo "Failed to create symlink for $(basename "$source_file")"; exit 1; }
 }
-create_symlink "$DOTFILES_DIR/.zshrc" "$HOME/.zshrc"
-create_symlink "$DOTFILES_DIR/.gitconfig" "$HOME/.gitconfig"
-create_symlink "$DOTFILES_DIR/tmux.conf" "$TMUX_CONFIG_DIR/tmux.conf"
+
+create_symlink "$DOTFILES_DIR/configs/.zshrc" "$HOME/.zshrc"
+create_symlink "$DOTFILES_DIR/configs/.gitconfig" "$HOME/.gitconfig"
+create_symlink "$DOTFILES_DIR/configs/tmux.conf" "$HOME/.config/tmux/tmux.conf"
 
 # Step 3: Install Homebrew and software from Brewfile
 if ! command -v brew &>/dev/null; then
