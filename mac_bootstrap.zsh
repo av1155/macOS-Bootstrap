@@ -6,6 +6,7 @@ GREEN='\033[0;32m'
 BLUE='\033[0;34m'
 YELLOW='\033[0;33m'
 PURPLE='\033[0;35m'
+ORANGE='\033[0;33m'
 NC='\033[0m' # No color (reset)
 
 # Function to display colored messages
@@ -13,6 +14,23 @@ color_echo() {
     local color="$1"
     local message="$2"
     echo -e "${color}${message}${NC}"
+}
+
+# Function to calculate padding for centering text
+calculate_padding() {
+    local text="$1"
+    local terminal_width=$(tput cols)
+    local text_width=${#text}
+    local padding_length=$(( (terminal_width - text_width) / 2 ))
+    printf "%*s" $padding_length ""
+}
+
+# Function to display centered colored messages
+centered_color_echo() {
+    local color="$1"
+    local message="$2"
+    local padding=$(calculate_padding "$message")
+    echo -e "${color}${padding}${message}${padding}${NC}"
 }
 
 # Attempt to clone using SSH, fallback to HTTPS if SSH fails
@@ -29,6 +47,12 @@ git_clone_fallback() {
 # Usage: Execute this script in a zsh shell.
 
 # Step 1: Install Xcode Command Line Tools
+echo "" # Print a blank line
+
+centered_color_echo $ORANGE "<-------------- Xcode Command Line Tools Configuration -------------->"
+
+echo "" # Print a blank line
+
 if ! xcode-select -p &>/dev/null; then
     color_echo $RED "Installing Xcode Command Line Tools..."
     xcode-select --install || { color_echo $RED "Failed to install Xcode Command Line Tools."; exit 1; }
@@ -44,9 +68,13 @@ else
     color_echo $GREEN "Xcode Command Line Tools already installed."
 fi
 
+# Step 2: Install Homebrew
 echo "" # Print a blank line
 
-# Step 2: Install Homebrew
+centered_color_echo $ORANGE "<-------------- Homebrew Configuration -------------->"
+
+echo "" # Print a blank line
+
 if ! command -v brew &>/dev/null; then
     color_echo $BLUE "Installing Homebrew..."
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" || { color_echo $RED "Failed to install Homebrew."; exit 1; }
@@ -60,25 +88,39 @@ if ! command -v git &>/dev/null; then
     brew install git || { color_echo $RED "Failed to install Git."; exit 1; }
 fi
 
+# Step 4: Clone .dotfiles repository
 echo "" # Print a blank line
 
-# Step 4: Clone .dotfiles repository
+centered_color_echo $ORANGE "<-------------- Dotfiles + BootStrap Repository Configuration -------------->"
+
+echo "" # Print a blank line
+
 DOTFILES_DIR="$HOME/.dotfiles"
 if [ ! -d "$DOTFILES_DIR" ]; then
     color_echo $BLUE "Cloning .dotfiles repository..."
     git clone "https://github.com/av1155/.dotfiles.git" "$DOTFILES_DIR" || \
         { color_echo $RED "Failed to clone .dotfiles repository."; exit 1; }
 else
-    color_echo $GREEN "The .dotfiles directory already exists. Skipping clone of repository."
+    color_echo $GREEN "The '.dotfiles' directory already exists. Skipping clone of repository."
 fi
+
+# Step 5: Install software from Brewfile
+echo "" # Print a blank line
+
+centered_color_echo $ORANGE "<-------------- Brewfile Configuration -------------->"
 
 echo "" # Print a blank line
 
-# Step 5: Install software from Brewfile
 color_echo $BLUE "Installing software from Brewfile..."
 brew bundle --file "$DOTFILES_DIR/Brewfile" || { color_echo $RED "Failed to install software from Brewfile."; exit 1; }
 
 # Validate TMUX_CONFIG_DIR
+echo "" # Print a blank line
+
+centered_color_echo $ORANGE "<-------------- tmux Config Directory Setup -------------->"
+
+echo "" # Print a blank line
+
 TMUX_CONFIG_DIR="$HOME/.config/tmux"
 if [ ! -d "$TMUX_CONFIG_DIR" ]; then
     color_echo $BLUE "Creating tmux config directory..."
@@ -88,6 +130,12 @@ else
 fi
 
 # Step 6: Create symlinks (Idempotent) ----------------------------------------
+echo "" # Print a blank line
+
+centered_color_echo $ORANGE "<-------------- Symlinks Configuration -------------->"
+
+echo "" # Print a blank line
+
 color_echo $BLUE "Creating symlinks..."
 
 create_symlink() {
@@ -129,11 +177,12 @@ create_symlink "$DOTFILES_DIR/configs/.zshrc" "$HOME/.zshrc"
 create_symlink "$DOTFILES_DIR/configs/.gitconfig" "$HOME/.gitconfig"
 create_symlink "$DOTFILES_DIR/configs/tmux.conf" "$HOME/.config/tmux/tmux.conf"
 
-color_echo $GREEN "Symlink operations completed successfully."
-
+# Installation of of software -----------------------------------------------
 echo "" # Print a blank line
 
-# Installation of of software -----------------------------------------------
+centered_color_echo $ORANGE "<-------------- Installation of Software -------------->"
+
+echo "" # Print a blank line
 
 # Install iTerm2
 if ! brew list --cask | grep -q iterm2 && [ ! -d "/Applications/iTerm.app" ]; then
@@ -191,8 +240,12 @@ else
     color_echo $GREEN "Ollama already installed."
 fi
 
-echo "" # Print a blank line
 # -----------------------------------------------------------------------------
+echo "" # Print a blank line
+
+centered_color_echo $ORANGE "<-------------- Configuration of NVM, NODE, & NPM -------------->"
+
+echo "" # Print a blank line
 
 # Check if NVM (Node Version Manager) is installed
 if ! command -v nvm &>/dev/null; then
@@ -227,9 +280,12 @@ npm install -g tree-sitter-cli || { color_echo $RED "Failed to install tree-sitt
 color_echo $BLUE "live-server: "
 npm install -g live-server || { color_echo $RED "Failed to install live-server."; exit 1; }
 
+# -----------------------------------------------------------------------------
 echo "" # Print a blank line
 
-# -----------------------------------------------------------------------------
+centered_color_echo $ORANGE "<-------------- Configuration of Nerd Fonts -------------->"
+
+echo "" # Print a blank line
 
 # Install JetBrainsMono Nerd Font
 color_echo $BLUE "Installing JetBrainsMono Nerd Font..."
@@ -243,9 +299,12 @@ unzip "$FONT_DIR/JetBrainsMono.zip" -d "$FONT_DIR" || { color_echo $RED "Failed 
 rm "$FONT_DIR/JetBrainsMono.zip"
 color_echo $GREEN "JetBrainsMono Nerd Font installation complete."
 
+# AstroNvim Installation ------------------------------------------------------
 echo "" # Print a blank line
 
-# AstroNvim Installation ------------------------------------------------------
+centered_color_echo $ORANGE "<-------------- AstroNvim Configuration -------------->"
+
+echo "" # Print a blank line
 
 # Check if ~/.config/nvim exists
 if [ -d "$HOME/.config/nvim" ]; then
@@ -302,13 +361,12 @@ else
     git_clone_fallback "git@github.com:av1155/astronvim_config.git" "https://github.com/av1155/astronvim_config.git" "$HOME/.config/nvim/lua/user"
 fi
 
-echo "" # Print a blank line
-
-color_echo $GREEN "<-------------- AstroNvim Configuration Complete -------------->"
-
-echo "" # Print a blank line
-
 # -----------------------------------------------------------------------------
+echo "" # Print a blank line
+
+centered_color_echo $ORANGE "<-------------- TODO List of Apps to Download -------------->"
+
+echo "" # Print a blank line
 
 # Define the list of apps
 app_list=(
@@ -370,9 +428,13 @@ desktop_path="$HOME/Desktop/apps_to_download.txt"
 printf "%s\n" "${app_list[@]}" > "$desktop_path"
 
 # Print a message to inform the user
-color_echo $BLUE "A list of apps to download has been created on your desktop: $desktop_path"
+color_echo $BLUE "A TODO list of apps to download has been created on your desktop: $desktop_path"
 
-echo ""
+echo "" # Print a blank line
+
+centered_color_echo $ORANGE "<-------------- Thank You! -------------->"
+
+echo "" # Print a blank line
 
 color_echo $PURPLE "🚀 Installation successful! Your development environment is now supercharged and ready for lift-off. Please restart your computer to finalize the setup. Happy coding! 🚀"
 
