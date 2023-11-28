@@ -92,7 +92,8 @@ create_symlink() {
 
     if [ -f "$target_file" ]; then
         color_echo $YELLOW "Existing file found for $(basename "$target_file"). Do you want to overwrite it? (y/n)"
-        read -p "Enter choice: " choice
+        echo -n "Enter choice: > "
+        read -r choice
         case "$choice" in
             y|Y )
                 color_echo $BLUE "Backing up existing $(basename "$target_file") to $(basename "$target_file").bak"
@@ -124,7 +125,7 @@ color_echo $GREEN "Symlinks created."
 # Installation of of software -----------------------------------------------
 
 # Install iTerm2
-if ! brew list --cask | grep -q iterm2; then
+if ! brew list --cask | grep -q iterm2 && [ ! -d "/Applications/iTerm.app" ]; then
     color_echo $BLUE "Installing iTerm2..."
     brew install --cask iterm2 || { color_echo $RED "Failed to install iTerm2."; exit 1; }
 else
@@ -132,7 +133,7 @@ else
 fi
 
 # Install Docker
-if ! command -v docker &>/dev/null; then
+if ! brew list --cask | grep -q docker && [ ! -d "/Applications/Docker.app" ]; then
     color_echo $BLUE "Installing Docker..."
     brew install --cask docker || { color_echo $RED "Failed to install Docker."; exit 1; }
 else
@@ -140,7 +141,7 @@ else
 fi
 
 # Install Miniforge3
-if ! command -v conda &>/dev/null; then
+if [ ! -d "$HOME/miniforge3" ]; then
     color_echo $BLUE "Installing Miniforge3..."
     brew install miniforge || { color_echo $RED "Failed to install Miniforge3."; exit 1; }
 else
@@ -148,7 +149,7 @@ else
 fi
 
 # Install Google Chrome
-if ! brew list --cask | grep -q google-chrome; then
+if ! brew list --cask | grep -q google-chrome && [ ! -d "/Applications/Google Chrome.app" ]; then
     color_echo $BLUE "Installing Google Chrome..."
     brew install --cask google-chrome || { color_echo $RED "Failed to install Google Chrome."; exit 1; }
 else
@@ -156,7 +157,7 @@ else
 fi
 
 # Install Visual Studio Code
-if ! brew list --cask | grep -q visual-studio-code; then
+if ! brew list --cask | grep -q visual-studio-code && [ ! -d "/Applications/Visual Studio Code.app" ]; then
     color_echo $BLUE "Installing Visual Studio Code..."
     brew install --cask visual-studio-code || { color_echo $RED "Failed to install Visual Studio Code."; exit 1; }
 else
@@ -164,15 +165,20 @@ else
 fi
 
 # Install JetBrains Toolbox
-if ! brew list --cask | grep -q jetbrains-toolbox; then
+if ! brew list --cask | grep -q jetbrains-toolbox && [ ! -d "/Applications/JetBrains Toolbox.app" ]; then
     color_echo $BLUE "Installing JetBrains Toolbox..."
     brew install --cask jetbrains-toolbox || { color_echo $RED "Failed to install JetBrains Toolbox."; exit 1; }
 else
     color_echo $GREEN "JetBrains Toolbox already installed."
 fi
 
-# Manual Ollama Installation Note
-color_echo $YELLOW "NOTE: Ollama is not included in this automated script. To install Ollama, please visit the official website at https://ollama.ai and follow the manual installation instructions provided there."
+# Install Ollama
+if ! brew list | grep -q ollama && [ ! -d "/Applications/Ollama.app" ]; then
+    color_echo $BLUE "Installing Ollama..."
+    brew install ollama || { color_echo $RED "Failed to install Ollama."; exit 1; }
+else
+    color_echo $GREEN "Ollama already installed."
+fi
 
 # -----------------------------------------------------------------------------
 
@@ -205,18 +211,62 @@ unzip "$FONT_DIR/JetBrainsMono.zip" -d "$FONT_DIR" || { color_echo $RED "Failed 
 rm "$FONT_DIR/JetBrainsMono.zip"
 color_echo $GREEN "JetBrainsMono Nerd Font installation complete."
 
-# -----------------------------------------------------------------------------
+# AstroNvim Installation ------------------------------------------------------
 
-# Install AstroNvim
-color_echo $BLUE "Installing AstroNvim..."
-[ -d "$HOME/.config/nvim" ] && mv "$HOME/.config/nvim" "$HOME/.config/nvim.bak"
-[ -d "$HOME/.local/share/nvim" ] && mv "$HOME/.local/share/nvim" "$HOME/.local/share/nvim.bak"
-[ -d "$HOME/.local/state/nvim" ] && mv "$HOME/.local/state/nvim" "$HOME/.local/state/nvim.bak"
-[ -d "$HOME/.cache/nvim" ] && mv "$HOME/.cache/nvim" "$HOME/.cache/nvim.bak"
+# Check if ~/.config/nvim exists
+if [ -d "$HOME/.config/nvim" ]; then
+    color_echo $YELLOW "AstroNvim configuration already exists. Do you want to proceed with the AstroNvim installation? (y/n)"
+    echo -n "> "
+    read -r choice
+    case "$choice" in
+        y|Y )
+            color_echo $BLUE "Proceeding with AstroNvim installation..."
+            # Install AstroNvim
+            color_echo $BLUE "Installing AstroNvim..."
+            [ -d "$HOME/.config/nvim" ] && mv "$HOME/.config/nvim" "$HOME/.config/nvim.bak"
+            [ -d "$HOME/.local/share/nvim" ] && mv "$HOME/.local/share/nvim" "$HOME/.local/share/nvim.bak"
+            [ -d "$HOME/.local/state/nvim" ] && mv "$HOME/.local/state/nvim" "$HOME/.local/state/nvim.bak"
+            [ -d "$HOME/.cache/nvim" ] && mv "$HOME/.cache/nvim" "$HOME/.cache/nvim.bak"
+            git clone --depth 1 https://github.com/AstroNvim/AstroNvim ~/.config/nvim
+            ;;
+        n|N )
+            color_echo $GREEN "Skipping AstroNvim installation."
+            ;;
+        * )
+            color_echo $RED "Invalid choice. Exiting."
+            exit 1
+            ;;
+    esac
+else
+    # If ~/.config/nvim doesn't exist, proceed with cloning
+    git clone --depth 1 https://github.com/AstroNvim/AstroNvim ~/.config/nvim
+fi
 
-# Install AstroNvim user configuration
-git_clone_fallback "git@github.com:av1155/astronvim_config.git" "https://github.com/av1155/astronvim_config.git" "$HOME/.config/nvim/lua/user"
-color_echo $GREEN "AstroNvim installation complete."
+# Check if ~/.config/nvim/lua/user exists
+if [ -d "$HOME/.config/nvim/lua/user" ]; then
+    color_echo $YELLOW "AstroNvim user configuration directory already exists. Do you want to replace it with a new configuration? (y/n)"
+    echo -n "> "
+    read -r choice
+    case "$choice" in
+        y|Y )
+            color_echo $BLUE "Replacing existing user configuration..."
+            rm -rf "$HOME/.config/nvim/lua/user"
+            git_clone_fallback "git@github.com:av1155/astronvim_config.git" "https://github.com/av1155/astronvim_config.git" "$HOME/.config/nvim/lua/user"
+            ;;
+        n|N )
+            color_echo $GREEN "Keeping existing user configuration."
+            ;;
+        * )
+            color_echo $RED "Invalid choice. Exiting."
+            exit 1
+            ;;
+    esac
+else
+    # If ~/.config/nvim/lua/user doesn't exist, proceed with cloning
+    git_clone_fallback "git@github.com:av1155/astronvim_config.git" "https://github.com/av1155/astronvim_config.git" "$HOME/.config/nvim/lua/user"
+fi
+
+color_echo $GREEN "Configuration complete."
 
 # -----------------------------------------------------------------------------
 
