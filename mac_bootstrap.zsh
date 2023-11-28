@@ -337,7 +337,7 @@ app_list=(
 
 # Create a text file on the desktop with the app list
 desktop_path="$HOME/Desktop/apps_to_download.txt"
-echo "${app_list[@]}" > "$desktop_path"
+printf "%s\n" "${app_list[@]}" > "$desktop_path"
 
 # Print a message to inform the user
 echo "A list of apps to download has been created on your desktop: $desktop_path"
