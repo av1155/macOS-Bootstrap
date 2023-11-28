@@ -58,9 +58,17 @@ fi
 
 # Step 3: Create symlinks (Idempotent) ----------------------------------------
 color_echo $BLUE "Creating symlinks..."
+
+# Step 3: Create symlinks (Idempotent) ----------------------------------------
 create_symlink() {
     local source_file="$1"
     local target_file="$2"
+
+    if [ -L "$target_file" ] && [ "$(readlink "$target_file")" = "$source_file" ]; then
+        color_echo $GREEN "Symlink for $(basename "$source_file") already exists and is correct."
+        return
+    fi
+
     if [ -f "$target_file" ]; then
         color_echo $BLUE "Backing up existing $(basename "$target_file") to $(basename "$target_file").bak"
         mv "$target_file" "${target_file}.bak" || { color_echo $RED "Failed to backup $target_file"; exit 1; }
