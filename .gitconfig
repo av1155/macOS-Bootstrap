@@ -1,0 +1,13 @@
+[user]
+	email = andrea.venti12@gmail.com
+	name = Andrea Venti Fuentes
+[core]
+	editor = nvim
+	autocrlf = input
+	excludesfile = /Users/andreaventi/.gitignore
+[alias]
+	count = !git ls-remote --heads origin | wc -l
+[color]
+	ui = auto
+[init]
+	defaultBranch = main
