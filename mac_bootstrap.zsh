@@ -182,15 +182,25 @@ fi
 
 # -----------------------------------------------------------------------------
 
-# Install NVM (Node Version Manager)
-color_echo $BLUE "Installing Node Version Manager (nvm)..."
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash || { color_echo $RED "Failed to install nvm."; exit 1; }
-export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+# Check if NVM (Node Version Manager) is installed
+if ! command -v nvm &>/dev/null; then
+    # Install NVM if it's not installed
+    color_echo $BLUE "Installing Node Version Manager (nvm)..."
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash || { color_echo $RED "Failed to install nvm."; exit 1; }
+    export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+else
+    color_echo $GREEN "NVM already installed."
+fi
 
-# Install Node.js using NVM
-color_echo $BLUE "Installing Node.js..."
-nvm install node || { color_echo $RED "Failed to install Node.js."; exit 1; }
+# Check if Node is installed
+if ! command -v node &>/dev/null; then
+    # Install Node.js using NVM if it's not installed
+    color_echo $BLUE "Installing Node.js..."
+    nvm install node || { color_echo $RED "Failed to install Node.js."; exit 1; }
+else
+    color_echo $GREEN "Node.js already installed."
+fi
 
 # Install Global npm Packages:
 color_echo $BLUE "Installing global npm packages..."
