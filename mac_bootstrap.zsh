@@ -5,6 +5,25 @@
 # Assumptions: macOS with internet access and standard file system structure.
 # Usage: Execute this script in a zsh shell.
 
+# Step 1: Install Xcode Command Line Tools
+if ! xcode-select -p &>/dev/null; then
+    echo "Installing Xcode Command Line Tools..."
+    xcode-select --install || { echo "Failed to install Xcode Command Line Tools."; exit 1; }
+else
+    echo "Xcode Command Line Tools already installed."
+fi
+
+# Step 2: Install Homebrew and software from Brewfile
+if ! command -v brew &>/dev/null; then
+    echo "Installing Homebrew..."
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" || { echo "Failed to install Homebrew."; exit 1; }
+else
+    echo "Homebrew already installed."
+fi
+
+echo "Installing software from Brewfile..."
+brew bundle --file "$DOTFILES_DIR/Brewfile" || { echo "Failed to install software from Brewfile."; exit 1; }
+
 # Clone .dotfiles repository if it doesn't exist
 DOTFILES_DIR="$HOME/.dotfiles"
 if [ ! -d "$DOTFILES_DIR" ]; then
@@ -23,15 +42,7 @@ if [ ! -d "$TMUX_CONFIG_DIR" ]; then
     mkdir -p "$TMUX_CONFIG_DIR"
 fi
 
-# Step 1: Install Xcode Command Line Tools
-if ! xcode-select -p &>/dev/null; then
-    echo "Installing Xcode Command Line Tools..."
-    xcode-select --install || { echo "Failed to install Xcode Command Line Tools."; exit 1; }
-else
-    echo "Xcode Command Line Tools already installed."
-fi
-
-# Step 2: Create symlinks (Idempotent)
+# Step 3: Create symlinks (Idempotent) ----------------------------------------
 echo "Creating symlinks..."
 create_symlink() {
     local source_file="$1"
@@ -47,23 +58,32 @@ create_symlink "$DOTFILES_DIR/configs/.zshrc" "$HOME/.zshrc"
 create_symlink "$DOTFILES_DIR/configs/.gitconfig" "$HOME/.gitconfig"
 create_symlink "$DOTFILES_DIR/configs/tmux.conf" "$HOME/.config/tmux/tmux.conf"
 
-# Step 3: Install Homebrew and software from Brewfile
-if ! command -v brew &>/dev/null; then
-    echo "Installing Homebrew..."
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" || { echo "Failed to install Homebrew."; exit 1; }
-else
-    echo "Homebrew already installed."
-fi
+echo "Symlinks created."
 
-echo "Installing software from Brewfile..."
-brew bundle --file "$DOTFILES_DIR/Brewfile" || { echo "Failed to install software from Brewfile."; exit 1; }
+# -----------------------------------------------------------------------------
 
-# Conditional installation of iTerm2
+# Install iTerm2
 if ! brew list --cask | grep -q iterm2; then
     echo "Installing iTerm2..."
     brew install --cask iterm2 || { echo "Failed to install iTerm2."; exit 1; }
 else
     echo "iTerm2 already installed."
+fi
+
+# Install Miniforge3
+if ! command -v conda &>/dev/null; then
+    echo "Installing Miniforge3..."
+    /bin/bash -c "$(curl -fsSL https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-MacOSX-$(uname -m).sh)" || { echo "Failed to install Miniforge3."; exit 1; }
+else
+    echo "Miniforge3 already installed."
+fi
+
+# Install Google Chrome
+if ! brew list --cask | grep -q google-chrome; then
+    echo "Installing Google Chrome..."
+    brew install --cask google-chrome || { echo "Failed to install Google Chrome."; exit 1; }
+else
+    echo "Google Chrome already installed."
 fi
 
 # Install NVM, Node.js, and tree-sitter-cli
@@ -102,5 +122,12 @@ git_clone_fallback() {
     git clone "$ssh_url" "$clone_directory" || git clone "$https_url" "$clone_directory" || { echo "Failed to clone repository."; exit 1; }
 }
 
+# Install AstroNvim user configuration
 git_clone_fallback "git@github.com:av1155/astronvim_config.git" "https://github.com/av1155/astronvim_config.git" "$HOME/.config/nvim/lua/user"
 echo "AstroNvim installation complete."
+
+# Change to the home directory
+cd "$HOME"
+
+# Source the Zsh configuration to apply changes
+source ~/.zshrc
