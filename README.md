@@ -10,7 +10,7 @@ configuration files.
 
 ## Table of Contents
 
-- [Installation](#installation)
+- [Steps to Bootstrap a New Mac](#steps-to-bootstrap-a-new-mac)
 - [Usage](#usage)
 - [Customization](#customization)
 - [Contributing](#contributing)
