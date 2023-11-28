@@ -120,7 +120,7 @@ create_symlink "$DOTFILES_DIR/configs/.zshrc" "$HOME/.zshrc"
 create_symlink "$DOTFILES_DIR/configs/.gitconfig" "$HOME/.gitconfig"
 create_symlink "$DOTFILES_DIR/configs/tmux.conf" "$HOME/.config/tmux/tmux.conf"
 
-color_echo $GREEN "Symlinks created."
+color_echo $GREEN "Symlink operations completed successfully."
 
 # Installation of of software -----------------------------------------------
 
