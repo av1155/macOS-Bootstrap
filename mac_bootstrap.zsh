@@ -220,8 +220,12 @@ install_app "Oh My Zsh" "sh -c \"\$(curl -fsSL https://raw.githubusercontent.com
 # Install Powerlevel10k Theme
 install_app "Powerlevel10k" "git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k" "[ ! -d '$HOME/powerlevel10k' ]"
 
+
 # Install Java
-install_app "Java" "curl -L https://download.oracle.com/java/21/latest/jdk-21_macos-aarch64_bin.tar.gz | tar xz -C /Users/andreaventi/Library/Java/JavaVirtualMachines" "! java -version 2>&1 | grep -q 'java version'"
+install_app "Java" \
+    "mkdir -p $HOME/Library/Java/JavaVirtualMachines && curl -L https://download.oracle.com/java/21/latest/jdk-21_macos-aarch64_bin.tar.gz | tar xz -C $HOME/Library/Java/JavaVirtualMachines" \
+    "! java -version 2>&1 | grep -q 'java version'"
+
 
 # Step 5: Clone .dotfiles repository -------------------------------------------
 
@@ -241,15 +245,18 @@ else
 fi
 
 # Step 6: Install software from Brewfile ---------------------------------------
-
-echo ""
-
-centered_color_echo $ORANGE "<-------------- Brewfile Configuration -------------->"
-
-echo ""
-
 color_echo $BLUE "Installing software from Brewfile..."
-brew bundle --file "$DOTFILES_DIR/Brewfile" || { color_echo $RED "Failed to install software from Brewfile."; exit 1; }
+
+# Confirmation prompt for Brewfile installation
+color_echo $YELLOW "Do you want to proceed with installing software from Brewfile? (y/n)"
+echo -n "Enter choice: > "
+read -r brewfile_confirmation
+if [ "$brewfile_confirmation" != "y" ] && [ "$brewfile_confirmation" != "Y" ]; then
+    color_echo $RED "Brewfile installation aborted."
+else
+    brew bundle --file "$DOTFILES_DIR/Brewfile" || { color_echo $RED "Failed to install software from Brewfile."; exit 1; }
+    color_echo $GREEN "Brewfile installation complete."
+fi
 
 # Validate TMUX_CONFIG_DIR ----------------------------------------------------
 
