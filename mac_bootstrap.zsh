@@ -13,7 +13,6 @@ YELLOW='\033[0;33m'
 PURPLE='\033[0;35m'
 ORANGE='\033[0;33m'
 NC='\033[0m' # No color (reset)
-
 # BEGINNING OF FUNCTIONS ------------------------------------------------------
 
 # Function to display colored messages
@@ -22,6 +21,15 @@ color_echo() {
     local message="$2"
     echo -e "${color}${message}${NC}"
 }
+
+# Confirmation prompt for starting the script
+color_echo $YELLOW "Do you want to proceed with the BootStrap Setup Script? (y/n)"
+echo -n "Enter choice: > "
+read -r confirmation
+if [ "$confirmation" != "y" ] && [ "$confirmation" != "Y" ]; then
+    color_echo $RED "BootStrap Setup Script aborted."
+    exit 1
+fi
 
 # Function to calculate padding for centering text
 calculate_padding() {
@@ -87,7 +95,7 @@ install_app() {
     local install_command="$2"
     local check_command="$3"
 
-    if eval "$check_command"; then
+    if ! eval "$check_command"; then
         color_echo $GREEN "$app_name already installed."
     else
         color_echo $YELLOW "Do you want to install $app_name? (y/n)"
