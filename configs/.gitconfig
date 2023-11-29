@@ -4,7 +4,8 @@
 [core]
 	editor = nvim
 	autocrlf = input
-	excludesfile = /Users/andreaventi/.gitignore
+	excludesfile = ~/.gitignore
+
 [alias]
 	count = !git ls-remote --heads origin | wc -l
 [color]
