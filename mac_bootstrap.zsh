@@ -299,7 +299,7 @@ centered_color_echo $ORANGE "<-------------- Configuration of NVM, NODE, & NPM -
 echo ""
 
 # Check if NVM (Node Version Manager) is installed ----------------------------
-if command -v nvm &>/dev/null; then
+if ! command -v nvm &>/dev/null; then
     # Install NVM if it's not installed
     color_echo $BLUE "Installing Node Version Manager (nvm)..."
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash || { color_echo $RED "Failed to install nvm."; exit 1; }
