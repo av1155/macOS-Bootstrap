@@ -146,12 +146,31 @@ centered_color_echo $ORANGE "<-------------- Homebrew Configuration ------------
 
 echo ""
 
+# Check if Homebrew is installed
 if ! command -v brew &>/dev/null; then
     color_echo $BLUE "Installing Homebrew..."
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" || { color_echo $RED "Failed to install Homebrew."; exit 1; }
 else
     color_echo $GREEN "Homebrew already installed."
 fi
+
+# Determine the architecture (Intel or Apple Silicon)
+arch_name="$(uname -m)"
+
+if [ "$arch_name" = "x86_64" ]; then
+    # Intel Macs
+    HOMEBREW_BIN="/usr/local/bin/brew"
+elif [ "$arch_name" = "arm64" ]; then
+    # Apple Silicon Macs
+    HOMEBREW_BIN="/opt/homebrew/bin/brew"
+else
+    color_echo $RED "Unknown architecture: $arch_name"
+    exit 1
+fi
+
+# Set up Homebrew in the shell
+echo "eval \"$($HOMEBREW_BIN shellenv)\"" >> $HOME/.zprofile
+eval "$($HOMEBREW_BIN shellenv)"
 
 # Step 3: Install Git (if not already installed by Xcode Command Line Tools) ---
 if ! command -v git &>/dev/null; then
