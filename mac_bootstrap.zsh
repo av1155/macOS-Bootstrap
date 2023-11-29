@@ -87,6 +87,9 @@ create_symlink() {
     fi
 
     ln -sf "$source_file" "$target_file" || { color_echo $RED "Failed to create symlink for $(basename "$source_file")"; exit 1; }
+
+    # Display this message only when a symlink is created.
+    color_echo $GREEN "Created symlink for $(basename "$source_file") to $(basename "$target_file")."
 }
 
 # Function to prompt and install an app
@@ -113,6 +116,7 @@ install_app() {
 # END OF FUNCTIONS ------------------------------------------------------------
 
 # Step 1: Install Xcode Command Line Tools -------------------------------------
+
 echo ""
 
 centered_color_echo $ORANGE "<-------------- Xcode Command Line Tools Configuration -------------->"
@@ -135,6 +139,7 @@ else
 fi
 
 # Step 2: Install Homebrew ----------------------------------------------------
+
 echo ""
 
 centered_color_echo $ORANGE "<-------------- Homebrew Configuration -------------->"
@@ -154,64 +159,7 @@ if ! command -v git &>/dev/null; then
     brew install git || { color_echo $RED "Failed to install Git."; exit 1; }
 fi
 
-# Step 4: Clone .dotfiles repository -------------------------------------------
-echo ""
-
-centered_color_echo $ORANGE "<-------------- Dotfiles + BootStrap Repository Configuration -------------->"
-
-echo ""
-
-DOTFILES_DIR="$HOME/.dotfiles"
-if [ ! -d "$DOTFILES_DIR" ]; then
-    color_echo $BLUE "Cloning .dotfiles repository..."
-    git clone "https://github.com/av1155/.dotfiles.git" "$DOTFILES_DIR" || \
-        { color_echo $RED "Failed to clone .dotfiles repository."; exit 1; }
-else
-    color_echo $GREEN "The '.dotfiles' directory already exists. Skipping clone of repository."
-fi
-
-# Step 5: Install software from Brewfile ---------------------------------------
-echo ""
-
-centered_color_echo $ORANGE "<-------------- Brewfile Configuration -------------->"
-
-echo ""
-
-color_echo $BLUE "Installing software from Brewfile..."
-brew bundle --file "$DOTFILES_DIR/Brewfile" || { color_echo $RED "Failed to install software from Brewfile."; exit 1; }
-
-# Validate TMUX_CONFIG_DIR ----------------------------------------------------
-echo ""
-
-centered_color_echo $ORANGE "<-------------- tmux Config Directory Setup -------------->"
-
-echo ""
-
-TMUX_CONFIG_DIR="$HOME/.config/tmux"
-if [ ! -d "$TMUX_CONFIG_DIR" ]; then
-    color_echo $BLUE "Creating tmux config directory..."
-    mkdir -p "$TMUX_CONFIG_DIR"
-else
-    color_echo $GREEN "The tmux config directory already exists. Skipping configuration."
-fi
-
-# Step 6: Create symlinks (Idempotent) ----------------------------------------
-
-echo ""
-
-centered_color_echo $ORANGE "<-------------- Symlinks Configuration -------------->"
-
-echo ""
-
-color_echo $BLUE "Creating symlinks..."
-
-# Symlinks go here:
-# create_symlink "$DOTFILES_DIR/configs/.original_file" "$HOME/.linked_file"
-create_symlink "$DOTFILES_DIR/configs/.zshrc" "$HOME/.zshrc"
-create_symlink "$DOTFILES_DIR/configs/.gitconfig" "$HOME/.gitconfig"
-create_symlink "$DOTFILES_DIR/configs/tmux.conf" "$HOME/.config/tmux/tmux.conf"
-
-# Installation of software -----------------------------------------------
+# Step 4: Installation of software --------------------------------------------
 
 echo ""
 
@@ -249,6 +197,69 @@ install_app "Ollama" "brew install ollama" "! brew list | grep -q ollama && [ ! 
 
 # Install Oh My Zsh
 install_app "Oh My Zsh" "sh -c \"\$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\"" "[ ! -d '$HOME/.oh-my-zsh' ]"
+
+# Install Java
+install_app "Java" "curl -L https://download.oracle.com/java/21/latest/jdk-21_macos-aarch64_bin.tar.gz | tar xz -C /Users/andreaventi/Library/Java/JavaVirtualMachines" "! java -version 2>&1 | grep -q 'java version'"
+
+# Step 5: Clone .dotfiles repository -------------------------------------------
+
+echo ""
+
+centered_color_echo $ORANGE "<-------------- Dotfiles + BootStrap Repository Configuration -------------->"
+
+echo ""
+
+DOTFILES_DIR="$HOME/.dotfiles"
+if [ ! -d "$DOTFILES_DIR" ]; then
+    color_echo $BLUE "Cloning .dotfiles repository..."
+    git clone "https://github.com/av1155/.dotfiles.git" "$DOTFILES_DIR" || \
+        { color_echo $RED "Failed to clone .dotfiles repository."; exit 1; }
+else
+    color_echo $GREEN "The '.dotfiles' directory already exists. Skipping clone of repository."
+fi
+
+# Step 6: Install software from Brewfile ---------------------------------------
+
+echo ""
+
+centered_color_echo $ORANGE "<-------------- Brewfile Configuration -------------->"
+
+echo ""
+
+color_echo $BLUE "Installing software from Brewfile..."
+brew bundle --file "$DOTFILES_DIR/Brewfile" || { color_echo $RED "Failed to install software from Brewfile."; exit 1; }
+
+# Validate TMUX_CONFIG_DIR ----------------------------------------------------
+
+echo ""
+
+centered_color_echo $ORANGE "<-------------- tmux Config Directory Setup -------------->"
+
+echo ""
+
+TMUX_CONFIG_DIR="$HOME/.config/tmux"
+if [ ! -d "$TMUX_CONFIG_DIR" ]; then
+    color_echo $BLUE "Creating tmux config directory..."
+    mkdir -p "$TMUX_CONFIG_DIR"
+else
+    color_echo $GREEN "The tmux config directory already exists. Skipping configuration."
+fi
+
+# Step 7: Create symlinks (Idempotent) ----------------------------------------
+
+echo ""
+
+centered_color_echo $ORANGE "<-------------- Symlinks Configuration -------------->"
+
+echo ""
+
+color_echo $BLUE "Creating symlinks..."
+
+# Symlinks go here:
+# create_symlink "$DOTFILES_DIR/configs/.original_file" "$HOME/.linked_file"
+create_symlink "$DOTFILES_DIR/configs/.zshrc" "$HOME/.zshrc"
+create_symlink "$DOTFILES_DIR/configs/.gitconfig" "$HOME/.gitconfig"
+create_symlink "$DOTFILES_DIR/configs/tmux.conf" "$HOME/.config/tmux/tmux.conf"
 
 # -----------------------------------------------------------------------------
 
@@ -291,25 +302,32 @@ npm install -g tree-sitter-cli || { color_echo $RED "Failed to install tree-sitt
 color_echo $BLUE "live-server: "
 npm install -g live-server || { color_echo $RED "Failed to install live-server."; exit 1; }
 
-# -----------------------------------------------------------------------------
-
 # Install JetBrainsMono Nerd Font ---------------------------------------------
+
 echo ""
 
 centered_color_echo $ORANGE "<-------------- Configuration of Nerd Fonts -------------->"
 
 echo ""
 
-color_echo $BLUE "Installing JetBrainsMono Nerd Font..."
-FONT_DIR="$HOME/Library/Fonts"
-if [ ! -d "$FONT_DIR" ]; then
-    color_echo $BLUE "Creating font directory..."
-    mkdir -p "$FONT_DIR"
+# Confirmation prompt for font installation
+color_echo $YELLOW "Do you want to proceed installing JetBrainsMono Nerd Font? (y/n)"
+echo -n "Enter choice: > "
+read -r font_confirmation
+if [ "$font_confirmation" != "y" ] && [ "$font_confirmation" != "Y" ]; then
+    color_echo $RED "Font installation aborted."
+else
+    color_echo $BLUE "Installing JetBrainsMono Nerd Font..."
+    FONT_DIR="$HOME/Library/Fonts"
+    if [ ! -d "$FONT_DIR" ]; then
+        color_echo $BLUE "Creating font directory..."
+        mkdir -p "$FONT_DIR"
+    fi
+    curl -L https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/JetBrainsMono.zip -o "$FONT_DIR/JetBrainsMono.zip" || { color_echo $RED "Failed to download JetBrainsMono Nerd Font."; exit 1; }
+    unzip "$FONT_DIR/JetBrainsMono.zip" -d "$FONT_DIR" || { color_echo $RED "Failed to unzip JetBrainsMono Nerd Font."; exit 1; }
+    rm "$FONT_DIR/JetBrainsMono.zip"
+    color_echo $GREEN "JetBrainsMono Nerd Font installation complete."
 fi
-curl -L https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/JetBrainsMono.zip -o "$FONT_DIR/JetBrainsMono.zip" || { color_echo $RED "Failed to download JetBrainsMono Nerd Font."; exit 1; }
-unzip "$FONT_DIR/JetBrainsMono.zip" -d "$FONT_DIR" || { color_echo $RED "Failed to unzip JetBrainsMono Nerd Font."; exit 1; }
-rm "$FONT_DIR/JetBrainsMono.zip"
-color_echo $GREEN "JetBrainsMono Nerd Font installation complete."
 
 # AstroNvim Installation ------------------------------------------------------
 
@@ -375,6 +393,7 @@ else
 fi
 
 # -----------------------------------------------------------------------------
+
 echo ""
 
 centered_color_echo $ORANGE "<-------------- TODO List of Apps to Download -------------->"
@@ -383,57 +402,57 @@ echo ""
 
 # Define the list of apps
 app_list=(
-    "zoom.us.app"
-    "WhatsApp.app"
-    "Warp.app"
-    "TickTick.app"
-    "The Unarchiver.app"
-    "Spotify.app"
-    "Shottr.app"
-    "Ryujinx.app"
-    "PS Remote Play.app"
-    "OnyX.app"
-    "OneMenu.app"
-    "Ollama.app"
-    "Notion.app"
-    "MonitorControl.app"
-    "MiddleClick.app"
-    "Microsoft Word.app"
-    "Microsoft Teams classic.app"
-    "Microsoft PowerPoint.app"
-    "Microsoft Outlook.app"
-    "Microsoft OneNote.app"
-    "Microsoft Excel.app"
-    "Microsoft Edge.app"
-    "Mathpix Snipping Tool.app"
-    "Magnet.app"
-    "Maccy.app"
-    "LockDown Browser.app"
-    "Latest.app"
-    "IINA.app"
-    "Grammarly for Safari.app"
-    "Grammarly Desktop.app"
-    "Goodnotes.app"
-    "Flycut.app"
-    "Encrypto.app"
-    "Dropover.app"
-    "Discord.app"
-    "Color Picker.app"
-    "CleanMyMac X.app"
-    "Cinebench.app"
-    "CheatSheet.app"
-    "CalcBar.app"
-    "BetterDisplay.app"
-    "Bartender 5.app"
-    "AppCleaner.app"
-    "Anki.app"
-    "AltTab.app"
-    "Alfred 5.app"
-    "AlDente.app"
+    "1Blocker.app"
     "1Password.app"
     "1Password for Safari.app"
-    "1Blocker.app"
     "Adobe Creative Cloud"
+    "AlDente.app"
+    "Alfred 5.app"
+    "AltTab.app"
+    "Anki.app"
+    "AppCleaner.app"
+    "Bartender 5.app"
+    "BetterDisplay.app"
+    "CalcBar.app"
+    "CheatSheet.app"
+    "Cinebench.app"
+    "CleanMyMac X.app"
+    "Color Picker.app"
+    "Discord.app"
+    "Dropover.app"
+    "Encrypto.app"
+    "Flycut.app"
+    "Goodnotes.app"
+    "Grammarly Desktop.app"
+    "Grammarly for Safari.app"
+    "IINA.app"
+    "Latest.app"
+    "LockDown Browser.app"
+    "Maccy.app"
+    "Magnet.app"
+    "Mathpix Snipping Tool.app"
+    "Microsoft Edge.app"
+    "Microsoft Excel.app"
+    "Microsoft OneNote.app"
+    "Microsoft Outlook.app"
+    "Microsoft PowerPoint.app"
+    "Microsoft Teams classic.app"
+    "Microsoft Word.app"
+    "MiddleClick.app"
+    "MonitorControl.app"
+    "Notion.app"
+    "Ollama.app"
+    "OneMenu.app"
+    "OnyX.app"
+    "PS Remote Play.app"
+    "Ryujinx.app"
+    "Shottr.app"
+    "Spotify.app"
+    "The Unarchiver.app"
+    "TickTick.app"
+    "Warp.app"
+    "WhatsApp.app"
+    "zoom.us.app"
 )
 
 # Create a text file on the desktop with the app list
