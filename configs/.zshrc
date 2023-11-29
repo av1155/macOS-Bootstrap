@@ -154,13 +154,17 @@ alias vim='nvim'
 # Fuzzy Finder + Nvim Alias:
 alias f="fd --type f --hidden --exclude .git | fzf --preview 'bat --color=always {1}' | xargs nvim"
 
-# SOURCED SCRIPTS + ALIASES:
+# SCRIPTS ----------------------------------------------
 
-source ~/scripts/JavaProject.zsh
-source ~/scripts/JavaCompiler.zsh
+# Function for JavaCompiler
+jcr() {
+    ~/scripts/JavaCompiler.zsh "$@"
+}
 
-# Create Java Project Script (javaproject):
-alias jp="javaproject"
+# Alias for JavaProject
+alias jp="~/scripts/JavaProject.zsh"
+
+# END OF SCRIPTS ---------------------------------------
 
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
