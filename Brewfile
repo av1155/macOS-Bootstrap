@@ -56,6 +56,8 @@ brew "jesseduffield/lazygit/lazygit"
 brew "samtay/tui/tetris"
 # Command-line interface for 1Password
 cask "1password-cli"
+# App to build and share containerized applications and microservices
+cask "docker"
 # Clipboard manager
 cask "maccy"
 # Utility to extend trackpad functionality
