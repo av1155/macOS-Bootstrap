@@ -28,10 +28,21 @@ export ZSH="$HOME/.oh-my-zsh"
 # source ~/powerlevel10k/powerlevel10k.zsh-theme
 # [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# Pure Prompt Configuration
-export ZPLUG_HOME="/opt/homebrew/opt/zplug"
+# Detect the architecture (Intel x86_64 or Apple Silicon arm64)
+arch_name="$(uname -m)"
+
+if [ "$arch_name" = "x86_64" ]; then
+    # If Intel, set ZPLUG_HOME to the Intel Homebrew path
+    export ZPLUG_HOME="/usr/local/opt/zplug"
+elif [ "$arch_name" = "arm64" ]; then
+    # If Apple Silicon, set ZPLUG_HOME to the Apple Silicon Homebrew path
+    export ZPLUG_HOME="/opt/homebrew/opt/zplug"
+fi
+
+# Rest of the Zplug configuration
 source $ZPLUG_HOME/init.zsh
 zplug "mafredri/zsh-async", from:github
+# Pure Prompt Configuration
 zplug "sindresorhus/pure", use:pure.zsh, from:github, as:theme
 # zplug "zdharma/fast-syntax-highlighting", as:plugin, defer:2
 zplug "zsh-users/zsh-autosuggestions", as:plugin, defer:2
@@ -138,7 +149,6 @@ source $ZSH/oh-my-zsh.sh
 # For a full list of active aliases, run `alias`.
 #
 
-alias pythonmain=/opt/homebrew/bin/python3
 alias ls='eza'
 alias vim='nvim'
 # Fuzzy Finder + Nvim Alias:
