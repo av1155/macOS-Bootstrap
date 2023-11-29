@@ -242,10 +242,10 @@ if [ ! -d "$DOTFILES_DIR" ]; then
         { color_echo $RED "Failed to clone .dotfiles repository."; exit 1; }
 else
     color_echo $GREEN "The '.dotfiles' directory already exists. Skipping clone of repository."
+    echo ""
 fi
 
 # Step 6: Install software from Brewfile ---------------------------------------
-color_echo $BLUE "Installing software from Brewfile..."
 
 # Confirmation prompt for Brewfile installation
 color_echo $YELLOW "Do you want to proceed with installing software from Brewfile? (y/n)"
@@ -254,6 +254,7 @@ read -r brewfile_confirmation
 if [ "$brewfile_confirmation" != "y" ] && [ "$brewfile_confirmation" != "Y" ]; then
     color_echo $RED "Brewfile installation aborted."
 else
+    color_echo $BLUE "Installing software from Brewfile..."
     brew bundle --file "$DOTFILES_DIR/Brewfile" || { color_echo $RED "Failed to install software from Brewfile."; exit 1; }
     color_echo $GREEN "Brewfile installation complete."
 fi
@@ -299,7 +300,7 @@ centered_color_echo $ORANGE "<-------------- Configuration of NVM, NODE, & NPM -
 echo ""
 
 # Check if NVM (Node Version Manager) is installed ----------------------------
-if ! command -v nvm &>/dev/null; then
+if command -v nvm &>/dev/null; then
     # Install NVM if it's not installed
     color_echo $BLUE "Installing Node Version Manager (nvm)..."
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash || { color_echo $RED "Failed to install nvm."; exit 1; }
@@ -325,11 +326,21 @@ echo ""
 # Install Global npm Packages: ------------------------------------------------
 color_echo $BLUE "Installing global npm packages..."
 
-color_echo $BLUE "tree-sitter-cli: "
-npm install -g tree-sitter-cli || { color_echo $RED "Failed to install tree-sitter-cli."; exit 1; }
+# Check and install tree-sitter-cli
+if npm list -g tree-sitter-cli &>/dev/null; then
+    color_echo $BLUE " * tree-sitter-cli: "
+    npm install -g tree-sitter-cli || { color_echo $RED "Failed to install tree-sitter-cli."; exit 1; }
+else
+    color_echo $GREEN " * tree-sitter-cli already installed."
+fi
 
-color_echo $BLUE "live-server: "
-npm install -g live-server || { color_echo $RED "Failed to install live-server."; exit 1; }
+# Check and install live-server
+if npm list -g live-server &>/dev/null; then
+    color_echo $BLUE " * live-server: "
+    npm install -g live-server || { color_echo $RED "Failed to install live-server."; exit 1; }
+else
+    color_echo $GREEN " * live-server already installed."
+fi
 
 # Install JetBrainsMono Nerd Font ---------------------------------------------
 
