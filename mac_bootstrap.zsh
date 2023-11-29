@@ -150,27 +150,26 @@ echo ""
 if ! command -v brew &>/dev/null; then
     color_echo $BLUE "Installing Homebrew..."
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" || { color_echo $RED "Failed to install Homebrew."; exit 1; }
+
+    # Determine the architecture (Intel or Apple Silicon)
+    arch_name="$(uname -m)"
+    if [ "$arch_name" = "x86_64" ]; then
+        # Intel Macs
+        HOMEBREW_BIN="/usr/local/bin/brew"
+    elif [ "$arch_name" = "arm64" ]; then
+        # Apple Silicon Macs
+        HOMEBREW_BIN="/opt/homebrew/bin/brew"
+    else
+        color_echo $RED "Unknown architecture: $arch_name"
+        exit 1
+    fi
+
+    # Set up Homebrew in the shell only after installation
+    echo "eval \"$($HOMEBREW_BIN shellenv)\"" >> $HOME/.zprofile
+    eval "$($HOMEBREW_BIN shellenv)"
 else
     color_echo $GREEN "Homebrew already installed."
 fi
-
-# Determine the architecture (Intel or Apple Silicon)
-arch_name="$(uname -m)"
-
-if [ "$arch_name" = "x86_64" ]; then
-    # Intel Macs
-    HOMEBREW_BIN="/usr/local/bin/brew"
-elif [ "$arch_name" = "arm64" ]; then
-    # Apple Silicon Macs
-    HOMEBREW_BIN="/opt/homebrew/bin/brew"
-else
-    color_echo $RED "Unknown architecture: $arch_name"
-    exit 1
-fi
-
-# Set up Homebrew in the shell
-echo "eval \"$($HOMEBREW_BIN shellenv)\"" >> $HOME/.zprofile
-eval "$($HOMEBREW_BIN shellenv)"
 
 # Step 3: Install Git (if not already installed by Xcode Command Line Tools) ---
 if ! command -v git &>/dev/null; then
@@ -327,7 +326,7 @@ echo ""
 color_echo $BLUE "Installing global npm packages..."
 
 # Check and install tree-sitter-cli
-if npm list -g tree-sitter-cli &>/dev/null; then
+if ! npm list -g tree-sitter-cli &>/dev/null; then
     color_echo $BLUE " * tree-sitter-cli: "
     npm install -g tree-sitter-cli || { color_echo $RED "Failed to install tree-sitter-cli."; exit 1; }
 else
@@ -335,7 +334,7 @@ else
 fi
 
 # Check and install live-server
-if npm list -g live-server &>/dev/null; then
+if ! npm list -g live-server &>/dev/null; then
     color_echo $BLUE " * live-server: "
     npm install -g live-server || { color_echo $RED "Failed to install live-server."; exit 1; }
 else
