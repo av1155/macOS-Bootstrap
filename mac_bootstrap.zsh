@@ -198,6 +198,9 @@ install_app "Ollama" "brew install ollama" "! brew list | grep -q ollama && [ ! 
 # Install Oh My Zsh
 install_app "Oh My Zsh" "sh -c \"\$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\"" "[ ! -d '$HOME/.oh-my-zsh' ]"
 
+# Install Powerlevel10k Theme
+install_app "Powerlevel10k" "git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k" "[ ! -d '$HOME/powerlevel10k' ]"
+
 # Install Java
 install_app "Java" "curl -L https://download.oracle.com/java/21/latest/jdk-21_macos-aarch64_bin.tar.gz | tar xz -C /Users/andreaventi/Library/Java/JavaVirtualMachines" "! java -version 2>&1 | grep -q 'java version'"
 
