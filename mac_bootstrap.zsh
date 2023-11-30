@@ -139,11 +139,14 @@ install_neovim() {
 
             # Extract Neovim
             color_echo $BLUE "Extracting Neovim..."
-            tar xzvf $nvim_tarball || { color_echo $RED "Failed to extract Neovim."; exit 1; }
+            tar xzf $nvim_tarball || { color_echo $RED "Failed to extract Neovim."; exit 1; }
 
             # Move Neovim binary to a directory in PATH (e.g., /usr/local/bin)
             color_echo $BLUE "Installing Neovim..."
-            mv nvim-osx64/bin/nvim /usr/local/bin/ || { color_echo $RED "Failed to install Neovim."; exit 1; }
+            if [ ! -d "/usr/local/bin" ]; then
+                sudo mkdir -p /usr/local/bin
+            fi
+            mv nvim-macos/bin/nvim /usr/local/bin/ || { color_echo $RED "Failed to install Neovim."; exit 1; }
 
             color_echo $GREEN "Neovim installed successfully."
         else

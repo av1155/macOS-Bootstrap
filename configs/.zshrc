@@ -153,7 +153,14 @@ source $ZSH/oh-my-zsh.sh
 #
 
 alias ls='eza'
-alias vim='nvim'
+
+# Alias for Neovim
+if command -v /opt/homebrew/bin/nvim &>/dev/null; then
+    alias vim='nvim'  # If Neovim installed via Homebrew on Apple Silicon
+elif command -v /usr/local/bin/nvim &>/dev/null; then
+    alias vim='nvim'  # If Neovim installed in /usr/local/bin
+fi
+
 # Fuzzy Finder + Nvim Alias:
 alias f="fd --type f --hidden --exclude .git | fzf --preview 'bat --color=always {1}' | xargs nvim"
 
