@@ -40,7 +40,7 @@ elif [ "$arch_name" = "arm64" ]; then
 fi
 
 # Set JAVA_HOME for Java version 21
-export JAVA_HOME="$(/usr/libexec/java_home -v 21)"
+export JAVA_HOME="$(/usr/libexec/java_home)"
 
 # Rest of the Zplug configuration
 source $ZPLUG_HOME/init.zsh
