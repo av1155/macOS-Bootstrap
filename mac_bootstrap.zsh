@@ -201,18 +201,6 @@ install_app "iTerm2" "brew install --cask iterm2" "! brew list --cask | grep -q 
 # Install Docker
 install_app "Docker" "brew install --cask docker" "! brew list --cask | grep -q docker && [ ! -d '/Applications/Docker.app' ]"
 
-# Flag to check if Miniforge3 was not installed
-MINIFORGE_NOT_INSTALLED=$(command -v conda &>/dev/null; echo $?)
-
-# Install Miniforge3
-install_app "Miniforge3" "brew install miniforge" "! command -v conda &>/dev/null"
-
-# If Miniforge3 was not installed and is installed now, initialize conda for zsh
-if [ $MINIFORGE_NOT_INSTALLED -ne 0 ] && command -v conda &>/dev/null; then
-    echo "Initializing conda for zsh..."
-    conda init zsh
-fi
-
 # Install Google Chrome
 install_app "Google Chrome" "brew install --cask google-chrome" "! brew list --cask | grep -q google-chrome && [ ! -d '/Applications/Google Chrome.app' ]"
 
@@ -242,6 +230,18 @@ if [ -d "$HOME/.oh-my-zsh" ]; then
     fi
 else
     color_echo $RED "Oh My Zsh is not installed. Please install Oh My Zsh first."
+fi
+
+# Flag to check if Miniforge3 was not installed
+MINIFORGE_NOT_INSTALLED=$(command -v conda &>/dev/null; echo $?)
+
+# Install Miniforge3
+install_app "Miniforge3" "brew install miniforge" "! command -v conda &>/dev/null"
+
+# If Miniforge3 was not installed and is installed now, initialize conda for zsh
+if [ $MINIFORGE_NOT_INSTALLED -ne 0 ] && command -v conda &>/dev/null; then
+    echo "Initializing conda for zsh..."
+    conda init "$(basename "${SHELL}")"
 fi
 
 # Install Powerlevel10k Theme
