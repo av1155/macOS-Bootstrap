@@ -199,7 +199,7 @@ install_app "iTerm2" "brew install --cask iterm2" "! brew list --cask | grep -q 
 install_app "Docker" "brew install --cask docker" "! brew list --cask | grep -q docker && [ ! -d '/Applications/Docker.app' ]"
 
 # Install Miniforge3
-install_app "Miniforge3" "brew install miniforge" "[ ! -d '$HOME/miniforge3' ]"
+install_app "Miniforge3" "brew install miniforge" "! command -v conda &>/dev/null"
 
 # Install Google Chrome
 install_app "Google Chrome" "brew install --cask google-chrome" "! brew list --cask | grep -q google-chrome && [ ! -d '/Applications/Google Chrome.app' ]"
@@ -219,12 +219,10 @@ install_app "Oh My Zsh" "sh -c \"\$(curl -fsSL https://raw.githubusercontent.com
 # Install Powerlevel10k Theme
 install_app "Powerlevel10k" "git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k" "[ ! -d '$HOME/powerlevel10k' ]"
 
-
 # Install Java
 install_app "Java" \
     "mkdir -p $HOME/Library/Java/JavaVirtualMachines && curl -L https://download.oracle.com/java/21/latest/jdk-21_macos-aarch64_bin.tar.gz | tar xz -C $HOME/Library/Java/JavaVirtualMachines" \
-    "! java -version 2>&1 | grep -q 'java version'"
-
+    "[ ! -d \"$HOME/Library/Java/JavaVirtualMachines\" ]"
 
 # Step 5: Clone .dotfiles repository -------------------------------------------
 
@@ -299,12 +297,17 @@ centered_color_echo $ORANGE "<-------------- Configuration of NVM, NODE, & NPM -
 echo ""
 
 # Check if NVM (Node Version Manager) is installed ----------------------------
-if ! command -v nvm &>/dev/null; then
+if [ ! -d "$HOME/.nvm" ]; then
     # Install NVM if it's not installed
     color_echo $BLUE "Installing Node Version Manager (nvm)..."
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash || { color_echo $RED "Failed to install nvm."; exit 1; }
-    export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+    # Run the following to use it in the same shell session:
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+    # For Zsh completion, you would need a Zsh-specific completion script
+    # [ -s "path/to/zsh-completion-script" ] && . "path/to/zsh-completion-script" # Optional: This loads nvm Zsh completion
+
 else
     color_echo $GREEN "NVM already installed."
 fi
