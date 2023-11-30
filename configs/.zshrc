@@ -119,9 +119,9 @@ zstyle ':omz:update' mode auto      # update automatically without asking
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
     git
-    zsh-syntax-highlighting
     # zsh-autosuggestions
     web-search
+    zsh-syntax-highlighting
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -155,8 +155,8 @@ alias vim='nvim'
 alias f="fd --type f --hidden --exclude .git | fzf --preview 'bat --color=always {1}' | xargs nvim"
 
 # SOURCED SCRIPTS + ALIASES:
-source ~/scripts/JavaProject.zsh
-source ~/scripts/JavaCompiler.zsh
+[ -f ~/scripts/JavaProject.zsh ] && source ~/scripts/JavaProject.zsh
+[ -f ~/scripts/JavaCompiler.zsh ] && source ~/scripts/JavaCompiler.zsh
 
 # Alias for javaproject:
 alias jp="javaproject"

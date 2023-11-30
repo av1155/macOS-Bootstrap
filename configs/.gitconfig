@@ -1,10 +1,11 @@
 [user]
-	email = andrea.venti12@gmail.com
+	email = 117413846+av1155@users.noreply.github.com
 	name = Andrea Venti Fuentes
+
 [core]
-	editor = nvim
-	autocrlf = input
-	excludesfile = ~/.gitignore
+    editor = sh -c 'command -v nvim >/dev/null 2>&1 && echo \"nvim\" || command -v code --wait >/dev/null 2>&1 && echo \"code --wait\" || echo \"vi\"'
+    autocrlf = input
+    excludesfile = ~/.gitignore
 
 [alias]
 	count = !git ls-remote --heads origin | wc -l
