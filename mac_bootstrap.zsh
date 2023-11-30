@@ -345,6 +345,7 @@ else
     color_echo $GREEN "Brewfile installation complete."
 fi
 
+echo ""
 # Install Neovim if Brewfile installation was unsuccessful
 install_neovim
 
