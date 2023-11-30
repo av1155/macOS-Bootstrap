@@ -157,8 +157,8 @@ alias ls='eza'
 # Alias for Neovim
 if command -v /opt/homebrew/bin/nvim &>/dev/null; then
     alias vim='nvim'  # If Neovim installed via Homebrew on Apple Silicon
-elif command -v /usr/local/bin/nvim &>/dev/null; then
-    alias vim='nvim'  # If Neovim installed in /usr/local/bin
+elif [ -f ~/nvim-macos/bin/nvim ]; then
+    alias vim='~/nvim-macos/bin/nvim'  # If Neovim installed in the home directory
 fi
 
 # Fuzzy Finder + Nvim Alias:
