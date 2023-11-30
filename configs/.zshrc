@@ -172,22 +172,43 @@ alias jp="javaproject"
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 # [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$($HOME/miniforge3/bin/conda 'shell.zsh' 'hook' 2> /dev/null)"
+# Determine the architecture of the machine
+ARCH=$(uname -m)
 
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "$HOME/miniforge3/etc/profile.d/conda.sh" ]; then
-        . "$HOME/miniforge3/etc/profile.d/conda.sh"
+# For ARM architecture (e.g., Apple M1/M2 chips)
+if [ "$ARCH" = "arm64" ]; then
+    # ARM-specific Conda initialization (Script 2)
+    __conda_setup="$('/opt/homebrew/Caskroom/miniforge/base/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+    if [ $? -eq 0 ]; then
+        eval "$__conda_setup"
     else
-        export PATH="$HOME/miniforge3/bin:$PATH"
+        if [ -f "/opt/homebrew/Caskroom/miniforge/base/etc/profile.d/conda.sh" ]; then
+            . "/opt/homebrew/Caskroom/miniforge/base/etc/profile.d/conda.sh"
+        else
+            export PATH="/opt/homebrew/Caskroom/miniforge/base/bin:$PATH"
+        fi
     fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
 
+    # For Intel x86_64 architecture
+elif [ "$ARCH" = "x86_64" ]; then
+    # Intel-specific Conda initialization (Script 1)
+    __conda_setup="$('/usr/local/Caskroom/miniforge/base/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+    if [ $? -eq 0 ]; then
+        eval "$__conda_setup"
+    else
+        if [ -f "/usr/local/Caskroom/miniforge/base/etc/profile.d/conda.sh" ]; then
+            . "/usr/local/Caskroom/miniforge/base/etc/profile.d/conda.sh"
+        else
+            export PATH="/usr/local/Caskroom/miniforge/base/bin:$PATH"
+        fi
+    fi
+
+    # If architecture is neither arm64 nor x86_64
+else
+    echo "Unsupported architecture: $ARCH"
+fi
+
+unset __conda_setup
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm

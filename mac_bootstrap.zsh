@@ -232,17 +232,17 @@ else
     color_echo $RED "Oh My Zsh is not installed. Please install Oh My Zsh first."
 fi
 
-# Flag to check if Miniforge3 was not installed
-MINIFORGE_NOT_INSTALLED=$(command -v conda &>/dev/null; echo $?)
+# # Flag to check if Miniforge3 was not installed
+# MINIFORGE_NOT_INSTALLED=$(command -v conda &>/dev/null; echo $?)
 
 # Install Miniforge3
 install_app "Miniforge3" "brew install miniforge" "! command -v conda &>/dev/null"
 
-# If Miniforge3 was not installed and is installed now, initialize conda for zsh
-if [ $MINIFORGE_NOT_INSTALLED -ne 0 ] && command -v conda &>/dev/null; then
-    echo "Initializing conda for zsh..."
-    conda init "$(basename "${SHELL}")"
-fi
+# # If Miniforge3 was not installed and is installed now, initialize conda for zsh
+# if [ $MINIFORGE_NOT_INSTALLED -ne 0 ] && command -v conda &>/dev/null; then
+#     echo "Initializing conda for zsh..."
+#     conda init "$(basename "${SHELL}")"
+# fi
 
 # Install Powerlevel10k Theme
 install_app "Powerlevel10k" "git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k" "[ ! -d '$HOME/powerlevel10k' ]"
