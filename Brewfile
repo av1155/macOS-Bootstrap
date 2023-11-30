@@ -62,6 +62,8 @@ cask "docker"
 cask "maccy"
 # Utility to extend trackpad functionality
 cask "middleclick"
+# Minimal installer for conda specific to conda-forge
+cask "miniforge"
 # System monitor for the menu bar
 cask "stats"
 vscode "adpyke.codesnap"

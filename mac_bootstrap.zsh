@@ -113,6 +113,47 @@ install_app() {
     fi
 }
 
+# Function to install Neovim on macOS
+install_neovim() {
+    # URL for Neovim pre-built binary for macOS
+    local nvim_url="https://github.com/neovim/neovim/releases/download/v0.9.4/nvim-macos.tar.gz"
+    local nvim_tarball="nvim-macos.tar.gz"
+
+    # Check if Neovim is installed
+    if ! command -v nvim &>/dev/null; then
+        color_echo $YELLOW "Do you want to install Neovim? (y/n)"
+        echo -n "Enter choice: > "
+        read -r choice
+        if [ "$choice" = "y" ]; then
+            # Install dependencies
+            color_echo $BLUE "Installing dependencies for Neovim..."
+            brew install gettext || { color_echo $RED "Failed to install dependencies for Neovim."; exit 1; }
+
+            # Download Neovim
+            color_echo $BLUE "Downloading Neovim..."
+            curl -LO $nvim_url || { color_echo $RED "Failed to download Neovim."; exit 1; }
+
+            # Remove "unknown developer" warning
+            color_echo $BLUE "Removing 'unknown developer' warning from Neovim tarball..."
+            xattr -c $nvim_tarball
+
+            # Extract Neovim
+            color_echo $BLUE "Extracting Neovim..."
+            tar xzvf $nvim_tarball || { color_echo $RED "Failed to extract Neovim."; exit 1; }
+
+            # Move Neovim binary to a directory in PATH (e.g., /usr/local/bin)
+            color_echo $BLUE "Installing Neovim..."
+            mv nvim-osx64/bin/nvim /usr/local/bin/ || { color_echo $RED "Failed to install Neovim."; exit 1; }
+
+            color_echo $GREEN "Neovim installed successfully."
+        else
+            color_echo $BLUE "Skipping Neovim installation."
+        fi
+    else
+        color_echo $GREEN "Neovim already installed."
+    fi
+}
+
 # END OF FUNCTIONS ------------------------------------------------------------
 
 # Step 1: Install Xcode Command Line Tools -------------------------------------
@@ -296,6 +337,9 @@ else
     brew bundle --file "$DOTFILES_DIR/Brewfile" || { color_echo $RED "Failed to install software from Brewfile."; exit 1; }
     color_echo $GREEN "Brewfile installation complete."
 fi
+
+# Install Neovim if Brewfile installation was unsuccessful
+install_neovim
 
 # Validate TMUX_CONFIG_DIR ----------------------------------------------------
 
