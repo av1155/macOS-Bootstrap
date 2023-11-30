@@ -201,8 +201,17 @@ install_app "iTerm2" "brew install --cask iterm2" "! brew list --cask | grep -q 
 # Install Docker
 install_app "Docker" "brew install --cask docker" "! brew list --cask | grep -q docker && [ ! -d '/Applications/Docker.app' ]"
 
+# Flag to check if Miniforge3 was not installed
+MINIFORGE_NOT_INSTALLED=$(command -v conda &>/dev/null; echo $?)
+
 # Install Miniforge3
 install_app "Miniforge3" "brew install miniforge" "! command -v conda &>/dev/null"
+
+# If Miniforge3 was not installed and is installed now, initialize conda for zsh
+if [ $MINIFORGE_NOT_INSTALLED -ne 0 ] && command -v conda &>/dev/null; then
+    echo "Initializing conda for zsh..."
+    conda init zsh
+fi
 
 # Install Google Chrome
 install_app "Google Chrome" "brew install --cask google-chrome" "! brew list --cask | grep -q google-chrome && [ ! -d '/Applications/Google Chrome.app' ]"
@@ -216,8 +225,24 @@ install_app "JetBrains Toolbox" "brew install --cask jetbrains-toolbox" "! brew 
 # Install Ollama
 install_app "Ollama" "brew install ollama" "! brew list | grep -q ollama && [ ! -d '/Applications/Ollama.app' ]"
 
+# After Oh My Zsh installation, insert a reminder to run the script again
+echo "After Oh My Zsh installation, re-run this script to complete the setup."
+
 # Install Oh My Zsh
 install_app "Oh My Zsh" "sh -c \"\$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\"" "[ ! -d '$HOME/.oh-my-zsh' ]"
+
+# Check if Oh My Zsh is installed before attempting to install zsh-syntax-highlighting
+if [ -d "$HOME/.oh-my-zsh" ]; then
+    # Install zsh-syntax-highlighting plugin
+    if [ ! -d "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting" ]; then
+        color_echo $BLUE "Installing zsh-syntax-highlighting plugin..."
+        git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting" || { color_echo $RED "Failed to clone zsh-syntax-highlighting."; exit 1; }
+    else
+        color_echo $GREEN "zsh-syntax-highlighting plugin already installed."
+    fi
+else
+    color_echo $RED "Oh My Zsh is not installed. Please install Oh My Zsh first."
+fi
 
 # Install Powerlevel10k Theme
 install_app "Powerlevel10k" "git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k" "[ ! -d '$HOME/powerlevel10k' ]"
