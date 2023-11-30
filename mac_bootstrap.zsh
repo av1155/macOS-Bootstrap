@@ -192,6 +192,9 @@ echo ""
 # Example:
 # install_app "Visual Studio Code" "brew install --cask visual-studio-code" "! brew list --cask | grep -q visual-studio-code && [ ! -d '/Applications/Visual Studio Code.app' ]"
 
+# Install Zplug
+install_app "Zplug" "brew install zplug" "! command -v zplug &>/dev/null"
+
 # Install iTerm2
 install_app "iTerm2" "brew install --cask iterm2" "! brew list --cask | grep -q iterm2 && [ ! -d '/Applications/iTerm.app' ]"
 
@@ -219,10 +222,23 @@ install_app "Oh My Zsh" "sh -c \"\$(curl -fsSL https://raw.githubusercontent.com
 # Install Powerlevel10k Theme
 install_app "Powerlevel10k" "git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k" "[ ! -d '$HOME/powerlevel10k' ]"
 
+# Determine the architecture of the macOS system
+ARCH="$(uname -m)"
+if [ "$ARCH" = "x86_64" ]; then
+    # Intel architecture (x86_64)
+    JDK_URL="https://download.oracle.com/java/21/latest/jdk-21_macos-x64_bin.tar.gz"
+elif [ "$ARCH" = "arm64" ]; then
+    # ARM architecture (Apple Silicon)
+    JDK_URL="https://download.oracle.com/java/21/latest/jdk-21_macos-aarch64_bin.tar.gz"
+else
+    echo "Unsupported architecture: $ARCH"
+    exit 1
+fi
+
 # Install Java
 install_app "Java" \
-    "mkdir -p $HOME/Library/Java/JavaVirtualMachines && curl -L https://download.oracle.com/java/21/latest/jdk-21_macos-aarch64_bin.tar.gz | tar xz -C $HOME/Library/Java/JavaVirtualMachines" \
-    "[ ! -d \"$HOME/Library/Java/JavaVirtualMachines\" ]"
+    "mkdir -p $HOME/Library/Java/JavaVirtualMachines && curl -L $JDK_URL | tar xz -C $HOME/Library/Java/JavaVirtualMachines" \
+    "[ ! -d \"$HOME/Library/Java/JavaVirtualMachines/jdk-21.jdk\" ]"
 
 # Step 5: Clone .dotfiles repository -------------------------------------------
 

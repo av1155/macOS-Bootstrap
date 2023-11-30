@@ -39,6 +39,9 @@ elif [ "$arch_name" = "arm64" ]; then
     export ZPLUG_HOME="/opt/homebrew/opt/zplug"
 fi
 
+# Set JAVA_HOME for Java version 21
+export JAVA_HOME="$(/usr/libexec/java_home -v 21)"
+
 # Rest of the Zplug configuration
 source $ZPLUG_HOME/init.zsh
 zplug "mafredri/zsh-async", from:github
