@@ -193,7 +193,7 @@ echo ""
 # install_app "Visual Studio Code" "brew install --cask visual-studio-code" "! brew list --cask | grep -q visual-studio-code && [ ! -d '/Applications/Visual Studio Code.app' ]"
 
 # Install Zplug
-install_app "Zplug" "brew install zplug" "! command -v zplug &>/dev/null"
+install_app "Zplug" "brew install zplug" "! brew list zplug &>/dev/null"
 
 # Install iTerm2
 install_app "iTerm2" "brew install --cask iterm2" "! brew list --cask | grep -q iterm2 && [ ! -d '/Applications/iTerm.app' ]"
@@ -238,7 +238,7 @@ fi
 # Install Java
 install_app "Java" \
     "mkdir -p $HOME/Library/Java/JavaVirtualMachines && curl -L $JDK_URL | tar xz -C $HOME/Library/Java/JavaVirtualMachines" \
-    "[ ! -d \"$HOME/Library/Java/JavaVirtualMachines/jdk-21.jdk\" ]"
+    "[ ! -d \"$HOME/Library/Java/JavaVirtualMachines/jdk-21.0.1.jdk\" ]"
 
 # Step 5: Clone .dotfiles repository -------------------------------------------
 
