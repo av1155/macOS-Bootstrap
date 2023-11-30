@@ -148,6 +148,10 @@ install_neovim() {
             fi
             mv nvim-macos/bin/nvim /usr/local/bin/ || { color_echo $RED "Failed to install Neovim."; exit 1; }
 
+            # Remove the tarball and extracted directory
+            rm -f $nvim_tarball
+            rm -rf nvim-macos
+
             color_echo $GREEN "Neovim installed successfully."
         else
             color_echo $BLUE "Skipping Neovim installation."
