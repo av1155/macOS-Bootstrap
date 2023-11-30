@@ -175,9 +175,11 @@ alias jp="javaproject"
 # Determine the architecture of the machine
 ARCH=$(uname -m)
 
+# CONDA INITIALIZATION >>>
+
 # For ARM architecture (e.g., Apple M1/M2 chips)
 if [ "$ARCH" = "arm64" ]; then
-    # ARM-specific Conda initialization (Script 2)
+    # ARM-specific Conda initialization
     __conda_setup="$('/opt/homebrew/Caskroom/miniforge/base/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
     if [ $? -eq 0 ]; then
         eval "$__conda_setup"
@@ -191,7 +193,7 @@ if [ "$ARCH" = "arm64" ]; then
 
     # For Intel x86_64 architecture
 elif [ "$ARCH" = "x86_64" ]; then
-    # Intel-specific Conda initialization (Script 1)
+    # Intel-specific Conda initialization
     __conda_setup="$('/usr/local/Caskroom/miniforge/base/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
     if [ $? -eq 0 ]; then
         eval "$__conda_setup"
@@ -209,6 +211,8 @@ else
 fi
 
 unset __conda_setup
+
+# <<< END CONDA INITIALIZATION
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
