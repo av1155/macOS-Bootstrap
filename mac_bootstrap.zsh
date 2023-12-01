@@ -120,7 +120,7 @@ install_neovim() {
     local nvim_tarball="nvim-macos.tar.gz"
 
     # Check if Neovim is installed
-    if ! command -v nvim &>/dev/null || [ -d "$HOME/nvim-macos" ]; then
+    if ! command -v nvim &>/dev/null || [ ! -d "$HOME/nvim-macos" ]; then
         color_echo $YELLOW "Do you want to install Neovim? (y/n)"
         echo -n "Enter choice: > "
         read -r choice
