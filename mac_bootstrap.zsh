@@ -89,7 +89,7 @@ create_symlink() {
     ln -sf "$source_file" "$target_file" || { color_echo $RED "Failed to create symlink for $(basename "$source_file")"; exit 1; }
 
     # Display this message only when a symlink is created.
-    color_echo $GREEN "Created symlink for $(basename "$source_file") to $(basename "$target_file")."
+    color_echo $GREEN "Created symlink for $(basename "$source_file") to $(dirname "$target_file")."
 }
 
 # Function to prompt and install an app
@@ -307,7 +307,32 @@ install_app "Java" \
     "mkdir -p $HOME/Library/Java/JavaVirtualMachines && curl -L $JDK_URL | tar xz -C $HOME/Library/Java/JavaVirtualMachines" \
     "[ ! -d \"$HOME/Library/Java/JavaVirtualMachines/jdk-21.0.1.jdk\" ]"
 
-# Step 5: Clone .dotfiles repository -------------------------------------------
+# Step 5: Clone scripts repository -------------------------------------------
+
+echo ""
+
+centered_color_echo $ORANGE "<-------------- Scripts Repository Configuration -------------->"
+
+echo ""
+
+# Check if the "scripts" repository already exists in the specified directory
+SCRIPTS_REPO_DIRECTORY="$HOME/scripts"
+if [ -d "$SCRIPTS_REPO_DIRECTORY" ]; then
+    color_echo $GREEN "The scripts repository already exists in '$SCRIPTS_REPO_DIRECTORY'."
+else
+    # Ask the user if they want to clone the "scripts" repository
+    color_echo $YELLOW "The scripts repository does not exist in '$SCRIPTS_REPO_DIRECTORY'."
+    color_echo $YELLOW "Do you want to clone the scripts repository? (y/n)"
+    echo -n "Enter choice: > "
+    read -r scripts_clone_choice
+    if [ "$scripts_clone_choice" = "y" ] || [ "$scripts_clone_choice" = "Y" ]; then
+        git_clone_fallback "git@github.com:yourusername/your-scripts-repo.git" "https://github.com/yourusername/your-scripts-repo.git" "$SCRIPTS_REPO_DIRECTORY"
+    else
+        color_echo $GREEN "Skipping scripts repository cloning."
+    fi
+fi
+
+# Step 6: Clone .dotfiles repository -------------------------------------------
 
 echo ""
 
@@ -325,7 +350,7 @@ else
     echo ""
 fi
 
-# Step 6: Install software from Brewfile ---------------------------------------
+# Step 7: Install software from Brewfile ---------------------------------------
 
 # Confirmation prompt for Brewfile installation
 color_echo $YELLOW "Do you want to proceed with installing software from Brewfile? (y/n)"
@@ -359,7 +384,7 @@ else
     color_echo $GREEN "The tmux config directory already exists. Skipping configuration."
 fi
 
-# Step 7: Create symlinks (Idempotent) ----------------------------------------
+# Step 8: Create symlinks (Idempotent) ----------------------------------------
 
 echo ""
 
@@ -378,7 +403,7 @@ create_symlink "$DOTFILES_DIR/configs/settings.json" "$HOME/Library/Application 
 create_symlink "$DOTFILES_DIR/configs/.gitignore_global" "$HOME/.gitignore_global"
 create_symlink "$DOTFILES_DIR/configs/.ideavimrc" "$HOME/.ideavimrc"
 
-# -----------------------------------------------------------------------------
+# Step 9: Install NVM, Node.js, & npm -----------------------------------------
 
 echo ""
 
@@ -434,7 +459,7 @@ else
     color_echo $GREEN " * live-server already installed."
 fi
 
-# Install JetBrainsMono Nerd Font ---------------------------------------------
+# Step 10: Install JetBrainsMono Nerd Font ------------------------------------
 
 echo ""
 
@@ -461,7 +486,7 @@ else
     color_echo $GREEN "JetBrainsMono Nerd Font installation complete."
 fi
 
-# AstroNvim Installation ------------------------------------------------------
+# Step 11: Configure Neovim with AstroNvim -----------------------------------
 
 echo ""
 
@@ -526,7 +551,7 @@ else
     git_clone_fallback "git@github.com:av1155/astronvim_config.git" "https://github.com/av1155/astronvim_config.git" "$HOME/.config/nvim/lua/user"
 fi
 
-# -----------------------------------------------------------------------------
+# Step 12: Create TODO List of Apps to Download -------------------------------
 
 echo ""
 
