@@ -152,7 +152,9 @@ source $ZSH/oh-my-zsh.sh
 # For a full list of active aliases, run `alias`.
 #
 
-alias ls='eza'
+if command -v eza &>/dev/null; then
+    alias ls='eza'
+fi
 
 # Alias for Neovim
 if command -v /opt/homebrew/bin/nvim &>/dev/null; then
