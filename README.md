@@ -91,7 +91,9 @@ administrative access on your macOS device.
 2. Move the downloaded script to your home directory (~), you can use the mv
    command for this:
 
-   `mv /path/to/downloaded/mac_bootstrap.zsh ~/mac_bootstrap.zsh`
+   ```shell
+   mv ~/Downloads/mac_bootstrap.zsh ~/mac_bootstrap.zsh
+   ```
 
 3. Make the script executable:
 
@@ -99,7 +101,7 @@ administrative access on your macOS device.
 
 4. Execute the script:
 
-`./mac_bootstrap.zsh`
+   `./mac_bootstrap.zsh`
 
 5. Follow any on-screen instructions to complete setup.
 
