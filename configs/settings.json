@@ -1,0 +1,84 @@
+{
+  // General Editor Settings
+  "workbench.colorTheme": "Noctis Azureus",
+  "editor.wordWrap": "on",
+  "editor.bracketPairColorization.enabled": true,
+  "editor.fontSize": 14,
+  "editor.lineHeight": 22,
+  "editor.fontLigatures": true,
+  "editor.formatOnSave": true,
+  "editor.accessibilitySupport": "off",
+  "editor.fontFamily": "JetBrains Mono Nerd Font",
+  "editor.fontWeight": "normal",
+  "workbench.iconTheme": "material-icon-theme",
+  "workbench.startupEditor": "none",
+  "workbench.editor.empty.hint": "hidden",
+  "window.zoomLevel": 1,
+
+  // Language Specific Settings
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[markdown]": {
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.formatOnType": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": true
+    }
+  },
+  "[c]": {
+    "editor.defaultFormatter": "ms-vscode.cpptools"
+  },
+
+  // Terminal Settings
+  "terminal.integrated.fontFamily": "MesloLGS NF",
+  "terminal.integrated.fontSize": 14,
+  "terminal.integrated.env.osx": {},
+
+  // Security and Trust Settings
+  "security.workspace.trust.untrustedFiles": "open",
+
+  // Git and Version Control
+  "git.autofetch": true,
+  "git.enableSmartCommit": true,
+  "git.confirmSync": false,
+  "git.ignoreRebaseWarning": true,
+
+  // Code Runner Extension
+  "code-runner.executorMap": {
+    "javascript": "node",
+    "php": "C:\\php\\php.exe",
+    "python": "python",
+    "perl": "perl",
+    "ruby": "C:\\Ruby23-x64\\bin\\ruby.exe",
+    "go": "go run",
+    "html": "\"C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe\"",
+    "java": "cd $dir && javac $fileName && java $fileNameWithoutExt",
+    "c": "cd $dir && gcc $fileName -o $fileNameWithoutExt.o && $dir$fileNameWithoutExt.o"
+  },
+  "code-runner.runInTerminal": true,
+  "code-runner.showExecutionMessage": false,
+  "code-runner.clearPreviousOutput": true,
+  "code-runner.enableAppInsights": false,
+
+  // Python and Other Language Tools
+  "python.defaultInterpreterPath": "/opt/homebrew/bin/python3",
+  "isort.args": ["--profile", "black"],
+  "cSpell.userWords": ["marbella", "Venti"],
+
+  // Miscellaneous
+  "github.copilot.enable": {
+    "*": false,
+    "plaintext": true,
+    "markdown": false,
+    "scminput": false,
+    "yaml": false
+  },
+  "console-ninja.featureSet": "Community",
+  "redhat.telemetry.enabled": false
+}

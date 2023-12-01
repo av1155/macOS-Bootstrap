@@ -374,6 +374,7 @@ color_echo $BLUE "Creating symlinks..."
 create_symlink "$DOTFILES_DIR/configs/.zshrc" "$HOME/.zshrc"
 create_symlink "$DOTFILES_DIR/configs/.gitconfig" "$HOME/.gitconfig"
 create_symlink "$DOTFILES_DIR/configs/tmux.conf" "$HOME/.config/tmux/tmux.conf"
+create_symlink "$DOTFILES_DIR/configs/settings.json" "$HOME/Library/Application Support/Code/User/settings.json"
 
 # -----------------------------------------------------------------------------
 
@@ -466,6 +467,7 @@ centered_color_echo $ORANGE "<-------------- AstroNvim Configuration -----------
 
 echo ""
 
+color_echo $BLUE "Installing AstroNvim..."
 # Check if ~/.config/nvim exists
 if [ -d "$HOME/.config/nvim" ]; then
     color_echo $YELLOW "AstroNvim configuration already exists. Do you want to proceed with the AstroNvim installation? (y/n)"
@@ -497,6 +499,7 @@ fi
 
 echo ""
 
+color_echo $BLUE "Installing AstroNvim user configuration..."
 # Check if ~/.config/nvim/lua/user exists
 if [ -d "$HOME/.config/nvim/lua/user" ]; then
     color_echo $YELLOW "AstroNvim user configuration directory already exists. Do you want to replace it with a new configuration? (y/n)"
