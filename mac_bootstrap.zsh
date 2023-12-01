@@ -402,6 +402,7 @@ create_symlink "$DOTFILES_DIR/configs/tmux.conf" "$HOME/.config/tmux/tmux.conf"
 create_symlink "$DOTFILES_DIR/configs/settings.json" "$HOME/Library/Application Support/Code/User/settings.json"
 create_symlink "$DOTFILES_DIR/configs/.gitignore_global" "$HOME/.gitignore_global"
 create_symlink "$DOTFILES_DIR/configs/.ideavimrc" "$HOME/.ideavimrc"
+create_symlink "$DOTFILES_DIR/configs/ssh/config" "$HOME/.ssh/config"
 
 # Step 9: Install NVM, Node.js, & npm -----------------------------------------
 

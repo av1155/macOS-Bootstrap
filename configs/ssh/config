@@ -1,0 +1,11 @@
+# Default settings for all hosts
+Host *
+    AddKeysToAgent yes
+    UseKeychain yes
+    IdentityFile ~/.ssh/id_ed25519
+
+# Host specific settings
+Host github.com
+    User git
+    IdentityFile ~/.ssh/id_ed25519
+
