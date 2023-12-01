@@ -16,12 +16,12 @@ Set the file permissions for the private key to ensure security:
 chmod 600 ~/.ssh/id_ed25519
 ```
 
-## Step 4: Run Setup Scripts from .dotfiles
+## Step 3: Run Setup Scripts from .dotfiles
 
 Execute `mac_bootstrap.zsh` from the .dotfiles repository to configure your
 environment and create a symbolic link for the SSH config file.
 
-## Step 6: Start SSH Agent and Add Your SSH Key
+## Step 4: Start SSH Agent and Add Your SSH Key
 
 Start the SSH agent and add your SSH key:
 
@@ -36,7 +36,7 @@ You will be prompted to enter the passphrase for your SSH key.
 ssh-add -l
 ```
 
-## Step 7: Test SSH Connection
+## Step 5: Test SSH Connection
 
 Test your SSH setup, for example, with GitHub:
 
@@ -46,12 +46,12 @@ ssh -T git@github.com
 
 You should receive a message confirming successful authentication.
 
-## Step 8: Update SSH Key in Services
+## Step 6: Update SSH Key in Services
 
 If necessary, update your SSH public key (id_ed25519.pub) in services like
 GitHub or GitLab.
 
-## Step 9: Final Testing
+## Step 7: Final Testing
 
 Perform operations that require SSH (e.g., Git operations) to ensure everything
 is configured correctly.
