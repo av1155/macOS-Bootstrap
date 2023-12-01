@@ -1,3 +1,7 @@
+# <---------------------- ZSHRC FILE --------------------->
+
+# <-------------------- POWERLEVEL10K -------------------->
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -5,12 +9,21 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
     source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# FZF PLUGIN:
+# <------------------ JAVA_HOME CONFIGURATION ------------------>
 
-fcd() {
-    local dir
-    dir=$(find * -type d 2>/dev/null | fzf +m) && cd "$dir" || return
-}
+# Set JAVA_HOME for Java
+export JAVA_HOME="$(/usr/libexec/java_home)"
+
+# <-------------------- CUSTOM SCRIPTS -------------------->
+
+if command -v find &>/dev/null && command -v fzf &>/dev/null; then
+    fcd() {
+        local dir
+        dir=$(find * -type d 2>/dev/null | fzf +m) && cd "$dir" || return
+    }
+fi
+
+# <-------------------- PATH AND ZPLUG -------------------->
 
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
@@ -39,26 +52,31 @@ elif [ "$arch_name" = "arm64" ]; then
     export ZPLUG_HOME="/opt/homebrew/opt/zplug"
 fi
 
-# Set JAVA_HOME for Java version 21
-export JAVA_HOME="$(/usr/libexec/java_home)"
+# Check if Zplug is installed
+if [ -d "$ZPLUG_HOME" ]; then
 
-# Rest of the Zplug configuration
-source $ZPLUG_HOME/init.zsh
-zplug "mafredri/zsh-async", from:github
-# Pure Prompt Configuration
-zplug "sindresorhus/pure", use:pure.zsh, from:github, as:theme
-# zplug "zdharma/fast-syntax-highlighting", as:plugin, defer:2
-zplug "zsh-users/zsh-autosuggestions", as:plugin, defer:2
-zplug load
-if ! zplug check --verbose; then
-    printf "Install? [y/N]: "
-    if read -q; then
-        echo; zplug install
+    # Rest of the Zplug configuration
+    source $ZPLUG_HOME/init.zsh
+    zplug "mafredri/zsh-async", from:github
+    # Pure Prompt Configuration
+    zplug "sindresorhus/pure", use:pure.zsh, from:github, as:theme
+    # zplug "zdharma/fast-syntax-highlighting", as:plugin, defer:2
+    zplug "zsh-users/zsh-autosuggestions", as:plugin, defer:2
+    zplug load
+
+    if ! zplug check --verbose; then
+        printf "Install? [y/N]: "
+        if read -q; then
+            echo; zplug install
+        fi
     fi
+
+    # Pure prompt Git configurations
+    zstyle :prompt:pure:git:stash show yes
+
 fi
 
-# Pure prompt Git configurations
-zstyle :prompt:pure:git:stash show yes
+# <-------------------- ZSH CONFIGURATION -------------------->
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -120,6 +138,7 @@ zstyle ':omz:update' mode auto      # update automatically without asking
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
+
 plugins=(
     git
     # zsh-autosuggestions
@@ -146,32 +165,12 @@ source $ZSH/oh-my-zsh.sh
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
+# <-------------------- CUSTOM ALIASES -------------------->
+
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
 # For a full list of active aliases, run `alias`.
-#
-
-if command -v eza &>/dev/null; then
-    alias ls='eza'
-fi
-
-# Alias for Neovim
-if command -v /opt/homebrew/bin/nvim &>/dev/null; then
-    alias vim='nvim'  # If Neovim installed via Homebrew on Apple Silicon
-elif [ -f ~/nvim-macos/bin/nvim ]; then
-    alias vim='~/nvim-macos/bin/nvim'  # If Neovim installed in the home directory
-fi
-
-# Fuzzy Finder + Nvim Alias:
-alias f="fd --type f --hidden --exclude .git | fzf --preview 'bat --color=always {1}' | xargs nvim"
-
-# SOURCED SCRIPTS + ALIASES:
-[ -f ~/scripts/JavaProject.zsh ] && source ~/scripts/JavaProject.zsh
-[ -f ~/scripts/JavaCompiler.zsh ] && source ~/scripts/JavaCompiler.zsh
-
-# Alias for javaproject:
-alias jp="javaproject"
 
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
@@ -180,6 +179,29 @@ alias jp="javaproject"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 # [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# Alias for improved ls:
+if command -v eza &>/dev/null; then
+    alias ls='eza'
+fi
+
+# Alias for Neovim:
+if command -v /opt/homebrew/bin/nvim &>/dev/null; then
+    alias vim='nvim'  # If Neovim installed via Homebrew on Apple Silicon
+elif [ -f ~/nvim-macos/bin/nvim ]; then
+    alias vim='~/nvim-macos/bin/nvim'  # If Neovim installed in the home directory
+fi
+
+# Fuzzy Finder + Nvim Custom Alias:
+if command -v fd &>/dev/null && command -v fzf &>/dev/null && command -v bat &>/dev/null && command -v nvim &>/dev/null; then
+    alias f="fd --type f --hidden --exclude .git | fzf --preview 'bat --color=always {1}' | xargs nvim"
+fi
+
+# SOURCED SCRIPTS + ALIASES:
+[ -f ~/scripts/JavaProject.zsh ] && { source ~/scripts/JavaProject.zsh; alias jp="javaproject"; }
+[ -f ~/scripts/JavaCompiler.zsh ] && source ~/scripts/JavaCompiler.zsh
+
+# <-------------------- CONDA INITIALIZATION -------------------->
 
 # Determine the architecture of the machine
 ARCH=$(uname -m)
@@ -223,13 +245,20 @@ unset __conda_setup
 
 # <<< END CONDA INITIALIZATION
 
+# <-------------------- NVM INITIALIZATION -------------------->
+
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
+# <-------------------- FZF INITIALIZATION -------------------->
 
 # FZF: Fuzzy Finder:
 [[ -f $HOME/.fzf.zsh ]] && source $HOME/.fzf.zsh
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
+# <-------------------- ITERM2 SHELL INTEGRATION ------------------->
+
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
+# <-------------------- END OF ZSHRC FILE -------------------->
