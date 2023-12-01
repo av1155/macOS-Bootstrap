@@ -375,6 +375,8 @@ create_symlink "$DOTFILES_DIR/configs/.zshrc" "$HOME/.zshrc"
 create_symlink "$DOTFILES_DIR/configs/.gitconfig" "$HOME/.gitconfig"
 create_symlink "$DOTFILES_DIR/configs/tmux.conf" "$HOME/.config/tmux/tmux.conf"
 create_symlink "$DOTFILES_DIR/configs/settings.json" "$HOME/Library/Application Support/Code/User/settings.json"
+create_symlink "$DOTFILES_DIR/configs/.gitignore_global" "$HOME/.gitignore_global"
+create_symlink "$DOTFILES_DIR/configs/.ideavimrc" "$HOME/.ideavimrc"
 
 # -----------------------------------------------------------------------------
 
