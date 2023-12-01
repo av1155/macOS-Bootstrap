@@ -1,63 +1,77 @@
-let mapleader=" "
+" === Plugins ===
+let mapleader=" "    
+" Set the leader key to the spacebar
 
-""" Plugins  --------------------------------
-set surround
-set multiple-cursors
-set commentary
-set argtextobj
-set easymotion
-set textobj-entire
-set ReplaceWithRegister
-set exchange
+""" Plugin settings --------------------------------
+set surround         
+" Enable the 'surround' plugin for handling surrounding characters
+set multiple-cursors 
+" Enable the 'multiple-cursors' plugin for editing multiple selections
+set commentary       
+" Enable the 'commentary' plugin for commenting/uncommenting lines
+set argtextobj       
+" Enable the 'argtextobj' plugin for defining text objects for function arguments
+set easymotion       
+" Enable the 'easymotion' plugin for simplified navigation
+set textobj-entire   
+" Enable the 'textobj-entire' plugin for defining a text object for the entire buffer
+set ReplaceWithRegister 
+" Enable the 'ReplaceWithRegister' plugin for replacing text with register content
+set exchange         
+" Enable the 'exchange' plugin for swapping text objects
 " Trying the new syntax
-Plug 'machakann/vim-highlightedyank'
+Plug 'machakann/vim-highlightedyank'  
+" Add the 'vim-highlightedyank' plugin using Vim-Plug
 
-""" Plugin settings -------------------------
-let g:argtextobj_pairs="[:],(:),<:>"
+""" Common settings --------------------------------
+set showmode          " Display the current mode in the status line
+set so=5              " Set the 'scrolloff' option to keep lines visible above and below the cursor
+set incsearch         " Enable incremental search
+set nu                " Display line numbers in the left margin
 
-" <C-n> seems to me as a better solution than <M-n>,
-" but we should finally support vim-visual-multi because vim-multiple-cursors is deprecated now
-map <C-n> <Plug>NextWholeOccurrence
+""" Idea specific settings ---------------------------
+set ideajoin          " Configure IdeaVim-specific setting for joining lines
+set ideastatusicon=gray  " Set the status icon color in IntelliJ IDEA to gray
 
-""" Common settings -------------------------
-set showmode
-set so=5
-set incsearch
-set nu
+""" Mappings -----------------------------------------
+" === Easymotion and Navigation ===
+map <leader>f <Plug>(easymotion-s)  
+" Map <leader>f to easymotion-s for simplified text navigation
+map <leader>e <Plug>(easymotion-f)  
+" Map <leader>e to easymotion-f for text movement
 
-""" Idea specific settings ------------------
-set ideajoin
-set ideastatusicon=gray
+" === Debugging ===
+map <leader>d <Action>(Debug)        
+" Map <leader>d to the Debug action
+map <leader>r <Action>(RenameElement) 
+" Map <leader>r to the RenameElement action
+map <leader>c <Action>(Stop)         
+" Map <leader>c to the Stop action
+map <leader>z <Action>(ToggleDistractionFreeMode)  
+" Map <leader>z to ToggleDistractionFreeMode action
 
-""" My Mappings -----------------------------
-map <leader>f <Plug>(easymotion-s)
-map <leader>e <Plug>(easymotion-f)
+" === Project and VCS ===
+map <leader>s <Action>(SelectInProjectView)  
+" Map <leader>s to SelectInProjectView action
+map <leader>a <Action>(Annotate)             
+" Map <leader>a to Annotate action
+map <leader>h <Action>(Vcs.ShowTabbedFileHistory)  
+" Map <leader>h to Vcs.ShowTabbedFileHistory action
+map <S-Space> <Action>(GotoNextError)         
+" Map <S-Space> to GotoNextError action
 
-map <leader>d <Action>(Debug)
-map <leader>r <Action>(RenameElement)
-map <leader>c <Action>(Stop)
-map <leader>z <Action>(ToggleDistractionFreeMode)
+" === Code Formatting ===
+map <leader>l V<Action>(ReformatCode)     
+" Map <leader>l to ReformatCode action
 
-map <leader>s <Action>(SelectInProjectView)
-map <leader>a <Action>(Annotate)
-map <leader>h <Action>(Vcs.ShowTabbedFileHistory)
-map <S-Space> <Action>(GotoNextError)
-
-" Reformat the current line only
-map <leader>l V<Action>(ReformatCode)
-
-map <leader>b <Action>(ToggleLineBreakpoint)
-map <leader>o <Action>(FileStructurePopup)
-
-map <leader>J Ji <ESC>
-
-" Just makes me nervous
-map H h
-
-" Toggle case and start typing. E.g. `<leader>iget`: `property` -> `getProperty`
-map <leader>i ~hi
-" Remove selection and toggle case. E.g. `v2l<leader>u`: `getProperty` -> `property`
-vmap <leader>u d~h
-
-" I think it's a better solution
-map U <C-R>
+" === Code Manipulation ===
+map <leader>J Ji <ESC>   
+" Map <leader>J to Ji and exit insert mode
+map H h                   
+" Map H to h (seems to be a correction)
+map <leader>i ~hi         
+" Map <leader>i to toggle case and start typing
+vmap <leader>u d~h         
+" Map <leader>u to remove selection and toggle case
+map U <C-R>               
+" Map U to execute a specific action
