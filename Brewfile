@@ -6,6 +6,8 @@ tap "samtay/tui"
 brew "openssl@3"
 # Aquarium animation in ASCII art
 brew "asciiquarium"
+# Shell extension to jump to frequently used directories
+brew "autojump"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
 # Yet another cross-platform graphical process/system monitor
@@ -30,6 +32,8 @@ brew "git"
 brew "gradle"
 # Java-based project management
 brew "maven"
+# Fast, highly customisable system info script
+brew "neofetch"
 # Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
 # Package for scientific computing with Python

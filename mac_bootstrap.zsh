@@ -289,6 +289,9 @@ install_app "Miniforge3" "brew install miniforge" "! command -v conda &>/dev/nul
 # Install Powerlevel10k Theme
 install_app "Powerlevel10k" "git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k" "[ ! -d '$HOME/powerlevel10k' ]"
 
+# Install colorls
+install_app "colorls" "sudo gem install colorls" "! gem list colorls -i &>/dev/null"
+
 # Determine the architecture of the macOS system
 ARCH="$(uname -m)"
 if [ "$ARCH" = "x86_64" ]; then

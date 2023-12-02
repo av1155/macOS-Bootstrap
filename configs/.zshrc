@@ -178,11 +178,11 @@ source $ZSH/oh-my-zsh.sh
 # source ~/powerlevel10k/powerlevel10k.zsh-theme
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-# [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# Alias for improved ls:
-if command -v eza &>/dev/null; then
-    alias ls='eza'
+# Alias for improved ls with colorls:
+if command -v colorls &>/dev/null; then
+    alias ls='colorls'
 fi
 
 # Alias for Neovim:
@@ -253,9 +253,20 @@ export NVM_DIR="$HOME/.nvm"
 
 # <-------------------- FZF INITIALIZATION -------------------->
 
-# FZF: Fuzzy Finder:
 [[ -f $HOME/.fzf.zsh ]] && source $HOME/.fzf.zsh
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# <-------------------- AUTOJUMP INITIALIZATION -------------------->
+
+arch_name=$(uname -m)
+if [ "$arch_name" = "x86_64" ]; then
+    # Intel architecture
+    [ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh
+elif [ "$arch_name" = "arm64" ]; then
+    # ARM architecture (Apple Silicon)
+    [ -f /opt/homebrew/etc/profile.d/autojump.sh ] && . /opt/homebrew/etc/profile.d/autojump.sh
+else
+    echo "Unknown architecture: $arch_name"
+fi
 
 # <-------------------- ITERM2 SHELL INTEGRATION ------------------->
 
