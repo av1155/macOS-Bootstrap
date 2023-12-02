@@ -86,6 +86,8 @@ create_symlink() {
         esac
     fi
 
+    mkdir -p "$(dirname "$target_file")"
+
     ln -sf "$source_file" "$target_file" || { color_echo $RED "Failed to create symlink for $(basename "$source_file")"; exit 1; }
 
     # Display this message only when a symlink is created.
@@ -256,7 +258,7 @@ install_app "JetBrains Toolbox" "brew install --cask jetbrains-toolbox" "! brew 
 install_app "Ollama" "brew install ollama" "! brew list | grep -q ollama && [ ! -d '/Applications/Ollama.app' ]"
 
 # After Oh My Zsh installation, insert a reminder to run the script again
-echo "After Oh My Zsh installation, re-run this script to complete the setup."
+echo "Once Oh My Zsh has been installed, rerun the script to finish the setup process."
 
 # Install Oh My Zsh
 install_app "Oh My Zsh" "sh -c \"\$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\"" "[ ! -d '$HOME/.oh-my-zsh' ]"
@@ -406,6 +408,7 @@ create_symlink "$DOTFILES_DIR/configs/settings.json" "$HOME/Library/Application 
 create_symlink "$DOTFILES_DIR/configs/.gitignore_global" "$HOME/.gitignore_global"
 create_symlink "$DOTFILES_DIR/configs/.ideavimrc" "$HOME/.ideavimrc"
 create_symlink "$DOTFILES_DIR/configs/ssh/config" "$HOME/.ssh/config"
+create_symlink "$DOTFILES_DIR/configs/neofetch/config.conf" "$HOME/.config/neofetch/config.conf"
 
 # Step 9: Install NVM, Node.js, & npm -----------------------------------------
 
