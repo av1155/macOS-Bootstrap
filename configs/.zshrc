@@ -9,6 +9,23 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
     source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+# <-------------------- ARCHITECTURE DETECTION -------------------->
+
+# Determine the architecture and set the Homebrew path accordingly
+ARCH=$(uname -m)
+
+if [ "$ARCH" = "arm64" ]; then
+    # ARM architecture (Apple Silicon)
+    HOMEBREW_PATH="/opt/homebrew"
+elif [ "$ARCH" = "x86_64" ]; then
+    # Intel architecture
+    HOMEBREW_PATH="/usr/local"
+else
+    echo "Unknown architecture: $ARCH"
+    # Set a default or exit
+    HOMEBREW_PATH="/usr/local" # default for unknown architecture
+fi
+
 # <------------------ JAVA_HOME CONFIGURATION ------------------>
 
 # Set JAVA_HOME for Java
@@ -24,6 +41,8 @@ if command -v find &>/dev/null && command -v fzf &>/dev/null; then
 fi
 
 # <-------------------- PATH AND ZPLUG -------------------->
+
+# PATH --------------->
 
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
@@ -41,16 +60,11 @@ export ZSH="$HOME/.oh-my-zsh"
 # source ~/powerlevel10k/powerlevel10k.zsh-theme
 # [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# Detect the architecture (Intel x86_64 or Apple Silicon arm64)
-arch_name="$(uname -m)"
 
-if [ "$arch_name" = "x86_64" ]; then
-    # If Intel, set ZPLUG_HOME to the Intel Homebrew path
-    export ZPLUG_HOME="/usr/local/opt/zplug"
-elif [ "$arch_name" = "arm64" ]; then
-    # If Apple Silicon, set ZPLUG_HOME to the Apple Silicon Homebrew path
-    export ZPLUG_HOME="/opt/homebrew/opt/zplug"
-fi
+# ZPLUG --------------->
+
+# Set ZPLUG_HOME using HOMEBREW_PATH
+export ZPLUG_HOME="$HOMEBREW_PATH/opt/zplug"
 
 # Check if Zplug is installed
 if [ -d "$ZPLUG_HOME" ]; then
@@ -180,65 +194,45 @@ source $ZSH/oh-my-zsh.sh
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# Alias for improved ls with colorls:
-if command -v colorls &>/dev/null; then
-    alias ls='colorls'
-fi
+# Alias for improved ls with colorls
+command -v colorls &>/dev/null && alias ls='colorls'
 
-# Alias for Neovim:
-if command -v /opt/homebrew/bin/nvim &>/dev/null; then
-    alias vim='nvim'  # If Neovim installed via Homebrew on Apple Silicon
+# Alias for Neovim
+if command -v "$HOMEBREW_PATH/bin/nvim" &>/dev/null; then
+    alias vim='nvim'
 elif [ -f ~/nvim-macos/bin/nvim ]; then
-    alias vim='~/nvim-macos/bin/nvim'  # If Neovim installed in the home directory
+    alias vim='~/nvim-macos/bin/nvim'
 fi
 
-# Fuzzy Finder + Nvim Custom Alias:
-if command -v fd &>/dev/null && command -v fzf &>/dev/null && command -v bat &>/dev/null && command -v nvim &>/dev/null; then
+# Fuzzy Finder + Nvim Custom Alias
+command -v fd &>/dev/null && command -v fzf &>/dev/null && \
+    command -v bat &>/dev/null && command -v nvim &>/dev/null && \
     alias f="fd --type f --hidden --exclude .git | fzf --preview 'bat --color=always {1}' | xargs nvim"
-fi
 
-# SOURCED SCRIPTS + ALIASES:
+# Sourced Scripts
 [ -f ~/scripts/JavaProject.zsh ] && { source ~/scripts/JavaProject.zsh; alias jp="javaproject"; }
 [ -f ~/scripts/JavaCompiler.zsh ] && source ~/scripts/JavaCompiler.zsh
 
 # <-------------------- CONDA INITIALIZATION -------------------->
 
-# Determine the architecture of the machine
-ARCH=$(uname -m)
+# Set the Conda executable path based on HOMEBREW_PATH
+CONDA_EXEC_PATH="$HOMEBREW_PATH/Caskroom/miniforge/base/bin/conda"
 
-# CONDA INITIALIZATION >>>
-
-# For ARM architecture (e.g., Apple M1/M2 chips)
-if [ "$ARCH" = "arm64" ]; then
-    # ARM-specific Conda initialization
-    __conda_setup="$('/opt/homebrew/Caskroom/miniforge/base/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+# Initialize Conda
+if [ -f "$CONDA_EXEC_PATH" ]; then
+    __conda_setup="$("$CONDA_EXEC_PATH" 'shell.zsh' 'hook' 2> /dev/null)"
     if [ $? -eq 0 ]; then
         eval "$__conda_setup"
     else
-        if [ -f "/opt/homebrew/Caskroom/miniforge/base/etc/profile.d/conda.sh" ]; then
-            . "/opt/homebrew/Caskroom/miniforge/base/etc/profile.d/conda.sh"
+        CONDA_SH_PATH="$HOMEBREW_PATH/Caskroom/miniforge/base/etc/profile.d/conda.sh"
+        if [ -f "$CONDA_SH_PATH" ]; then
+            . "$CONDA_SH_PATH"
         else
-            export PATH="/opt/homebrew/Caskroom/miniforge/base/bin:$PATH"
+            export PATH="$HOMEBREW_PATH/Caskroom/miniforge/base/bin:$PATH"
         fi
     fi
-
-    # For Intel x86_64 architecture
-elif [ "$ARCH" = "x86_64" ]; then
-    # Intel-specific Conda initialization
-    __conda_setup="$('/usr/local/Caskroom/miniforge/base/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-    if [ $? -eq 0 ]; then
-        eval "$__conda_setup"
-    else
-        if [ -f "/usr/local/Caskroom/miniforge/base/etc/profile.d/conda.sh" ]; then
-            . "/usr/local/Caskroom/miniforge/base/etc/profile.d/conda.sh"
-        else
-            export PATH="/usr/local/Caskroom/miniforge/base/bin:$PATH"
-        fi
-    fi
-
-    # If architecture is neither arm64 nor x86_64
 else
-    echo "Unsupported architecture: $ARCH"
+    echo "Conda executable not found at $CONDA_EXEC_PATH"
 fi
 
 unset __conda_setup
@@ -249,7 +243,7 @@ unset __conda_setup
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # Commented out as not needed for Zsh
 
 # <-------------------- FZF INITIALIZATION -------------------->
 
@@ -257,16 +251,16 @@ export NVM_DIR="$HOME/.nvm"
 
 # <-------------------- AUTOJUMP INITIALIZATION -------------------->
 
-arch_name=$(uname -m)
-if [ "$arch_name" = "x86_64" ]; then
-    # Intel architecture
-    [ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh
-elif [ "$arch_name" = "arm64" ]; then
-    # ARM architecture (Apple Silicon)
-    [ -f /opt/homebrew/etc/profile.d/autojump.sh ] && . /opt/homebrew/etc/profile.d/autojump.sh
+# Initialize Autojump using HOMEBREW_PATH
+if [ -f "$HOMEBREW_PATH/etc/profile.d/autojump.sh" ]; then
+    . "$HOMEBREW_PATH/etc/profile.d/autojump.sh"
 else
-    echo "Unknown architecture: $arch_name"
+    echo "Autojump initialization file not found"
 fi
+
+# <-------------------- NEOFETCH INITIALIZATION -------------------->
+
+command -v neofetch &>/dev/null && neofetch
 
 # <-------------------- ITERM2 SHELL INTEGRATION ------------------->
 
