@@ -409,6 +409,7 @@ create_symlink "$DOTFILES_DIR/configs/.gitignore_global" "$HOME/.gitignore_globa
 create_symlink "$DOTFILES_DIR/configs/.ideavimrc" "$HOME/.ideavimrc"
 create_symlink "$DOTFILES_DIR/configs/ssh/config" "$HOME/.ssh/config"
 create_symlink "$DOTFILES_DIR/configs/neofetch/config.conf" "$HOME/.config/neofetch/config.conf"
+create_symlink "$DOTFILES_DIR/configs/starship.toml" "$HOME/.config/starship.toml"
 
 # Step 9: Install NVM, Node.js, & npm -----------------------------------------
 

@@ -40,12 +40,10 @@ if command -v find &>/dev/null && command -v fzf &>/dev/null; then
     }
 fi
 
-# <-------------------- PATH AND ZPLUG -------------------->
+# <----------------- PATH, THEMES, AND ZPLUG ------------------->
+
 
 # PATH --------------->
-
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -54,14 +52,19 @@ export ZSH="$HOME/.oh-my-zsh"
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-# ZSH_THEME="robbyrussell"
 
-# Commented out to disable Powerlevel10k and use Pure prompt (in other lines of code)
+# ZSH THEME ---------------> (ZSH theme configuration: off)
+ZSH_THEME=""
+# Default theme = robbyrussell
+
+# POWERLEVEL10K ---------------> (P10K theme configuration: off)
 # source ~/powerlevel10k/powerlevel10k.zsh-theme
 # [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
+# STARSHIP ---------------> (Starship theme configuration: off)
+# eval "$(starship init zsh)"
 
-# ZPLUG --------------->
+# ZPLUG + Pure ---------------> (Pure prompt configuration: on)
 
 # Set ZPLUG_HOME using HOMEBREW_PATH
 export ZPLUG_HOME="$HOMEBREW_PATH/opt/zplug"
