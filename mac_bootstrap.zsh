@@ -401,15 +401,16 @@ color_echo $BLUE "Creating symlinks..."
 
 # Symlinks go here:
 # create_symlink "$DOTFILES_DIR/configs/.original_file" "$HOME/.linked_file"
-create_symlink "$DOTFILES_DIR/configs/.zshrc" "$HOME/.zshrc"
-create_symlink "$DOTFILES_DIR/configs/.gitconfig" "$HOME/.gitconfig"
-create_symlink "$DOTFILES_DIR/configs/tmux.conf" "$HOME/.config/tmux/tmux.conf"
-create_symlink "$DOTFILES_DIR/configs/settings.json" "$HOME/Library/Application Support/Code/User/settings.json"
-create_symlink "$DOTFILES_DIR/configs/.gitignore_global" "$HOME/.gitignore_global"
-create_symlink "$DOTFILES_DIR/configs/.ideavimrc" "$HOME/.ideavimrc"
-create_symlink "$DOTFILES_DIR/configs/ssh/config" "$HOME/.ssh/config"
+create_symlink "$DOTFILES_DIR/configs/git/.gitconfig" "$HOME/.gitconfig"
+create_symlink "$DOTFILES_DIR/configs/git/.gitignore_global" "$HOME/.gitignore_global"
+create_symlink "$DOTFILES_DIR/configs/intelliJ_IDEA/.ideavimrc" "$HOME/.ideavimrc"
 create_symlink "$DOTFILES_DIR/configs/neofetch/config.conf" "$HOME/.config/neofetch/config.conf"
-create_symlink "$DOTFILES_DIR/configs/starship.toml" "$HOME/.config/starship.toml"
+create_symlink "$DOTFILES_DIR/configs/ssh/config" "$HOME/.ssh/config"
+create_symlink "$DOTFILES_DIR/configs/tmux/tmux.conf" "$HOME/.config/tmux/tmux.conf"
+create_symlink "$DOTFILES_DIR/configs/vscode/settings.json" "$HOME/Library/Application Support/Code/User/settings.json"
+create_symlink "$DOTFILES_DIR/configs/vscode/keybindings.json" "$HOME/Library/Application Support/Code/User/keybindings.json"
+create_symlink "$DOTFILES_DIR/configs/zsh/.zshrc" "$HOME/.zshrc"
+create_symlink "$DOTFILES_DIR/configs/zsh/starship.toml" "$HOME/.config/starship.toml"
 
 # Step 9: Install NVM, Node.js, & npm -----------------------------------------
 

@@ -1,0 +1,268 @@
+{
+  // General Settings
+  "workbench.colorTheme": "Catppuccin Mocha",
+  "catppuccin.accentColor": "lavender",
+  "window.zoomLevel": 1,
+  "workbench.iconTheme": "material-icon-theme",
+  "workbench.editor.empty.hint": "hidden",
+  "security.workspace.trust.untrustedFiles": "open",
+  "editor.minimap.enabled": false,
+  "workbench.settings.editor": "json",
+  "workbench.startupEditor": "readme",
+  "zenMode.hideLineNumbers": false,
+  "window.density.editorTabHeight": "compact",
+
+  // Editor Settings
+  "editor.wordWrap": "on",
+  "editor.bracketPairColorization.enabled": true,
+  "editor.fontFamily": "JetBrainsMonoNF-Regular",
+  "editor.fontSize": 16,
+  "editor.lineHeight": 22,
+  "editor.fontLigatures": true,
+  "editor.formatOnSave": true,
+  "editor.accessibilitySupport": "off",
+  "editor.codeActionsOnSave": {
+    "source.addMissingImports": true,
+    "source.organizeImports": true
+  },
+  "editor.cursorSmoothCaretAnimation": "on",
+  "editor.cursorSurroundingLines": 5,
+  "editor.fontWeight": "300",
+  "editor.inlineSuggest.enabled": true,
+  "editor.lineNumbers": "relative",
+  "editor.linkedEditing": true,
+  "editor.smoothScrolling": true,
+  "editor.stickyScroll.enabled": true,
+  "editor.suggest.insertMode": "replace",
+  "editor.suggestFontSize": 14,
+
+  // Language Specific Settings
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.formatOnType": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": true
+    }
+  },
+  "[c]": {
+    "editor.defaultFormatter": "ms-vscode.cpptools"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // Terminal Settings
+  "terminal.integrated.fontFamily": "JetBrainsMonoNF-Regular",
+  "terminal.integrated.fontSize": 14,
+  "terminal.integrated.env.osx": {},
+
+  // Git and Version Control
+  "git.autofetch": true,
+  "git.enableSmartCommit": true,
+  "git.confirmSync": false,
+  "git.ignoreRebaseWarning": true,
+
+  // Code Runner Extension
+  "code-runner.executorMap": {
+    "javascript": "node",
+    "php": "C:\\php\\php.exe",
+    "python": "python",
+    "perl": "perl",
+    "ruby": "C:\\Ruby23-x64\\bin\\ruby.exe",
+    "go": "go run",
+    "html": "\"C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe\"",
+    "java": "cd $dir && javac $fileName && java $fileNameWithoutExt",
+    "c": "cd $dir && gcc $fileName -o $fileNameWithoutExt.o && $dir$fileNameWithoutExt.o"
+  },
+  "code-runner.runInTerminal": true,
+  "code-runner.showExecutionMessage": false,
+  "code-runner.clearPreviousOutput": true,
+  "code-runner.enableAppInsights": false,
+
+  // Python and Other Language Tools
+  "python.defaultInterpreterPath": "/opt/homebrew/bin/python3",
+  "isort.args": ["--profile", "black"],
+  "cSpell.userWords": [
+    "marbella",
+    "Venti"
+  ],
+  "console-ninja.featureSet": "Community",
+  "redhat.telemetry.enabled": false,
+
+  // Miscellaneous
+  "errorLens.fontStyleItalic": true,
+  "everforest.italicKeywords": true,
+  "explorer.confirmDelete": false,
+  "explorer.confirmDragAndDrop": false,
+  "extensions.autoUpdate": "onlyEnabledExtensions",
+  "extensions.ignoreRecommendations": false,
+  "files.exclude": {
+    "**/node_modules": true
+  },
+  "prettier.semi": false,
+  "prettier.singleAttributePerLine": true,
+  "prettier.singleQuote": true,
+  "prettier.trailingComma": "all",
+  "projectManager.git.baseFolders": [
+    "$home/workspace"
+  ],
+  "projectManager.sortList": "Recent",
+  "sortJSON.orderOverride": [
+    "name",
+    "version",
+    "main",
+    "module",
+    "types",
+    "typings",
+    "files",
+    "publishConfig",
+    "repository",
+    "scripts",
+    "prefix",
+    "description",
+    "body"
+  ],
+  "sortJSON.orderUnderride": [
+    "resolutions",
+    "dependencies",
+    "devDependencies",
+    "peerDependencies",
+    "cSpell.userWords"
+  ],
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "update.showReleaseNotes": false,
+  "vim.foldfix": true,
+  "vim.highlightedyank.color": "rgba(230, 97, 89, 0.7)",
+  "vim.highlightedyank.enable": true,
+  "vim.highlightedyank.textColor": "white",
+  "vim.hlsearch": true,
+  "vim.leader": "<space>",
+  "vim.normalModeKeyBindingsNonRecursive": [
+    {
+      "before": [
+        "leader",
+        "r"
+      ],
+      "commands": [
+        "editor.action.rename"
+      ]
+    },
+    {
+      "before": [
+        "leader",
+        "w"
+      ],
+      "commands": [
+        ":w!"
+      ]
+    },
+    {
+      "before": [
+        "leader",
+        "q"
+      ],
+      "commands": [
+        ":q!"
+      ]
+    },
+    {
+      "before": [
+        "leader",
+        "x"
+      ],
+      "commands": [
+        ":x!"
+      ]
+    },
+    {
+      "after": [
+        "g",
+        "g",
+        "V",
+        "G"
+      ],
+      "before": [
+        "<c-a>"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "k"
+      ],
+      "commands": [
+        "editor.action.showHover"
+      ]
+    },
+    {
+      "before": [
+        "[",
+        "d"
+      ],
+      "commands": [
+        "editor.action.marker.prev"
+      ]
+    },
+    {
+      "before": [
+        "]",
+        "d"
+      ],
+      "commands": [
+        "editor.action.marker.next"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "c",
+        "a"
+      ],
+      "commands": [
+        "editor.action.quickFix"
+      ]
+    },
+    {
+      "after": [
+        "^"
+      ],
+      "before": [
+        "H"
+      ]
+    },
+    {
+      "after": [
+        "$"
+      ],
+      "before": [
+        "L"
+      ]
+    },
+    {
+      "before": [
+        "leader",
+        "i"
+      ],
+      "commands": [
+        "extension.toggleBool"
+      ]
+    }
+  ],
+  "vim.useSystemClipboard": true,
+}
