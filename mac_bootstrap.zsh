@@ -622,12 +622,19 @@ app_list=(
     "zoom.us.app"
 )
 
-# Create a text file on the desktop with the app list
+# Define the path of the text file
 desktop_path="$HOME/Desktop/apps_to_download.txt"
-printf "%s\n" "${app_list[@]}" > "$desktop_path"
 
-# Print a message to inform the user
-color_echo $BLUE "A TODO list of apps to download has been created on your desktop: $desktop_path"
+# Check if the file already exists
+if [ ! -f "$desktop_path" ]; then
+    # File does not exist, create the file and write the app list
+    printf "%s\n" "${app_list[@]}" > "$desktop_path"
+    # Print a message to inform the user
+    color_echo $BLUE "A TODO list of apps to download has been created on your desktop: $desktop_path"
+else
+    # File already exists, print a different message
+    color_echo $RED "The file already exists on your desktop: $desktop_path"
+fi
 
 # -----------------------------------------------------------------------------
 
