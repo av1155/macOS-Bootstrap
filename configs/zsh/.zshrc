@@ -214,7 +214,7 @@ command -v fd &>/dev/null && command -v fzf &>/dev/null && \
 
 # Sourced Scripts
 [ -f ~/scripts/JavaProject.zsh ] && { source ~/scripts/JavaProject.zsh; alias jp="javaproject"; }
-[ -f ~/scripts/JavaCompiler.zsh ] && source ~/scripts/JavaCompiler.zsh
+[ -f ~/scripts/JavaCompiler/JavaCompiler.zsh ] && source ~/scripts/JavaCompiler/JavaCompiler.zsh
 
 # <-------------------- CONDA INITIALIZATION -------------------->
 
