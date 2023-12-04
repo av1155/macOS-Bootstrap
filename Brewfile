@@ -46,6 +46,8 @@ brew "pyinstaller"
 brew "python@3.11"
 # Search tool like grep and The Silver Searcher
 brew "ripgrep"
+# Safe, concurrent, practical language
+brew "rust"
 # Cross-shell prompt for astronauts
 brew "starship"
 # Terminal multiplexer
