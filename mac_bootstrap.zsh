@@ -401,6 +401,7 @@ color_echo $BLUE "Creating symlinks..."
 
 # Symlinks go here:
 # create_symlink "$DOTFILES_DIR/configs/.original_file" "$HOME/.linked_file"
+create_symlink "$DOTFILES_DIR/configs/formatting_files/.clang-format" "$HOME/.clang-format"
 create_symlink "$DOTFILES_DIR/configs/git/.gitconfig" "$HOME/.gitconfig"
 create_symlink "$DOTFILES_DIR/configs/git/.gitignore_global" "$HOME/.gitignore_global"
 create_symlink "$DOTFILES_DIR/configs/intelliJ_IDEA/.ideavimrc" "$HOME/.ideavimrc"
