@@ -26,10 +26,14 @@ brew "ffmpeg"
 brew "fzf"
 # Disk usage analyzer with console interface written in Go
 brew "gdu"
+# GitHub command-line tool
+brew "gh"
 # Distributed revision control system
 brew "git"
 # Open-source build automation tool based on the Groovy and Kotlin DSL
 brew "gradle"
+# Package manager for the Lua programming language
+brew "luarocks"
 # Java-based project management
 brew "maven"
 # Fast, highly customisable system info script
