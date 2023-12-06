@@ -16,6 +16,8 @@ brew "bottom"
 brew "cmatrix"
 # Configurable talking characters in ASCII art
 brew "cowsay"
+# .NET Core
+brew "dotnet"
 # Modern, maintained replacement for ls
 brew "eza"
 # Simple, fast and user-friendly alternative to find
