@@ -331,7 +331,7 @@ else
     echo -n "Enter choice: > "
     read -r scripts_clone_choice
     if [ "$scripts_clone_choice" = "y" ] || [ "$scripts_clone_choice" = "Y" ]; then
-        git_clone_fallback "git@github.com:yourusername/your-scripts-repo.git" "https://github.com/yourusername/your-scripts-repo.git" "$SCRIPTS_REPO_DIRECTORY"
+        git_clone_fallback "git@github.com:av1155/scripts.git" "https://github.com/av1155/scripts.git" "$SCRIPTS_REPO_DIRECTORY"
     else
         color_echo $GREEN "Skipping scripts repository cloning."
     fi
