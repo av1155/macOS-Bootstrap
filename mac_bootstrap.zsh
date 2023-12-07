@@ -572,6 +572,7 @@ echo ""
 
 # Define the list of apps
 app_list=(
+    "Bartender 5.app"
     "CalcBar.app"
     "CleanMyMac X.app"
     "Color Picker.app"
@@ -586,7 +587,6 @@ app_list=(
     "OneMenu.app"
     "Ryujinx.app"
 )
-
 
 # Define the path of the text file
 desktop_path="$HOME/Desktop/apps_to_download.txt"
