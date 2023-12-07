@@ -22,6 +22,7 @@ color_echo() {
     echo -e "${color}${message}${NC}"
 }
 
+
 # Confirmation prompt for starting the script
 color_echo $YELLOW "Do you want to proceed with the BootStrap Setup Script? (y/n)"
 echo -n "Enter choice: > "
@@ -31,6 +32,7 @@ if [ "$confirmation" != "y" ] && [ "$confirmation" != "Y" ]; then
     exit 1
 fi
 
+
 # Function to calculate padding for centering text
 calculate_padding() {
     local text="$1"
@@ -39,6 +41,7 @@ calculate_padding() {
     local padding_length=$(( (terminal_width - text_width) / 2 ))
     printf "%*s" $padding_length ""
 }
+
 
 # Function to display centered colored messages
 centered_color_echo() {
@@ -56,27 +59,37 @@ git_clone_fallback() {
     git clone "$ssh_url" "$clone_directory" || git clone "$https_url" "$clone_directory" || { color_echo $RED "Failed to clone repository."; exit 1; }
 }
 
+
 # Function to create a symlink
 create_symlink() {
     local source_file="$1"
     local target_file="$2"
 
+    # Function to extract file and its immediate parent directory
+    get_file_and_parent() {
+        local full_path=$1
+        echo "$(basename "$(dirname "$full_path")")/$(basename "$full_path")"
+    }
+
+    local source_display="$(get_file_and_parent "$source_file")"
+    local target_display="$(get_file_and_parent "$target_file")"
+
     if [ -L "$target_file" ] && [ "$(readlink "$target_file")" = "$source_file" ]; then
-        color_echo $GREEN "Symlink for $(basename "$source_file") already exists and is correct."
+        color_echo $GREEN "Symlink for ${PURPLE}$source_display${GREEN} already exists and is correct."
         return
     fi
 
     if [ -f "$target_file" ]; then
-        color_echo $YELLOW "Existing file found for $(basename "$target_file"). Do you want to overwrite it? (y/n)"
+        color_echo $YELLOW "Existing file found for ${PURPLE}$target_display${YELLOW}. Do you want to overwrite it? (y/n)"
         echo -n "Enter choice: > "
         read -r choice
         case "$choice" in
             y|Y )
-                color_echo $BLUE "Backing up existing $(basename "$target_file") to $(basename "$target_file").bak"
+                color_echo $BLUE "Backing up existing ${PURPLE}$target_display${BLUE} as ${PURPLE}${target_display}.bak${BLUE}"
                 mv "$target_file" "${target_file}.bak" || { color_echo $RED "Failed to backup $target_file"; exit 1; }
                 ;;
             n|N )
-                color_echo $GREEN "Skipping $(basename "$target_file")."
+                color_echo $GREEN "Skipping ${PURPLE}$target_display${GREEN}."
                 return
                 ;;
             * )
@@ -88,11 +101,12 @@ create_symlink() {
 
     mkdir -p "$(dirname "$target_file")"
 
-    ln -sf "$source_file" "$target_file" || { color_echo $RED "Failed to create symlink for $(basename "$source_file")"; exit 1; }
+    ln -sf "$source_file" "$target_file" || { color_echo $RED "Failed to create symlink for ${PURPLE}$source_display${RED}"; exit 1; }
 
     # Display this message only when a symlink is created.
-    color_echo $GREEN "Created symlink for $(basename "$source_file") to $(dirname "$target_file")."
+    color_echo $GREEN "Created symlink for ${PURPLE}$source_display${GREEN} to ${PURPLE}$target_display${GREEN}."
 }
+
 
 # Function to prompt and install an app
 install_app() {
@@ -114,6 +128,7 @@ install_app() {
         fi
     fi
 }
+
 
 # Function to install Neovim on macOS
 install_neovim() {
@@ -156,6 +171,7 @@ install_neovim() {
     fi
 
 }
+
 
 # END OF FUNCTIONS ------------------------------------------------------------
 
@@ -242,9 +258,6 @@ install_app "Zplug" "brew install zplug" "! brew list zplug &>/dev/null"
 # Install iTerm2
 install_app "iTerm2" "brew install --cask iterm2" "! brew list --cask | grep -q iterm2 && [ ! -d '/Applications/iTerm.app' ]"
 
-# Install Docker
-install_app "Docker" "brew install --cask docker" "! brew list --cask | grep -q docker && [ ! -d '/Applications/Docker.app' ]"
-
 # Install Google Chrome
 install_app "Google Chrome" "brew install --cask google-chrome" "! brew list --cask | grep -q google-chrome && [ ! -d '/Applications/Google Chrome.app' ]"
 
@@ -253,9 +266,6 @@ install_app "Visual Studio Code" "brew install --cask visual-studio-code" "! bre
 
 # Install JetBrains Toolbox
 install_app "JetBrains Toolbox" "brew install --cask jetbrains-toolbox" "! brew list --cask | grep -q jetbrains-toolbox && [ ! -d '/Applications/JetBrains Toolbox.app' ]"
-
-# Install Ollama
-install_app "Ollama" "brew install ollama" "! brew list | grep -q ollama && [ ! -d '/Applications/Ollama.app' ]"
 
 # After Oh My Zsh installation, insert a reminder to run the script again
 echo "Once Oh My Zsh has been installed, rerun the script to finish the setup process."
@@ -372,22 +382,6 @@ fi
 echo ""
 # Install Neovim if Brewfile installation was unsuccessful
 install_neovim
-
-# Validate TMUX_CONFIG_DIR ----------------------------------------------------
-
-echo ""
-
-centered_color_echo $ORANGE "<-------------- tmux Config Directory Setup -------------->"
-
-echo ""
-
-TMUX_CONFIG_DIR="$HOME/.config/tmux"
-if [ ! -d "$TMUX_CONFIG_DIR" ]; then
-    color_echo $BLUE "Creating tmux config directory..."
-    mkdir -p "$TMUX_CONFIG_DIR"
-else
-    color_echo $GREEN "The tmux config directory already exists. Skipping configuration."
-fi
 
 # Step 8: Create symlinks (Idempotent) ----------------------------------------
 
