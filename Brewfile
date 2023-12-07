@@ -44,6 +44,8 @@ brew "neofetch"
 brew "neovim"
 # Package for scientific computing with Python
 brew "numpy"
+# Create, run, and share large language models (LLMs)
+brew "ollama", restart_service: true
 # General-purpose scripting language
 brew "php"
 # Bundle a Python application and all its dependencies
@@ -68,18 +70,94 @@ brew "zplug"
 brew "jesseduffield/lazygit/lazygit"
 # Tetris in your terminal
 brew "samtay/tui/tetris"
+# Password manager that keeps all passwords secure behind one password
+cask "1password"
 # Command-line interface for 1Password
 cask "1password-cli"
+# View, create, manipulate, print and manage files in Portable Document Format
+cask "adobe-acrobat-pro"
+# Collection of apps and services for photography, design, video, web, and UX
+cask "adobe-creative-cloud"
+# Menu bar tool to limit maximum charging percentage
+cask "aldente"
+# Application launcher and productivity software
+cask "alfred"
+# Enable Windows-like alt-tab
+cask "alt-tab"
+# Memory training application
+cask "anki"
+# Application uninstaller
+cask "appcleaner"
+# Display management tool
+cask "betterdisplay"
+# Tool to list all active shortcuts of the current application
+cask "cheatsheet"
+# Hardware benchmarking utility
+cask "cinebench"
+# Voice and text chat software
+cask "discord"
 # App to build and share containerized applications and microservices
 cask "docker"
+# Clipboard manager for developers
+cask "flycut"
+# Web browser
+cask "google-chrome"
+# Grammarly for desktop
+cask "grammarly-desktop"
+# Free and open-source media player
+cask "iina"
+# Terminal emulator as alternative to Apple's Terminal app
+cask "iterm2"
+# JetBrains tools manager
+cask "jetbrains-toolbox"
+# Interface for reading and syncing eBooks
+cask "kindle"
+# Utility that shows the latest app updates
+cask "latest"
 # Clipboard manager
 cask "maccy"
+# Scanner app for math and science
+cask "mathpix-snipping-tool"
+# Provides updates to various Microsoft products
+cask "microsoft-auto-update"
+# Web browser
+cask "microsoft-edge"
+# Office suite
+cask "microsoft-office"
+# Meet, chat, call, and collaborate in just one place
+cask "microsoft-teams"
 # Utility to extend trackpad functionality
 cask "middleclick"
 # Minimal installer for conda specific to conda-forge
 cask "miniforge"
+# Tool to control external monitor brightness & volume
+cask "monitorcontrol"
+# App to write, plan, collaborate, and get organized
+cask "notion"
+# Verify system files structure, run miscellaneous maintenance and more
+cask "onyx"
+# Screenshot measurement and annotation tool
+cask "shottr"
+# Application to control your PlayStation 4 or PlayStation 5
+cask "sony-ps-remote-play"
+# Music streaming service
+cask "spotify"
 # System monitor for the menu bar
 cask "stats"
+# Unpacks archive files
+cask "the-unarchiver"
+# To-do & task list manager
+cask "ticktick"
+# Open-source code editor
+cask "visual-studio-code"
+# Access etextbooks
+cask "vitalsource-bookshelf"
+# Rust-based terminal
+cask "warp"
+# Native desktop client for WhatsApp
+cask "whatsapp"
+# Video communication and virtual meeting platform
+cask "zoom"
 vscode "adpyke.codesnap"
 vscode "alefragnani.project-manager"
 vscode "batisteo.vscode-django"
