@@ -1,9 +1,10 @@
 ---
 # Defaults from the Google style + global configs:
-BasedOnStyle: Google
+BasedOnStyle: LLVM
 IndentWidth: 4
 BreakBeforeBraces: Allman
 ColumnLimit: 120
+AlignArrayOfStructures: Left 
 
 
 # Language specific configs:
