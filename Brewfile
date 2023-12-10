@@ -4,6 +4,8 @@ tap "jesseduffield/lazygit"
 tap "samtay/tui"
 # Cryptography and SSL/TLS Toolkit
 brew "openssl@3"
+# Highly capable, feature-rich programming language
+brew "perl"
 # Aquarium animation in ASCII art
 brew "asciiquarium"
 # Shell extension to jump to frequently used directories
@@ -16,6 +18,8 @@ brew "bottom"
 brew "cmatrix"
 # Configurable talking characters in ASCII art
 brew "cowsay"
+# Get, unpack, build, and install modules from CPAN
+brew "cpanminus"
 # .NET Core
 brew "dotnet"
 # Modern, maintained replacement for ls
@@ -177,6 +181,10 @@ vscode "kisstkondoros.vscode-gutter-preview"
 vscode "letrieu.expand-region"
 vscode "liviuschera.noctis"
 vscode "meganrogge.template-string-converter"
+vscode "ms-dotnettools.csdevkit"
+vscode "ms-dotnettools.csharp"
+vscode "ms-dotnettools.vscode-dotnet-runtime"
+vscode "ms-dotnettools.vscodeintellicode-csharp"
 vscode "ms-python.black-formatter"
 vscode "ms-python.isort"
 vscode "ms-python.python"

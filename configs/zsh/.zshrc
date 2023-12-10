@@ -200,6 +200,24 @@ source $ZSH/oh-my-zsh.sh
 # Alias for improved ls with colorls
 command -v colorls &>/dev/null && alias ls='colorls'
 
+# Initialize Perl local::lib environment
+# To set this up on a new machine:
+# 1. Install Perl via Homebrew: `brew install perl`
+# 2. Install local::lib, run this command on the terminal: `PERL_MM_OPT="INSTALL_BASE=$HOME/perl5" cpan local::lib`
+# 3. Add the following line to the shell profile to configure the environment
+if [ -d "$HOME/perl5/lib/perl5" ] && command -v perl &>/dev/null; then
+    eval "$(perl -I$HOME/perl5/lib/perl5 -Mlocal::lib=$HOME/perl5)"
+fi
+
+# Add Ruby gem user install directory to PATH
+# To set this up on a new machine:
+# 1. Install Ruby gems in the user directory: `gem install --user-install <gem_name>`
+# 2. Find the user gem bin directory, run on the terminal: `gem env | grep USER`
+# 3. Add the user gem bin directory to PATH in the shell profile
+if [ -d "$HOME/.gem/ruby/2.6.0/bin" ]; then
+    export PATH="$HOME/.gem/ruby/2.6.0/bin:$PATH"
+fi
+
 # Alias for Neovim
 if command -v "$HOMEBREW_PATH/bin/nvim" &>/dev/null; then
     alias vim='nvim'

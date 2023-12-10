@@ -407,6 +407,7 @@ create_symlink "$DOTFILES_DIR/configs/vscode/settings.json" "$HOME/Library/Appli
 create_symlink "$DOTFILES_DIR/configs/vscode/keybindings.json" "$HOME/Library/Application Support/Code/User/keybindings.json"
 create_symlink "$DOTFILES_DIR/configs/zsh/.zshrc" "$HOME/.zshrc"
 create_symlink "$DOTFILES_DIR/configs/zsh/starship.toml" "$HOME/.config/starship.toml"
+create_symlink "/opt/homebrew/bin/gdu-go" "/opt/homebrew/bin/gdu"
 
 # Step 9: Install NVM, Node.js, & npm -----------------------------------------
 
