@@ -76,7 +76,7 @@ if [ -d "$ZPLUG_HOME" ]; then
     source $ZPLUG_HOME/init.zsh
     zplug "mafredri/zsh-async", from:github
     # Pure Prompt Configuration
-    zplug "sindresorhus/pure", use:pure.zsh, from:github, as:theme
+    zplug "sindresorhus/pure", use:pure.zsh, from:github, as:theme # Pure prompt configuration: on
     # zplug "zdharma/fast-syntax-highlighting", as:plugin, defer:2
     zplug "zsh-users/zsh-autosuggestions", as:plugin, defer:2
     zplug load
