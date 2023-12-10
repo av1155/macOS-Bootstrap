@@ -22,8 +22,8 @@
   "editor.formatOnSave": true,
   "editor.accessibilitySupport": "off",
   "editor.codeActionsOnSave": {
-    "source.addMissingImports": true,
-    "source.organizeImports": true
+    "source.addMissingImports": "explicit",
+    "source.organizeImports": "explicit"
   },
   "editor.cursorSmoothCaretAnimation": "on",
   "editor.cursorSurroundingLines": 5,
@@ -44,7 +44,7 @@
     "editor.defaultFormatter": "ms-python.black-formatter",
     "editor.formatOnType": true,
     "editor.codeActionsOnSave": {
-      "source.organizeImports": true
+      "source.organizeImports": "explicit"
     }
   },
   "[c]": {
