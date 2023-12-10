@@ -36,8 +36,12 @@ brew "gdu"
 brew "gh"
 # Distributed revision control system
 brew "git"
+# Open source programming language to build simple/reliable/efficient software
+brew "go"
 # Open-source build automation tool based on the Groovy and Kotlin DSL
 brew "gradle"
+# Fast, Dynamic Programming Language
+brew "julia"
 # Package manager for the Lua programming language
 brew "luarocks"
 # Java-based project management
