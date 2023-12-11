@@ -40,6 +40,8 @@ brew "git"
 brew "go"
 # Open-source build automation tool based on the Groovy and Kotlin DSL
 brew "gradle"
+# Lightweight and flexible command-line JSON processor
+brew "jq"
 # Fast, Dynamic Programming Language
 brew "julia"
 # Package manager for the Lua programming language

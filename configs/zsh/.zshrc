@@ -216,7 +216,7 @@ fi
 
 # Add Ruby gem user install directory to PATH --------------------------------->
 # To set this up on a new machine:
-# 1. Install Ruby gems in the user directory: `gem install --user-install neovim`
+# 1. Install Ruby gems in the user directory: `gem install neovim`
 # 2. Find the user gem bin directory, run on the terminal: `gem env gemdir`
 # 3. Add the user gem bin directory to PATH in the shell profile
 
@@ -276,6 +276,55 @@ fi
 unset __conda_setup
 
 # <<< END CONDA INITIALIZATION
+
+# <------------------ PYTHON PATH CONFIGURATION ------------------>
+
+# Check if Conda is installed
+if command -v conda >/dev/null 2>&1; then
+    # Conda-specific configuration
+
+    # Function to set NVIM_PYTHON_PATH
+    set_python_path_for_neovim() {
+        if [[ -n "$CONDA_PREFIX" ]]; then
+            export NVIM_PYTHON_PATH="$CONDA_PREFIX/bin/python"
+        else
+            # Fallback to system Python (Python 3) if Conda is not active
+            local system_python_path=$(which python3)
+            if [[ -z "$system_python_path" ]]; then
+                echo "Python is not installed. Please install Python to use with Neovim."
+            else
+                export NVIM_PYTHON_PATH="$system_python_path"
+            fi
+        fi
+    }
+
+    # Initialize NVIM_PYTHON_PATH
+    set_python_path_for_neovim
+
+    # Hook into the precmd function
+    function precmd_set_python_path() {
+        if [[ "$PREV_CONDA_PREFIX" != "$CONDA_PREFIX" ]]; then
+            set_python_path_for_neovim
+            PREV_CONDA_PREFIX="$CONDA_PREFIX"
+        fi
+    }
+
+    # Save the initial Conda prefix
+    PREV_CONDA_PREFIX="$CONDA_PREFIX"
+
+    # Add the hook to precmd
+    autoload -U add-zsh-hook
+    add-zsh-hook precmd precmd_set_python_path
+
+else
+    # Non-Conda environment: Check if Python is installed
+    python_path=$(which python3)
+    if [[ -z "$python_path" ]]; then
+        echo "Python is not installed. Please install Python to use with Neovim."
+    else
+        export NVIM_PYTHON_PATH="$python_path"
+    fi
+fi
 
 # <-------------------- NVM INITIALIZATION -------------------->
 
