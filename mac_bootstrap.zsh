@@ -301,8 +301,6 @@ install_app "Miniforge3" "brew install miniforge" "! command -v conda &>/dev/nul
 # Install Powerlevel10k Theme
 install_app "Powerlevel10k" "git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k" "[ ! -d '$HOME/powerlevel10k' ]"
 
-# Install colorls
-install_app "colorls" "sudo gem install colorls" "! gem list colorls -i &>/dev/null"
 
 # Determine the architecture of the macOS system
 ARCH="$(uname -m)"
@@ -465,6 +463,14 @@ else
     color_echo $GREEN " * live-server already installed."
 fi
 
+# Check and install neovim
+if ! npm list -g neovim &>/dev/null; then
+    color_echo $BLUE " * neovim: "
+    npm install -g neovim || { color_echo $RED "Failed to install neovim."; exit 1; }
+else
+    color_echo $GREEN " * neovim already installed."
+fi
+
 # Step 10: Install JetBrainsMono Nerd Font ------------------------------------
 
 echo ""
@@ -557,7 +563,146 @@ else
     git_clone_fallback "git@github.com:av1155/astronvim_config.git" "https://github.com/av1155/astronvim_config.git" "$HOME/.config/nvim/lua/user"
 fi
 
-# Step 12: Create TODO List of Apps to Download -------------------------------
+# Step 12: Install AstroNvim Dependencies ------------------------------------
+
+echo ""
+
+centered_color_echo $ORANGE "<-------------- AstroNvim Dependencies Configuration -------------->"
+
+echo ""
+
+# PYNVIM SETUP -------------------------------->
+
+# Determine the architecture (Intel or Apple Silicon)
+arch_name="$(uname -m)"
+if [ "$arch_name" = "x86_64" ]; then
+    # Intel Macs
+    PYTHON_PATH="/usr/local/miniforge3/bin/python3"
+elif [ "$arch_name" = "arm64" ]; then
+    # Apple Silicon Macs
+    PYTHON_PATH="/opt/homebrew/Caskroom/miniforge/base/bin/python3"
+else
+    color_echo $RED "Unknown architecture: $arch_name"
+    exit 1
+fi
+
+# Python AstroNvim dependencies
+if ! $PYTHON_PATH -c "import pynvim" &>/dev/null; then
+    color_echo $YELLOW " * pynvim not installed, installing..."
+    $PYTHON_PATH -m pip install pynvim || { color_echo $RED "Failed to install pynvim."; exit 1; }
+else
+    color_echo $GREEN " * pynvim already installed."
+fi
+
+# END OF PYNVIM SETUP <<<
+
+# PERL NEONVIM EXTENSION SETUP -------------------------------->
+
+# Check if Perl is installed via Homebrew and install if necessary
+if brew list perl &>/dev/null; then
+    color_echo $GREEN " * Perl is already installed."
+else
+    color_echo $YELLOW " * Installing Perl..."
+    brew install perl || { color_echo $RED "Failed to install Perl."; exit 1; }
+fi
+
+# Check and Configure local::lib
+if [ -d "$HOME/perl5/lib/perl5" ] && grep -q 'perl5' <<< "$PERL5LIB"; then
+    color_echo $GREEN " * local::lib is already configured."
+else
+    color_echo $YELLOW " * Configuring local::lib..."
+    PERL_MM_OPT="INSTALL_BASE=$HOME/perl5" cpan local::lib || { color_echo $RED "Failed to configure local::lib."; exit 1; }
+fi
+
+# Check if cpanm is installed via Homebrew and install if necessary
+if brew list cpanminus &>/dev/null; then
+    color_echo $GREEN " * cpanm is already installed."
+else
+    color_echo $YELLOW " * Installing cpanm..."
+    brew install cpanminus || { color_echo $RED "Failed to install cpanminus."; exit 1; }
+fi
+
+# Check if Neovim::Ext is installed and install if necessary
+if perl -MNeovim::Ext -e 1 &>/dev/null; then
+    color_echo $GREEN " * Neovim::Ext is already installed."
+else
+    color_echo $YELLOW " * Installing Neovim::Ext..."
+    cpanm Neovim::Ext || { color_echo $RED "Failed to install Neovim::Ext."; exit 1; }
+fi
+
+# END OF PERL NEONVIM EXTENSION SETUP <<<
+
+# RUBY ASTRONVIM SETUP -------------------------------->
+
+color_echo $YELLOW " * Checking Ruby installation..."
+
+# Determine the architecture (Intel or Apple Silicon)
+arch_name="$(uname -m)"
+
+# Determine the path of the current Ruby executable
+current_ruby_path=$(which ruby)
+
+# Determine the path of the gem executable
+gem_executable=$(which gem)
+
+if [ "$arch_name" = "arm64" ]; then
+    # Apple Silicon Macs
+    expected_ruby_path="/opt/homebrew/opt/ruby/bin/ruby"
+elif [ "$arch_name" = "x86_64" ]; then
+    # Intel Macs
+    expected_ruby_path="/usr/local/opt/ruby/bin/ruby"
+else
+    color_echo $RED "Unknown architecture: $arch_name"
+    exit 1
+fi
+
+# Check if the current Ruby is the expected Ruby based on architecture
+if [[ "$current_ruby_path" == "$expected_ruby_path" ]]; then
+    color_echo $YELLOW " * Ruby installed via Homebrew, installing neovim gem..."
+    # Run gem install using the gem executable
+    $gem_executable install neovim || { color_echo $RED "Failed to install neovim gem."; exit 1; }
+else
+    color_echo $GREEN " * Non-Homebrew Ruby detected. Please ensure Ruby from Homebrew is correctly set up."
+fi
+
+# END OF RUBY ASTRONVIM SETUP <<<
+
+echo ""
+
+# Install colorls
+install_app "colorls" "gem install colorls" "! gem list colorls -i &>/dev/null"
+
+# Install Composer for PHP development ---------------------------------------
+
+echo ""
+
+centered_color_echo $ORANGE "<-------------- Composer Installation for PHP Development -------------->"
+
+echo ""
+
+# Verify if Composer is already installed
+if command -v composer >/dev/null 2>&1; then
+    color_echo $GREEN " * Composer is already installed."
+else
+    # Download and verify Composer
+    color_echo $YELLOW " * Downloading and verifying Composer..."
+    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+    php -r "if (hash_file('sha384', 'composer-setup.php') === 'e21205b207c3ff031906575712edab6f13eb0b361f2085f1f1237b7126d785e826a450292b6cfd1d64d92e6563bbde02') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+    php composer-setup.php
+    php -r "unlink('composer-setup.php');"
+
+    # Move Composer to a global directory
+    color_echo $YELLOW " * Moving Composer to global directory..."
+    sudo mv composer.phar /usr/local/bin/composer || { color_echo $RED "Failed to move Composer."; exit 1; }
+
+    # Verify Composer installation
+    color_echo $YELLOW " * Verifying Composer installation..."
+    composer --version || { color_echo $RED "Composer installation failed."; exit 1; }
+
+    color_echo $GREEN " * Composer installed successfully."
+fi
+
+# Step 13: Create TODO List of Apps to Download -------------------------------
 
 echo ""
 
