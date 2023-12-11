@@ -62,6 +62,8 @@ brew "pyinstaller"
 brew "python@3.11"
 # Search tool like grep and The Silver Searcher
 brew "ripgrep"
+# Powerful, clean, object-oriented scripting language
+brew "ruby"
 # Safe, concurrent, practical language
 brew "rust"
 # Cross-shell prompt for astronauts
@@ -144,6 +146,8 @@ cask "monitorcontrol"
 cask "notion"
 # Verify system files structure, run miscellaneous maintenance and more
 cask "onyx"
+# Move and resize windows using keyboard shortcuts or snap areas
+cask "rectangle"
 # Screenshot measurement and annotation tool
 cask "shottr"
 # Application to control your PlayStation 4 or PlayStation 5

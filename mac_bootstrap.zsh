@@ -252,6 +252,9 @@ echo ""
 # Example:
 # install_app "Visual Studio Code" "brew install --cask visual-studio-code" "! brew list --cask | grep -q visual-studio-code && [ ! -d '/Applications/Visual Studio Code.app' ]"
 
+# Install Rectangle
+install_app "Rectangle" "brew install --cask rectangle" "! brew list rectangle &>/dev/null"
+
 # Install Zplug
 install_app "Zplug" "brew install zplug" "! brew list zplug &>/dev/null"
 
@@ -659,8 +662,13 @@ fi
 # Check if the current Ruby is the expected Ruby based on architecture
 if [[ "$current_ruby_path" == "$expected_ruby_path" ]]; then
     color_echo $YELLOW " * Ruby installed via Homebrew, installing neovim gem..."
-    # Run gem install using the gem executable
-    $gem_executable install neovim || { color_echo $RED "Failed to install neovim gem."; exit 1; }
+    # Check if the neovim gem is already installed
+    if gem list -i neovim > /dev/null 2>&1; then
+        color_echo $GREEN " * Neovim gem already installed."
+    else
+        color_echo $YELLOW " * Installing neovim gem..."
+        $gem_executable install neovim || { color_echo $RED "Failed to install neovim gem."; exit 1; }
+    fi
 else
     color_echo $GREEN " * Non-Homebrew Ruby detected. Please ensure Ruby from Homebrew is correctly set up."
 fi
@@ -668,7 +676,7 @@ fi
 # END OF RUBY ASTRONVIM SETUP <<<
 
 echo ""
-
+echo -n " ${GREEN}*${NC} "
 # Install colorls
 install_app "colorls" "gem install colorls" "! gem list colorls -i &>/dev/null"
 
