@@ -396,6 +396,7 @@ color_echo $BLUE "Creating symlinks..."
 
 # Symlinks go here:
 # create_symlink "$DOTFILES_DIR/configs/.original_file" "$HOME/.linked_file"
+create_symlink "$DOTFILES_DIR/configs/colorls" "$HOME/.config/colorls"
 create_symlink "$DOTFILES_DIR/configs/formatting_files/.clang-format" "$HOME/.clang-format"
 create_symlink "$DOTFILES_DIR/configs/formatting_files/.prettierrc.json" "$HOME/.config/.prettierrc.json"
 create_symlink "$DOTFILES_DIR/configs/git/.gitconfig" "$HOME/.gitconfig"
