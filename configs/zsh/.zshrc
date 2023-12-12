@@ -38,10 +38,12 @@ export PATH="$HOMEBREW_PATH/opt/ruby/bin:$PATH"
 
 # <-------------------- CUSTOM SCRIPTS -------------------->
 
-if command -v find &>/dev/null && command -v fzf &>/dev/null; then
+# Enhanced fcd function with customizable depth and better performance
+if command -v find &>/dev/null && command -v fzf &>/dev/null && command -v colorls &>/dev/null; then
     fcd() {
+        local depth="${1:-7}"  # Default depth is 7, but can be overridden by first argument
         local dir
-        dir=$(find * -type d 2>/dev/null | fzf +m) && cd "$dir" || return
+        dir=$(find * -type d -maxdepth "$depth" 2>/dev/null | fzf --preview 'colorls --tree=2 --sd --gs --color=always {}' +m) && cd "$dir" || return
     }
 fi
 
@@ -187,6 +189,9 @@ source $ZSH/oh-my-zsh.sh
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
 # <-------------------- CUSTOM ALIASES -------------------->
 
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
@@ -199,42 +204,25 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 # source ~/powerlevel10k/powerlevel10k.zsh-theme
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # Alias for improved ls with colorls
-command -v colorls &>/dev/null && alias ls='colorls'
+# - Lists almost all files (including hidden), sorts directories first, and shows git status.
+command -v colorls &>/dev/null && alias ls='colorls -A --gs --sd'
 
-# Initialize Perl local::lib environment ------------------------------------->
-# To set this up on a new machine:
-# 1. Install Perl via Homebrew: `brew install perl`
-# 2. Install local::lib, run this command on the terminal: `PERL_MM_OPT="INSTALL_BASE=$HOME/perl5" cpan local::lib`
-# 3. Add the following line to the shell profile to configure the environment
-if [ -d "$HOME/perl5/lib/perl5" ] && command -v perl &>/dev/null; then
-    eval "$(perl -I$HOME/perl5/lib/perl5 -Mlocal::lib=$HOME/perl5)"
-fi
-# <<< END PERL INITIALIZATION
+# Alias for long format listing with colorls
+# - Lists all files (including hidden), sorts directories first, and shows git status.
+# - Omits group information in the long listing format.
+command -v colorls &>/dev/null && alias la='colorls -oA --sd --gs'
 
-# Add Ruby gem user install directory to PATH --------------------------------->
-# To set this up on a new machine:
-# 1. Install Ruby gems in the user directory: `gem install neovim`
-# 2. Find the user gem bin directory, run on the terminal: `gem env gemdir`
-# 3. Add the user gem bin directory to PATH in the shell profile
+# Alias for file-only long format listing with colorls
+# - Lists only files (including hidden), sorts directories first, and shows git status.
+# - Omits group information in the long listing format.
+command -v colorls &>/dev/null && alias lf='colorls -foa --sd --gs'
 
-# Dynamically get the user gem bin directory
-user_gem_bin=$(ruby -e 'puts Gem.user_dir')/bin
+# Alias for tree view with colorls
+# - Displays a tree view of directories, sorts directories first, shows git status, and enables hyperlinks.
+command -v colorls &>/dev/null && alias lt='colorls --tree=3 --sd --gs --hyperlink'
 
-# Dynamically get the Homebrew gem bin directory
-homebrew_gem_bin=$(ruby -e 'puts Gem.bindir')
-
-# Check if the directories exist and add them to PATH
-if [ -d "$user_gem_bin" ]; then
-    export PATH="$user_gem_bin:$PATH"
-fi
-if [ -d "$homebrew_gem_bin" ]; then
-    export PATH="$homebrew_gem_bin:$PATH"
-fi
-# <<< END RUBY INITIALIZATION
 
 # Alias for Neovim
 if command -v "$HOMEBREW_PATH/bin/nvim" &>/dev/null; then
@@ -326,6 +314,39 @@ else
         export NVIM_PYTHON_PATH="$python_path"
     fi
 fi
+
+# <-------------------- PERL & RUBY INITIALIZATION -------------------->
+
+# Initialize Perl local::lib environment ------------------------------------->
+# To set this up on a new machine:
+# 1. Install Perl via Homebrew: `brew install perl`
+# 2. Install local::lib, run this command on the terminal: `PERL_MM_OPT="INSTALL_BASE=$HOME/perl5" cpan local::lib`
+# 3. Add the following line to the shell profile to configure the environment
+if [ -d "$HOME/perl5/lib/perl5" ] && command -v perl &>/dev/null; then
+    eval "$(perl -I$HOME/perl5/lib/perl5 -Mlocal::lib=$HOME/perl5)"
+fi
+# <<< END PERL INITIALIZATION
+
+# Add Ruby gem user install directory to PATH --------------------------------->
+# To set this up on a new machine:
+# 1. Install Ruby gems in the user directory: `gem install neovim`
+# 2. Find the user gem bin directory, run on the terminal: `gem env gemdir`
+# 3. Add the user gem bin directory to PATH in the shell profile
+
+# Dynamically get the user gem bin directory
+user_gem_bin=$(ruby -e 'puts Gem.user_dir')/bin
+
+# Dynamically get the Homebrew gem bin directory
+homebrew_gem_bin=$(ruby -e 'puts Gem.bindir')
+
+# Check if the directories exist and add them to PATH
+if [ -d "$user_gem_bin" ]; then
+    export PATH="$user_gem_bin:$PATH"
+fi
+if [ -d "$homebrew_gem_bin" ]; then
+    export PATH="$homebrew_gem_bin:$PATH"
+fi
+# <<< END RUBY INITIALIZATION
 
 # <-------------------- NVM INITIALIZATION -------------------->
 
