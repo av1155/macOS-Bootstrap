@@ -24,8 +24,8 @@ brew "cowsay"
 brew "cpanminus"
 # .NET Core
 brew "dotnet"
-# Modern replacement for 'ls'
-brew "exa"
+# Modern, maintained replacement for ls
+brew "eza"
 # Simple, fast and user-friendly alternative to find
 brew "fd"
 # Play, record, convert, and stream audio and video
