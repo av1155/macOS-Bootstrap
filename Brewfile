@@ -16,14 +16,16 @@ brew "bat"
 brew "bottom"
 # Console Matrix
 brew "cmatrix"
+# Pure Scala Artifact Fetching
+brew "coursier"
 # Configurable talking characters in ASCII art
 brew "cowsay"
 # Get, unpack, build, and install modules from CPAN
 brew "cpanminus"
 # .NET Core
 brew "dotnet"
-# Modern, maintained replacement for ls
-brew "eza"
+# Modern replacement for 'ls'
+brew "exa"
 # Simple, fast and user-friendly alternative to find
 brew "fd"
 # Play, record, convert, and stream audio and video

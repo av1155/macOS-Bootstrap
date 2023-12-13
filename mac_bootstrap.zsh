@@ -476,7 +476,7 @@ else
     color_echo $GREEN " * neovim already installed."
 fi
 
-# Step 10: Install JetBrainsMono Nerd Font ------------------------------------
+# Step 10: Install Nerd Font --------------------------------------------------
 
 echo ""
 
@@ -484,23 +484,26 @@ centered_color_echo $ORANGE "<-------------- Configuration of Nerd Fonts -------
 
 echo ""
 
+FONT_NAME="FiraCode"
+FONT_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/$FONT_NAME.zip"
+
 # Confirmation prompt for font installation
-color_echo $YELLOW "Do you want to proceed installing JetBrainsMono Nerd Font? (y/n)"
+color_echo $YELLOW "Do you want to proceed installing $FONT_NAME Nerd Font? (y/n)"
 echo -n "Enter choice: > "
 read -r font_confirmation
 if [ "$font_confirmation" != "y" ] && [ "$font_confirmation" != "Y" ]; then
     color_echo $RED "Font installation aborted."
 else
-    color_echo $BLUE "Installing JetBrainsMono Nerd Font..."
+    color_echo $BLUE "Installing $FONT_NAME Nerd Font..."
     FONT_DIR="$HOME/Library/Fonts"
     if [ ! -d "$FONT_DIR" ]; then
         color_echo $BLUE "Creating font directory..."
         mkdir -p "$FONT_DIR"
     fi
-    curl -L https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/JetBrainsMono.zip -o "$FONT_DIR/JetBrainsMono.zip" || { color_echo $RED "Failed to download JetBrainsMono Nerd Font."; exit 1; }
-    unzip "$FONT_DIR/JetBrainsMono.zip" -d "$FONT_DIR" || { color_echo $RED "Failed to unzip JetBrainsMono Nerd Font."; exit 1; }
-    rm "$FONT_DIR/JetBrainsMono.zip"
-    color_echo $GREEN "JetBrainsMono Nerd Font installation complete."
+    curl -L $FONT_URL -o "$FONT_DIR/$FONT_NAME.zip" || { color_echo $RED "Failed to download $FONT_NAME Nerd Font."; exit 1; }
+    unzip "$FONT_DIR/$FONT_NAME.zip" -d "$FONT_DIR" || { color_echo $RED "Failed to unzip $FONT_NAME Nerd Font."; exit 1; }
+    rm "$FONT_DIR/$FONT_NAME.zip"
+    color_echo $GREEN "$FONT_NAME Nerd Font installation complete."
 fi
 
 # Step 11: Configure Neovim with AstroNvim -----------------------------------
