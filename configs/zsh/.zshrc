@@ -124,6 +124,8 @@ else
     fi
 fi
 
+# Add the following line in `~/.config/nvim/lua/user/options.lua` to set the dynamic Python executable for pynvim
+# python3_host_prog = "$NVIM_PYTHON_PATH",
 
 # <-------------------- PERL & RUBY INITIALIZATION -------------------->
 
@@ -166,9 +168,13 @@ export NVM_DIR="$HOME/.nvm"
 # [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # Commented out as not needed for Zsh
 
 
-# <-------------------- CUSTOM SCRIPTS -------------------->
+# <-------------------- CUSTOM FUNCTIONS -------------------->
 
-# Enhanced fcd function with customizable depth and better performance
+# fcd: A function to interactively navigate directories using find, fzf, and colorls.
+# This script allows you to visually search and select directories within a specified depth
+# and then directly change to the selected directory. It uses 'find' to list directories,
+# 'fzf' for interactive selection, and 'colorls' to preview directories with color coding.
+
 if command -v find &>/dev/null && command -v fzf &>/dev/null && command -v colorls &>/dev/null; then
     fcd() {
         local depth="${1:-7}"  # Default depth is 7, but can be overridden by first argument
@@ -178,29 +184,54 @@ if command -v find &>/dev/null && command -v fzf &>/dev/null && command -v color
 fi
 
 
+# list: A versatile function for listing and executing categorized aliases from the .zshrc file.
+# This script enables you to choose from different categories of aliases.
+# and interactively select an alias to execute. It simplifies the process of remembering and
+# typing complex aliases and provides an easy way to browse and use them.
+
+CATEGORY_LIST=("tmux" "colorls" "git" "forecast" "weather")
+
+# Enhanced list function for managing and executing categorized aliases.
+list() {
+    if ! command -v fzf >/dev/null 2>&1; then
+        echo "Error: fzf is required for this function to work."
+        return 1
+    fi
+
+    if [[ $# -ne 1 ]] || [[ ! " ${CATEGORY_LIST[*]} " =~ " $1 " ]]; then
+        echo "Usage: list [category]"
+        echo "Available categories:"
+        for category in "${CATEGORY_LIST[@]}"; do
+            echo "* $category"
+        done
+        return 1
+    fi
+
+    local selected=$(grep "alias.*$1" ~/.zshrc | fzf +m --height 60% --reverse)
+    if [[ -n $selected ]]; then
+        local cmd=$(echo "$selected" | sed 's/alias \([^=]*\)="\(.*\)"/\2/')
+        eval "$cmd"
+    fi
+}
+
+
 # <---------------- OMZ PATH, THEMES, AND ZPLUG ------------------>
 
-# PATH --------------->
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
-# Set name of the theme to load --- if set to "random", it will
-# load a random theme each time oh-my-zsh is loaded, in which case,
-# to know which specific one was loaded, run: echo $RANDOM_THEME
+# ZSH THEME -------------------------------------------------------> (ZSH theme configuration: off) -> Default theme = robbyrussell
+ZSH_THEME=""
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 
-# ZSH THEME ---------------> (ZSH theme configuration: off)
-ZSH_THEME=""
-# Default theme = robbyrussell
-
-# POWERLEVEL10K ---------------> (P10K theme configuration: off)
+# POWERLEVEL10K ---------------------------------------------------> (P10K theme configuration: off)
 # source ~/powerlevel10k/powerlevel10k.zsh-theme
 # [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# STARSHIP ---------------> (Starship theme configuration: off)
+# STARSHIP --------------------------------------------------------> (Starship theme configuration: off)
 # eval "$(starship init zsh)"
 
-# ZPLUG + Pure ---------------> (Pure prompt configuration: on)
+# ZPLUG + Pure ----------------------------------------------------> (Pure prompt configuration: on)
 
 # Set ZPLUG_HOME using HOMEBREW_PATH
 export ZPLUG_HOME="$HOMEBREW_PATH/opt/zplug"
@@ -212,7 +243,7 @@ if [ -d "$ZPLUG_HOME" ]; then
     source $ZPLUG_HOME/init.zsh
     zplug "mafredri/zsh-async", from:github
     # Pure Prompt Configuration
-    zplug "sindresorhus/pure", use:pure.zsh, from:github, as:theme # Pure prompt configuration: on
+    zplug "sindresorhus/pure", use:pure.zsh, from:github, as:theme # Pure prompt configuration: on (comment out line for off)
     # zplug "zdharma/fast-syntax-highlighting", as:plugin, defer:2
     zplug "zsh-users/zsh-autosuggestions", as:plugin, defer:2
     zplug load
@@ -224,75 +255,49 @@ if [ -d "$ZPLUG_HOME" ]; then
         fi
     fi
 
-    # Pure prompt Git configurations
-    zstyle :prompt:pure:git:stash show yes
+    # Pure prompt Git configurations:
+    zstyle :prompt:pure:git:stash show yes                        # Show git stash status in prompt
 
 fi
 
 
 # <-------------------- ZSH CONFIGURATION -------------------->
 
-# Set list of themes to pick from when loading at random
-# Setting this variable when ZSH_THEME=random will cause zsh to load
-# a theme from this variable instead of looking in $ZSH/themes/
-# If set to an empty array, this variable will have no effect.
+# Theme Configuration
+# Random theme selection from specified list (only when ZSH_THEME=random)
 # ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
 
-# Uncomment the following line to use case-sensitive completion.
+# Completion Behavior
+# Case-sensitive completion
 # CASE_SENSITIVE="true"
-
-# Uncomment the following line to use hyphen-insensitive completion.
-# Case-sensitive completion must be off. _ and - will be interchangeable.
+# Hyphen-insensitive completion (requires CASE_SENSITIVE off)
 # HYPHEN_INSENSITIVE="true"
 
-# Uncomment one of the following lines to change the auto-update behavior
-# zstyle ':omz:update' mode disabled  # disable automatic updates
-zstyle ':omz:update' mode auto      # update automatically without asking
-# zstyle ':omz:update' mode reminder  # just remind me to update when it's time
+# Auto-update Settings
+# zstyle ':omz:update' mode disabled                              # Disable automatic updates
+zstyle ':omz:update' mode auto                                    # Enable automatic updates without prompt
+# zstyle ':omz:update' mode reminder                              # Reminder for manual updates
 
-# Uncomment the following line to change how often to auto-update (in days).
+# Update Frequency (in days)
 # zstyle ':omz:update' frequency 13
 
-# Uncomment the following line if pasting URLs and other text is messed up.
-# DISABLE_MAGIC_FUNCTIONS="true"
+# Terminal Functionality
+# DISABLE_MAGIC_FUNCTIONS="true"                                  # Fix issues with pasting text
+# DISABLE_LS_COLORS="true"                                        # Disable colors in ls
+# DISABLE_AUTO_TITLE="true"                                       # Disable auto-setting terminal title
+# ENABLE_CORRECTION="true"                                        # Enable command auto-correction
+# COMPLETION_WAITING_DOTS="true"                                  # Show red dots during completion
 
-# Uncomment the following line to disable colors in ls.
-# DISABLE_LS_COLORS="true"
+# Repository Status
+# DISABLE_UNTRACKED_FILES_DIRTY="true"                            # Speed up repo status in large repositories
 
-# Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
+# History Timestamps
+# HIST_STAMPS="mm/dd/yyyy"                                        # Set history timestamps format
 
-# Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
+# Custom Folder
+# ZSH_CUSTOM=/path/to/new-custom-folder                           # Custom folder for Zsh configurations
 
-# Uncomment the following line to display red dots whilst waiting for completion.
-# You can also set it to another string to have that shown instead of the default red dots.
-# e.g. COMPLETION_WAITING_DOTS="%F{yellow}waiting...%f"
-# Caution: this setting can cause issues with multi line prompts in zsh < 5.7.1 (see #5765)
-# COMPLETION_WAITING_DOTS="true"
-
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.
-# You can set one of the optional three formats:
-# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# or set a custom format using the strftime function format specifications,
-# see 'man strftime' for details.
-# HIST_STAMPS="mm/dd/yyyy"
-
-# Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
-
-# Which plugins would you like to load?
-# Standard plugins can be found in $ZSH/plugins/
-# Custom plugins may be added to $ZSH_CUSTOM/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
-
+# Plugins
 plugins=(
     git
     # zsh-autosuggestions
@@ -300,20 +305,18 @@ plugins=(
     zsh-syntax-highlighting
 )
 
+# Source Oh My Zsh
 source $ZSH/oh-my-zsh.sh
 
-# User configuration
-
+# User Configuration
 # export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
 # export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
 # if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
+#   export EDITOR='vim'                                          # Editor for SSH sessions
 # else
-#   export EDITOR='mvim'
+#   export EDITOR='mvim'                                         # Default editor for local sessions
 # fi
 
 # Compilation flags
@@ -337,80 +340,78 @@ source $ZSH/oh-my-zsh.sh
 
 # Check if Git is installed
 if command -v git &>/dev/null; then
-    # Git Aliases ------------------->
-    alias ga='git add'
-    alias gap='git add -p'
-    alias gs='git status'
-    alias gpr='git pull -r'
-    alias gl='git lg'
-    alias glo='git log --oneline'
-    alias gcm='git commit -m'
-    alias pear='git pair '
-    alias gra='git commit --amend --reset-author --no-edit'
-    alias gco='git checkout'
-    alias hangon='git stash save -u'
-    alias gsp='git stash pop'
-    alias grc='git rebase --continue'
-    alias gclean='git clean -df'
-    alias gup='gco main && gpr && gco -'
-    alias unwip='git reset HEAD~'
-    alias unroll='git reset HEAD~ --hard'
-    alias gpfwl='git push --force-with-lease'
-    alias glt='git describe --tags --abbrev=0'
-    alias unroll='unwip && git checkout . && git clean -df'
-    alias rspec_units='rspec --exclude-pattern "**/features/*_spec.rb"'
-    alias awsume='. awsume sso;. awsume'
-    alias gprune=$'git branch --merged main | grep -v \'^[ *]*main$\' | xargs git branch -d'
+
+    # Staging and Committing
+    alias ga="git add"                                           # Stage all changes
+    alias gap="git add -p"                                       # Stage changes interactively
+    alias gcm="git commit -m"                                    # Commit with a message
+    alias gra="git commit --amend --reset-author --no-edit"      # Amend the last commit without changing its message
+    alias unwip="git reset HEAD~"                                # Undo the last commit but keep changes
+    alias uncommit="git reset HEAD~ --hard"                      # Undo the last commit and discard changes
+
+    # Branch and Merge
+    alias gco="git checkout"                                     # Switch branches or restore working tree files
+    alias gpfwl="git push --force-with-lease"                    # Force push with lease for safety
+    alias gprune="git branch --merged main | grep -v '^[ *]*main\$' | xargs git branch -d" # Delete branches merged into main
+
+    # Repository Status and Inspection
+    alias gs="git status"                                        # Show the working tree status
+    alias gl="git lg"                                            # Show commit logs in a graph format
+    alias glo="git log --oneline"                                # Show commit logs in a single line each
+    alias glt="git describe --tags --abbrev=0"                   # Describe the latest tag
+
+    # Remote Operations
+    alias gpr="git pull -r"                                      # Pull with rebase
+    alias gup="gco main && gpr && gco -"                         # Update the current branch with changes from main
+
+    # Stashing
+    alias hangon="git stash save -u"                             # Stash changes including untracked files
+    alias gsp="git stash pop"                                    # Apply stashed changes and remove them from the stash
+
+    # Cleanup
+    alias gclean="git clean -df"                                 # Remove untracked files and directories
+    alias cleanstate="unwip && git checkout . && git clean -df"  # Undo last commit, revert changes, and clean untracked files
+
+    # Other Aliases
+    alias pear="git pair "                                       # Set up git pair for pair programming (requires git-pair gem)
+    alias rspec_units="rspec --exclude-pattern \"**/features/*_spec.rb\"" # Run RSpec tests excluding feature specs
+    alias awsume=". awsume sso;. awsume"                         # Alias for AWS role assumption
+
 fi
 
 # Check if Tmux is installed
 if command -v tmux &>/dev/null; then
-    # Tmux Aliases ------------------->
-    # Attaches tmux to a session (example: ta portal)
-    alias ta='tmux attach -t'
-    # Creates a new session
-    alias tn='tmux new-session -s '
-    # Kill session
-    alias tk='tmux kill-session -t '
-    # Lists all ongoing sessions
-    alias tl='tmux list-sessions'
-    # Detach from session
-    alias td='tmux detach'
-    # Tmux Clear pane
-    alias tc='clear; tmux clear-history; clear'
+
+    # Tmux Aliases
+    alias ta="tmux attach -t"                                    # Attaches tmux to a session (example: ta portal)
+    alias tn="tmux new-session -s "                              # Creates a new session
+    alias tk="tmux kill-session -t "                             # Kill session
+    alias tl="tmux list-sessions"                                # Lists all ongoing sessions
+    alias td="tmux detach"                                       # Detach from session
+    alias tc="clear; tmux clear-history; clear"                  # Tmux Clear pane
+
 fi
+
 
 # Check if colorls is installed
 if command -v colorls &>/dev/null; then
-    # COLORLS ALIASES -------------------->
 
-    # Alias for improved ls with colorls
-    # - Lists almost all files (including hidden), sorts directories first, and shows git status.
-    alias ls='colorls -A --gs --sd'
+    alias ls="colorls -A --gs --sd"                              # Lists most files, directories first, with git status.
+    alias la="colorls -oA --sd --gs"                             # Full listing of all files, directories first, with git status.
+    alias lf="colorls -foa --sd --gs"                            # File-only listing, directories first, with git status.
+    alias lt="colorls --tree=3 --sd --gs --hyperlink"            # Tree view of directories with git status and hyperlinks.
 
-    # Alias for long format listing with colorls
-    # - Lists all files (including hidden), sorts directories first, and shows git status.
-    # - Omits group information in the long listing format.
-    alias la='colorls -oA --sd --gs'
-
-    # Alias for file-only long format listing with colorls
-    # - Lists only files (including hidden), sorts directories first, and shows git status.
-    # - Omits group information in the long listing format.
-    alias lf='colorls -foa --sd --gs'
-
-    # Alias for tree view with colorls
-    # - Displays a tree view of directories, sorts directories first, shows git status, and enables hyperlinks.
-    alias lt='colorls --tree=3 --sd --gs --hyperlink'
 fi
 
 # Alias for Neovim
 if command -v "$HOMEBREW_PATH/bin/nvim" &>/dev/null; then
-    alias vim='nvim'
+    alias vim="nvim"
 elif [ -f ~/nvim-macos/bin/nvim ]; then
-    alias vim='~/nvim-macos/bin/nvim'
+    alias vim="~/nvim-macos/bin/nvim"
 fi
 
 # Fuzzy Finder + Nvim Custom Alias
+# Searches files with 'fd', previews with 'bat', and opens in 'nvim' via 'fzf'.
 command -v fd &>/dev/null && command -v fzf &>/dev/null && \
     command -v bat &>/dev/null && command -v nvim &>/dev/null && \
     alias f="fd --type f --hidden --exclude .git | fzf --preview 'bat --color=always {1}' | xargs nvim"
@@ -420,8 +421,9 @@ command -v fd &>/dev/null && command -v fzf &>/dev/null && \
 [ -f ~/scripts/JavaCompiler/JavaCompiler.zsh ] && source ~/scripts/JavaCompiler/JavaCompiler.zsh
 
 # Weather
-alias forecast='curl "https://wttr.in/coral-gables?1&F&q"'
-alias weather='curl "https://wttr.in/coral-gables?format=1"'
+alias forecast="curl \"https://wttr.in/coral-gables?1&F&q\""
+alias weather="curl \"https://wttr.in/coral-gables?format=1\""
+
 
 # <-------------------- FZF INITIALIZATION -------------------->
 
@@ -431,6 +433,7 @@ if type rg &> /dev/null; then
     export FZF_DEFAULT_COMMAND='rg --files'
     export FZF_DEFAULT_OPTS='-m --height 70% --border --layout=reverse'
 fi
+
 
 # <-------------------- AUTOJUMP INITIALIZATION -------------------->
 
