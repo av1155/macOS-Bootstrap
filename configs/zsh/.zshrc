@@ -9,32 +9,162 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
     source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# <-------------------- ARCHITECTURE DETECTION -------------------->
 
-# Determine the architecture and set the Homebrew path accordingly
-ARCH=$(uname -m)
+# <-------------------- HOMEBREW PATH DETECTION -------------------->
 
-if [ "$ARCH" = "arm64" ]; then
-    # ARM architecture (Apple Silicon)
-    HOMEBREW_PATH="/opt/homebrew"
-elif [ "$ARCH" = "x86_64" ]; then
-    # Intel architecture
-    HOMEBREW_PATH="/usr/local"
-else
-    echo "Unknown architecture: $ARCH"
-    # Set a default or exit
-    HOMEBREW_PATH="/usr/local" # default for unknown architecture
+if command -v brew >/dev/null 2>&1; then
+    HOMEBREW_PATH=$(brew --prefix)
 fi
 
-# <------------------ JAVA_HOME CONFIGURATION ------------------>
 
-# Set JAVA_HOME for Java
+# <------------------ PATH CONFIGURATION ------------------>
+# Check if Homebrew is installed
+if command -v brew >/dev/null 2>&1; then
+
+    # HOMEBREW
+    export PATH="$(brew --prefix)/bin:$PATH"
+
+    # GIT
+    export PATH="$(brew --prefix git)/bin:$PATH"
+
+    # DOTNET
+    export PATH="$(brew --prefix dotnet)/bin:$PATH"
+
+    # RUBY
+    export PATH="$(brew --prefix ruby)/bin:$PATH"
+
+    # GO
+    export PATH="$(brew --prefix go)/bin:$PATH"
+
+    # JULIA
+    export PATH="$(brew --prefix julia)/bin:$PATH"
+
+    # COURSIER (Scala)
+    export PATH="$(brew --prefix coursier)/bin:$PATH"
+
+fi
+
+# JAVA
 export JAVA_HOME="$(/usr/libexec/java_home)"
 export PATH=$JAVA_HOME/bin:$PATH
 
-# <------------------ RUBY PATH CONFIGURATION ------------------>
+# <-------------------- CONDA (Python) INITIALIZATION -------------------->
 
-export PATH="$HOMEBREW_PATH/opt/ruby/bin:$PATH"
+# Set the Conda executable path based on HOMEBREW_PATH
+CONDA_EXEC_PATH="$HOMEBREW_PATH/Caskroom/miniforge/base/bin/conda"
+
+# Initialize Conda
+if [ -f "$CONDA_EXEC_PATH" ]; then
+    __conda_setup="$("$CONDA_EXEC_PATH" 'shell.zsh' 'hook' 2> /dev/null)"
+    if [ $? -eq 0 ]; then
+        eval "$__conda_setup"
+    else
+        CONDA_SH_PATH="$HOMEBREW_PATH/Caskroom/miniforge/base/etc/profile.d/conda.sh"
+        if [ -f "$CONDA_SH_PATH" ]; then
+            . "$CONDA_SH_PATH"
+        else
+            export PATH="$HOMEBREW_PATH/Caskroom/miniforge/base/bin:$PATH"
+        fi
+    fi
+else
+    echo "Conda executable not found at $CONDA_EXEC_PATH"
+fi
+
+unset __conda_setup
+
+# <<< END CONDA INITIALIZATION
+
+
+# <------------------ NVIM PYTHON PATH CONFIGURATION ------------------>
+
+# Check if Conda is installed
+if command -v conda >/dev/null 2>&1; then
+    # Conda-specific configuration
+
+    # Function to set NVIM_PYTHON_PATH
+    set_python_path_for_neovim() {
+        if [[ -n "$CONDA_PREFIX" ]]; then
+            export NVIM_PYTHON_PATH="$CONDA_PREFIX/bin/python"
+        else
+            # Fallback to system Python (Python 3) if Conda is not active
+            local system_python_path=$(which python3)
+            if [[ -z "$system_python_path" ]]; then
+                echo "Python is not installed. Please install Python to use with Neovim."
+            else
+                export NVIM_PYTHON_PATH="$system_python_path"
+            fi
+        fi
+    }
+
+    # Initialize NVIM_PYTHON_PATH
+    set_python_path_for_neovim
+
+    # Hook into the precmd function
+    function precmd_set_python_path() {
+        if [[ "$PREV_CONDA_PREFIX" != "$CONDA_PREFIX" ]]; then
+            set_python_path_for_neovim
+            PREV_CONDA_PREFIX="$CONDA_PREFIX"
+        fi
+    }
+
+    # Save the initial Conda prefix
+    PREV_CONDA_PREFIX="$CONDA_PREFIX"
+
+    # Add the hook to precmd
+    autoload -U add-zsh-hook
+    add-zsh-hook precmd precmd_set_python_path
+
+else
+    # Non-Conda environment: Check if Python is installed
+    python_path=$(which python3)
+    if [[ -z "$python_path" ]]; then
+        echo "Python is not installed. Please install Python to use with Neovim."
+    else
+        export NVIM_PYTHON_PATH="$python_path"
+    fi
+fi
+
+
+# <-------------------- PERL & RUBY INITIALIZATION -------------------->
+
+# Initialize Perl local::lib environment ------------------------------------->
+# To set this up on a new machine:
+# 1. Install Perl via Homebrew: `brew install perl`
+# 2. Install local::lib, run this command on the terminal: `PERL_MM_OPT="INSTALL_BASE=$HOME/perl5" cpan local::lib`
+# 3. Add the following line to the shell profile to configure the environment
+if [ -d "$HOME/perl5/lib/perl5" ] && command -v perl &>/dev/null; then
+    eval "$(perl -I$HOME/perl5/lib/perl5 -Mlocal::lib=$HOME/perl5)"
+fi
+# <<< END PERL INITIALIZATION
+
+# Add Ruby gem user install directory to PATH --------------------------------->
+# To set this up on a new machine:
+# 1. Install Ruby gems in the user directory: `gem install neovim`
+# 2. Find the user gem bin directory, run on the terminal: `gem env gemdir`
+# 3. Add the user gem bin directory to PATH in the shell profile
+
+# Dynamically get the user gem bin directory
+user_gem_bin=$(ruby -e 'puts Gem.user_dir')/bin
+
+# Dynamically get the Homebrew gem bin directory
+homebrew_gem_bin=$(ruby -e 'puts Gem.bindir')
+
+# Check if the directories exist and add them to PATH
+if [ -d "$user_gem_bin" ]; then
+    export PATH="$user_gem_bin:$PATH"
+fi
+if [ -d "$homebrew_gem_bin" ]; then
+    export PATH="$homebrew_gem_bin:$PATH"
+fi
+# <<< END RUBY INITIALIZATION
+
+
+# <-------------------- NVM INITIALIZATION -------------------->
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # Commented out as not needed for Zsh
+
 
 # <-------------------- CUSTOM SCRIPTS -------------------->
 
@@ -47,11 +177,10 @@ if command -v find &>/dev/null && command -v fzf &>/dev/null && command -v color
     }
 fi
 
-# <----------------- PATH, THEMES, AND ZPLUG ------------------->
 
+# <---------------- OMZ PATH, THEMES, AND ZPLUG ------------------>
 
 # PATH --------------->
-
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -100,6 +229,7 @@ if [ -d "$ZPLUG_HOME" ]; then
 
 fi
 
+
 # <-------------------- ZSH CONFIGURATION -------------------->
 
 # Set list of themes to pick from when loading at random
@@ -138,7 +268,7 @@ zstyle ':omz:update' mode auto      # update automatically without asking
 # Uncomment the following line to display red dots whilst waiting for completion.
 # You can also set it to another string to have that shown instead of the default red dots.
 # e.g. COMPLETION_WAITING_DOTS="%F{yellow}waiting...%f"
-# Caution: this setting can cause issues with multiline prompts in zsh < 5.7.1 (see #5765)
+# Caution: this setting can cause issues with multi line prompts in zsh < 5.7.1 (see #5765)
 # COMPLETION_WAITING_DOTS="true"
 
 # Uncomment the following line if you want to disable marking untracked files
@@ -192,6 +322,7 @@ source $ZSH/oh-my-zsh.sh
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
+
 # <-------------------- CUSTOM ALIASES -------------------->
 
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
@@ -204,25 +335,73 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 # source ~/powerlevel10k/powerlevel10k.zsh-theme
 
+# Check if Git is installed
+if command -v git &>/dev/null; then
+    # Git Aliases ------------------->
+    alias ga='git add'
+    alias gap='git add -p'
+    alias gs='git status'
+    alias gpr='git pull -r'
+    alias gl='git lg'
+    alias glo='git log --oneline'
+    alias gcm='git commit -m'
+    alias pear='git pair '
+    alias gra='git commit --amend --reset-author --no-edit'
+    alias gco='git checkout'
+    alias hangon='git stash save -u'
+    alias gsp='git stash pop'
+    alias grc='git rebase --continue'
+    alias gclean='git clean -df'
+    alias gup='gco main && gpr && gco -'
+    alias unwip='git reset HEAD~'
+    alias unroll='git reset HEAD~ --hard'
+    alias gpfwl='git push --force-with-lease'
+    alias glt='git describe --tags --abbrev=0'
+    alias unroll='unwip && git checkout . && git clean -df'
+    alias rspec_units='rspec --exclude-pattern "**/features/*_spec.rb"'
+    alias awsume='. awsume sso;. awsume'
+    alias gprune=$'git branch --merged main | grep -v \'^[ *]*main$\' | xargs git branch -d'
+fi
 
-# Alias for improved ls with colorls
-# - Lists almost all files (including hidden), sorts directories first, and shows git status.
-command -v colorls &>/dev/null && alias ls='colorls -A --gs --sd'
+# Check if Tmux is installed
+if command -v tmux &>/dev/null; then
+    # Tmux Aliases ------------------->
+    # Attaches tmux to a session (example: ta portal)
+    alias ta='tmux attach -t'
+    # Creates a new session
+    alias tn='tmux new-session -s '
+    # Kill session
+    alias tk='tmux kill-session -t '
+    # Lists all ongoing sessions
+    alias tl='tmux list-sessions'
+    # Detach from session
+    alias td='tmux detach'
+    # Tmux Clear pane
+    alias tc='clear; tmux clear-history; clear'
+fi
 
-# Alias for long format listing with colorls
-# - Lists all files (including hidden), sorts directories first, and shows git status.
-# - Omits group information in the long listing format.
-command -v colorls &>/dev/null && alias la='colorls -oA --sd --gs'
+# Check if colorls is installed
+if command -v colorls &>/dev/null; then
+    # COLORLS ALIASES -------------------->
 
-# Alias for file-only long format listing with colorls
-# - Lists only files (including hidden), sorts directories first, and shows git status.
-# - Omits group information in the long listing format.
-command -v colorls &>/dev/null && alias lf='colorls -foa --sd --gs'
+    # Alias for improved ls with colorls
+    # - Lists almost all files (including hidden), sorts directories first, and shows git status.
+    alias ls='colorls -A --gs --sd'
 
-# Alias for tree view with colorls
-# - Displays a tree view of directories, sorts directories first, shows git status, and enables hyperlinks.
-command -v colorls &>/dev/null && alias lt='colorls --tree=3 --sd --gs --hyperlink'
+    # Alias for long format listing with colorls
+    # - Lists all files (including hidden), sorts directories first, and shows git status.
+    # - Omits group information in the long listing format.
+    alias la='colorls -oA --sd --gs'
 
+    # Alias for file-only long format listing with colorls
+    # - Lists only files (including hidden), sorts directories first, and shows git status.
+    # - Omits group information in the long listing format.
+    alias lf='colorls -foa --sd --gs'
+
+    # Alias for tree view with colorls
+    # - Displays a tree view of directories, sorts directories first, shows git status, and enables hyperlinks.
+    alias lt='colorls --tree=3 --sd --gs --hyperlink'
+fi
 
 # Alias for Neovim
 if command -v "$HOMEBREW_PATH/bin/nvim" &>/dev/null; then
@@ -236,127 +415,22 @@ command -v fd &>/dev/null && command -v fzf &>/dev/null && \
     command -v bat &>/dev/null && command -v nvim &>/dev/null && \
     alias f="fd --type f --hidden --exclude .git | fzf --preview 'bat --color=always {1}' | xargs nvim"
 
-# Sourced Scripts
+# Sourced + Aliased Scripts
 [ -f ~/scripts/JavaProject.zsh ] && { source ~/scripts/JavaProject.zsh; alias jp="javaproject"; }
 [ -f ~/scripts/JavaCompiler/JavaCompiler.zsh ] && source ~/scripts/JavaCompiler/JavaCompiler.zsh
 
-# <-------------------- CONDA INITIALIZATION -------------------->
-
-# Set the Conda executable path based on HOMEBREW_PATH
-CONDA_EXEC_PATH="$HOMEBREW_PATH/Caskroom/miniforge/base/bin/conda"
-
-# Initialize Conda
-if [ -f "$CONDA_EXEC_PATH" ]; then
-    __conda_setup="$("$CONDA_EXEC_PATH" 'shell.zsh' 'hook' 2> /dev/null)"
-    if [ $? -eq 0 ]; then
-        eval "$__conda_setup"
-    else
-        CONDA_SH_PATH="$HOMEBREW_PATH/Caskroom/miniforge/base/etc/profile.d/conda.sh"
-        if [ -f "$CONDA_SH_PATH" ]; then
-            . "$CONDA_SH_PATH"
-        else
-            export PATH="$HOMEBREW_PATH/Caskroom/miniforge/base/bin:$PATH"
-        fi
-    fi
-else
-    echo "Conda executable not found at $CONDA_EXEC_PATH"
-fi
-
-unset __conda_setup
-
-# <<< END CONDA INITIALIZATION
-
-# <------------------ PYTHON PATH CONFIGURATION ------------------>
-
-# Check if Conda is installed
-if command -v conda >/dev/null 2>&1; then
-    # Conda-specific configuration
-
-    # Function to set NVIM_PYTHON_PATH
-    set_python_path_for_neovim() {
-        if [[ -n "$CONDA_PREFIX" ]]; then
-            export NVIM_PYTHON_PATH="$CONDA_PREFIX/bin/python"
-        else
-            # Fallback to system Python (Python 3) if Conda is not active
-            local system_python_path=$(which python3)
-            if [[ -z "$system_python_path" ]]; then
-                echo "Python is not installed. Please install Python to use with Neovim."
-            else
-                export NVIM_PYTHON_PATH="$system_python_path"
-            fi
-        fi
-    }
-
-    # Initialize NVIM_PYTHON_PATH
-    set_python_path_for_neovim
-
-    # Hook into the precmd function
-    function precmd_set_python_path() {
-        if [[ "$PREV_CONDA_PREFIX" != "$CONDA_PREFIX" ]]; then
-            set_python_path_for_neovim
-            PREV_CONDA_PREFIX="$CONDA_PREFIX"
-        fi
-    }
-
-    # Save the initial Conda prefix
-    PREV_CONDA_PREFIX="$CONDA_PREFIX"
-
-    # Add the hook to precmd
-    autoload -U add-zsh-hook
-    add-zsh-hook precmd precmd_set_python_path
-
-else
-    # Non-Conda environment: Check if Python is installed
-    python_path=$(which python3)
-    if [[ -z "$python_path" ]]; then
-        echo "Python is not installed. Please install Python to use with Neovim."
-    else
-        export NVIM_PYTHON_PATH="$python_path"
-    fi
-fi
-
-# <-------------------- PERL & RUBY INITIALIZATION -------------------->
-
-# Initialize Perl local::lib environment ------------------------------------->
-# To set this up on a new machine:
-# 1. Install Perl via Homebrew: `brew install perl`
-# 2. Install local::lib, run this command on the terminal: `PERL_MM_OPT="INSTALL_BASE=$HOME/perl5" cpan local::lib`
-# 3. Add the following line to the shell profile to configure the environment
-if [ -d "$HOME/perl5/lib/perl5" ] && command -v perl &>/dev/null; then
-    eval "$(perl -I$HOME/perl5/lib/perl5 -Mlocal::lib=$HOME/perl5)"
-fi
-# <<< END PERL INITIALIZATION
-
-# Add Ruby gem user install directory to PATH --------------------------------->
-# To set this up on a new machine:
-# 1. Install Ruby gems in the user directory: `gem install neovim`
-# 2. Find the user gem bin directory, run on the terminal: `gem env gemdir`
-# 3. Add the user gem bin directory to PATH in the shell profile
-
-# Dynamically get the user gem bin directory
-user_gem_bin=$(ruby -e 'puts Gem.user_dir')/bin
-
-# Dynamically get the Homebrew gem bin directory
-homebrew_gem_bin=$(ruby -e 'puts Gem.bindir')
-
-# Check if the directories exist and add them to PATH
-if [ -d "$user_gem_bin" ]; then
-    export PATH="$user_gem_bin:$PATH"
-fi
-if [ -d "$homebrew_gem_bin" ]; then
-    export PATH="$homebrew_gem_bin:$PATH"
-fi
-# <<< END RUBY INITIALIZATION
-
-# <-------------------- NVM INITIALIZATION -------------------->
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # Commented out as not needed for Zsh
+# Weather
+alias forecast='curl "https://wttr.in/coral-gables?1&F&q"'
+alias weather='curl "https://wttr.in/coral-gables?format=1"'
 
 # <-------------------- FZF INITIALIZATION -------------------->
 
 [[ -f $HOME/.fzf.zsh ]] && source $HOME/.fzf.zsh
+export FZF_DEFAULT_OPS="--extended --layout=reverse"
+if type rg &> /dev/null; then
+    export FZF_DEFAULT_COMMAND='rg --files'
+    export FZF_DEFAULT_OPTS='-m --height 70% --border --layout=reverse'
+fi
 
 # <-------------------- AUTOJUMP INITIALIZATION -------------------->
 
@@ -367,12 +441,15 @@ else
     echo "Autojump initialization file not found"
 fi
 
+
 # <-------------------- NEOFETCH INITIALIZATION -------------------->
 
 command -v neofetch &>/dev/null && neofetch
 
+
 # <-------------------- ITERM2 SHELL INTEGRATION ------------------->
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
 
 # <-------------------- END OF ZSHRC FILE -------------------->
