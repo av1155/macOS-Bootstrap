@@ -1,77 +1,109 @@
-" === Plugins ===
-let mapleader=" "    
-" Set the leader key to the spacebar
-
-""" Plugin settings --------------------------------
-set surround         
-" Enable the 'surround' plugin for handling surrounding characters
+" Basic settings
+set ideajoin 
+" Enables IntelliJ IDEA-like joining lines.
+set surround 
+" Enables surround plugin functionality.
 set multiple-cursors 
-" Enable the 'multiple-cursors' plugin for editing multiple selections
-set commentary       
-" Enable the 'commentary' plugin for commenting/uncommenting lines
-set argtextobj       
-" Enable the 'argtextobj' plugin for defining text objects for function arguments
-set easymotion       
-" Enable the 'easymotion' plugin for simplified navigation
-set textobj-entire   
-" Enable the 'textobj-entire' plugin for defining a text object for the entire buffer
-set ReplaceWithRegister 
-" Enable the 'ReplaceWithRegister' plugin for replacing text with register content
-set exchange         
-" Enable the 'exchange' plugin for swapping text objects
-" Trying the new syntax
-Plug 'machakann/vim-highlightedyank'  
-" Add the 'vim-highlightedyank' plugin using Vim-Plug
+" Enables multiple cursor functionality.
+set incsearch 
+" Enables incremental search, highlighting matches as you type.
 
-""" Common settings --------------------------------
-set showmode          " Display the current mode in the status line
-set so=5              " Set the 'scrolloff' option to keep lines visible above and below the cursor
-set incsearch         " Enable incremental search
-set nu                " Display line numbers in the left margin
+" Leader key configuration
+let mapleader = " " 
+" Sets the spacebar as the leader key.
 
-""" Idea specific settings ---------------------------
-set ideajoin          " Configure IdeaVim-specific setting for joining lines
-set ideastatusicon=gray  " Set the status icon color in IntelliJ IDEA to gray
+" Surround plugin mappings for visual mode
+vmap s S 
+" Maps 's' to the 'S' command in visual mode for surround actions.
 
-""" Mappings -----------------------------------------
-" === Easymotion and Navigation ===
-map <leader>f <Plug>(easymotion-s)  
-" Map <leader>f to easymotion-s for simplified text navigation
-map <leader>e <Plug>(easymotion-f)  
-" Map <leader>e to easymotion-f for text movement
+" System clipboard integration mappings
+" These mappings allow you to yank to and paste from the system clipboard.
+vmap <leader>y 
+"+y " Yank selection to the system clipboard in visual mode.
+vmap <leader>d 
+"+d " Delete selection to the system clipboard in visual mode.
+nmap <leader>y 
+"+yy " Yank current line to the system clipboard in normal mode.
+nmap <leader>p 
+"+p " Paste from the system clipboard below the cursor in normal mode.
+nmap <leader>P 
+"+P " Paste from the system clipboard above the cursor in normal mode.
+vmap <leader>p 
+"+p " Paste from the system clipboard in visual mode, replacing the selection.
+vmap <leader>P 
+"+P " Paste from the system clipboard before the selection in visual mode.
 
-" === Debugging ===
-map <leader>d <Action>(Debug)        
-" Map <leader>d to the Debug action
-map <leader>r <Action>(RenameElement) 
-" Map <leader>r to the RenameElement action
-map <leader>c <Action>(Stop)         
-" Map <leader>c to the Stop action
-map <leader>z <Action>(ToggleDistractionFreeMode)  
-" Map <leader>z to ToggleDistractionFreeMode action
+" Action mappings
+" These mappings trigger various IntelliJ IDEA actions from normal mode.
+nmap <leader>q <action>(CloseEditor) 
+" Close the current editor tab.
+nmap <leader>i <action>(Generate) 
+" Open the 'Generate' menu (e.g., to generate code).
+nmap <leader>m <action>(Git.Menu) 
+" Open the 'VCS' menu for Git actions.
+nmap <leader>s <action>(QuickChangeScheme) 
+" Change the color scheme quickly.
+nmap <leader>/ <action>(ShowErrorDescription) 
+" Show the description of the current error.
+nmap <leader>e <action>(GotoNextError) 
+" Go to the next error in the file.
+nnoremap <leader><leader> <C-Tab> 
+" Map double leader press to switch between tabs.
+nnoremap <c-\> :action MoveTabRight<CR> 
+" Move the current tab to the right.
+nnoremap <c-m> :action MoveEditorToOppositeTabGroup<CR> 
+" Move editor to the opposite group.
+nnoremap <c--> :action SplitHorizontally<CR> 
+" Split the window horizontally.
 
-" === Project and VCS ===
-map <leader>s <Action>(SelectInProjectView)  
-" Map <leader>s to SelectInProjectView action
-map <leader>a <Action>(Annotate)             
-" Map <leader>a to Annotate action
-map <leader>h <Action>(Vcs.ShowTabbedFileHistory)  
-" Map <leader>h to Vcs.ShowTabbedFileHistory action
-map <S-Space> <Action>(GotoNextError)         
-" Map <S-Space> to GotoNextError action
+" Handler settings
+" These settings define which mode (IDEA or Vim) handles specific Ctrl-key combinations.
+sethandler <c-g> a:ide 
+" IDEA handles Ctrl-G
+sethandler <c-w> a:vim 
+" Vim handles Ctrl-W
+" ... (similarly for other Ctrl-key combinations)
 
-" === Code Formatting ===
-map <leader>l V<Action>(ReformatCode)     
-" Map <leader>l to ReformatCode action
+" Vim window navigation mappings
+nnoremap <c-h> <c-w>h 
+" Move to the window to the left.
+nnoremap <c-l> <c-w>l 
+" Move to the window to the right.
+nnoremap <c-j> <c-w>j 
+" Move to the window below.
+nnoremap <c-k> <c-w>k 
+" Move to the window above.
 
-" === Code Manipulation ===
-map <leader>J Ji <ESC>   
-" Map <leader>J to Ji and exit insert mode
-map H h                   
-" Map H to h (seems to be a correction)
-map <leader>i ~hi         
-" Map <leader>i to toggle case and start typing
-vmap <leader>u d~h         
-" Map <leader>u to remove selection and toggle case
-map U <C-R>               
-" Map U to execute a specific action
+" Tab navigation mappings
+nnoremap <TAB> :action PreviousTab<CR> 
+" Go to the previous tab.
+nnoremap <s-TAB> :action NextTab<CR> 
+" Go to the next tab.
+nnoremap <leader>t :action ActivateTerminalToolWindow<CR> 
+" Open or focus on the terminal window.
+
+" Multi-cursor mappings
+map mc <A-n> 
+" Start multi-cursor from the current cursor position with Alt-N.
+map mx <A-x> 
+" Remove a cursor or cancel multi-cursor mode with Alt-X.
+map mp <A-p> 
+" Skip the next occurrence with Alt-P.
+
+" Running and debugging mappings
+nnoremap ,r :action Rerun<CR> 
+" Rerun the last run configuration.
+nnoremap ,c :action RunClass<CR> 
+" Run the current class.
+nnoremap ,b :action ToggleLineBreakpoint<CR> 
+" Toggle a breakpoint on the current line.
+nnoremap ,d :action ContextDebug<CR> 
+" Start debugging in the current context.
+
+" NERDTree settings
+set NERDTree 
+" Enable NERDTree functionality.
+let g:NERDTreeMapActivateNode='l' 
+" Press 'l' to open a directory or file in NERDTree.
+let g:NERDTreeMapJumpParent='h' 
+" Press 'h' to move to the parent directory in NERDTree.
