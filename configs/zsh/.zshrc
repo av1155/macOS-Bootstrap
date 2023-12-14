@@ -30,6 +30,9 @@ if command -v brew >/dev/null 2>&1; then
     # DOTNET
     export PATH="$(brew --prefix dotnet)/bin:$PATH"
 
+    # MONO
+    export MONO_GAC_PREFIX="$(brew --prefix)"
+
     # RUBY
     export PATH="$(brew --prefix ruby)/bin:$PATH"
 

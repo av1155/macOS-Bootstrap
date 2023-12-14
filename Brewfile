@@ -50,6 +50,10 @@ brew "julia"
 brew "luarocks"
 # Java-based project management
 brew "maven"
+# Interpreted, interactive, object-oriented programming language
+brew "python@3.11"
+# Cross platform, open source .NET development framework
+brew "mono"
 # Fast, highly customisable system info script
 brew "neofetch"
 # Ambitious Vim-fork focused on extensibility and agility
@@ -62,8 +66,6 @@ brew "ollama", restart_service: true
 brew "php"
 # Bundle a Python application and all its dependencies
 brew "pyinstaller"
-# Interpreted, interactive, object-oriented programming language
-brew "python@3.11"
 # Search tool like grep and The Silver Searcher
 brew "ripgrep"
 # Powerful, clean, object-oriented scripting language
