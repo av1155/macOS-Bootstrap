@@ -494,6 +494,20 @@ else
     color_echo $GREEN " * neovim already installed."
 fi
 
+# Check and install TypeScript
+if ! npm list -g typescript &>/dev/null; then
+    color_echo $BLUE " * Installing TypeScript..."
+    npm install -g typescript || {
+        color_echo $YELLOW "Regular installation failed. Attempting with --force..."
+        npm install -g typescript --force || {
+            color_echo $RED "Failed to install TypeScript.";
+            exit 1;
+        }
+    }
+else
+    color_echo $GREEN " * TypeScript already installed."
+fi
+
 # Step 10: Install Nerd Font --------------------------------------------------
 
 echo ""
