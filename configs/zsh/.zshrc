@@ -44,9 +44,24 @@ if command -v brew >/dev/null 2>&1; then
 
 fi
 
+# Set GOBIN environment variable
+export GOBIN="$HOME/go/bin"
+
+# Add GOBIN to PATH
+export PATH="$GOBIN:$PATH"
+
+# Create GOBIN directory if it doesn't exist
+if [ ! -d "$GOBIN" ]; then
+    mkdir -p "$GOBIN"
+fi
+
 # JAVA
 export JAVA_HOME="$(/usr/libexec/java_home)"
 export PATH=$JAVA_HOME/bin:$PATH
+
+# DOTNET
+export DOTNET_ROOT="$HOMEBREW_PATH/opt/dotnet/libexec"
+
 
 # <-------------------- CONDA (Python) INITIALIZATION -------------------->
 
