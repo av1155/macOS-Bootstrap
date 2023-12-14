@@ -454,24 +454,42 @@ color_echo $BLUE "Installing global npm packages..."
 
 # Check and install tree-sitter-cli
 if ! npm list -g tree-sitter-cli &>/dev/null; then
-    color_echo $BLUE " * tree-sitter-cli: "
-    npm install -g tree-sitter-cli || { color_echo $RED "Failed to install tree-sitter-cli."; exit 1; }
+    color_echo $BLUE " * Installing tree-sitter-cli..."
+    npm install -g tree-sitter-cli || {
+        color_echo $YELLOW "Regular installation failed. Attempting with --force..."
+        npm install -g tree-sitter-cli --force || {
+            color_echo $RED "Failed to install tree-sitter-cli.";
+            exit 1;
+        }
+    }
 else
     color_echo $GREEN " * tree-sitter-cli already installed."
 fi
 
 # Check and install live-server
 if ! npm list -g live-server &>/dev/null; then
-    color_echo $BLUE " * live-server: "
-    npm install -g live-server || { color_echo $RED "Failed to install live-server."; exit 1; }
+    color_echo $BLUE " * Installing live-server..."
+    npm install -g live-server || {
+        color_echo $YELLOW "Regular installation failed. Attempting with --force..."
+        npm install -g live-server --force || {
+            color_echo $RED "Failed to install live-server.";
+            exit 1;
+        }
+    }
 else
     color_echo $GREEN " * live-server already installed."
 fi
 
 # Check and install neovim
 if ! npm list -g neovim &>/dev/null; then
-    color_echo $BLUE " * neovim: "
-    npm install -g neovim || { color_echo $RED "Failed to install neovim."; exit 1; }
+    color_echo $BLUE " * Installing neovim..."
+    npm install -g neovim || {
+        color_echo $YELLOW "Regular installation failed. Attempting with --force..."
+        npm install -g neovim --force || {
+            color_echo $RED "Failed to install neovim.";
+            exit 1;
+        }
+    }
 else
     color_echo $GREEN " * neovim already installed."
 fi
@@ -713,6 +731,46 @@ else
     composer --version || { color_echo $RED "Composer installation failed."; exit 1; }
 
     color_echo $GREEN " * Composer installed successfully."
+fi
+
+# Initialize Neovim plugins ---------------------------------------------------
+
+echo ""
+
+centered_color_echo $ORANGE "<-------------- Initializing Neovim Plugins -------------->"
+
+echo ""
+
+# Check if Neovim is installed
+if command -v nvim &> /dev/null; then
+    color_echo $GREEN "Neovim is installed."
+
+    # Check if user configuration directory exists
+    if [ -d "$HOME/.config/nvim/lua/user" ]; then
+        color_echo $GREEN "Neovim user configuration directory found."
+
+        # Prompt for initializing plugins
+        color_echo $YELLOW "Do you want to initialize Neovim plugins now? This will run 'nvim --headless -c quitall' (y/n)"
+        echo -n "> "
+        read -r choice
+        case "$choice" in
+            y|Y )
+                color_echo $BLUE "Initializing Neovim plugins..."
+                nvim --headless -c 'quitall'
+                color_echo $GREEN "Neovim plugins initialized."
+                ;;
+            n|N )
+                color_echo $GREEN "Skipping plugin initialization."
+                ;;
+            * )
+                color_echo $RED "Invalid choice. Skipping plugin initialization."
+                ;;
+        esac
+    else
+        color_echo $YELLOW "Neovim user configuration directory does not exist. Skipping plugin initialization."
+    fi
+else
+    color_echo $YELLOW "Neovim is not installed. Skipping plugin initialization."
 fi
 
 # Step 13: Create TODO List of Apps to Download -------------------------------
