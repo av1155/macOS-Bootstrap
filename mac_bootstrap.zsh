@@ -175,30 +175,7 @@ install_neovim() {
 
 # END OF FUNCTIONS ------------------------------------------------------------
 
-# Step 1: Install Xcode Command Line Tools -------------------------------------
-
-echo ""
-
-centered_color_echo $ORANGE "<-------------- Xcode Command Line Tools Configuration -------------->"
-
-echo ""
-
-if ! xcode-select -p &>/dev/null; then
-    color_echo $RED "Installing Xcode Command Line Tools..."
-    xcode-select --install || { color_echo $RED "Failed to install Xcode Command Line Tools."; exit 1; }
-
-    # Wait for Xcode Command Line Tools installation to complete
-    until xcode-select -p &>/dev/null; do
-        color_echo $YELLOW "Waiting for Xcode Command Line Tools to complete installation..."
-        sleep 30
-    done
-
-    color_echo $GREEN "Xcode Command Line Tools installation complete."
-else
-    color_echo $GREEN "Xcode Command Line Tools already installed."
-fi
-
-# Step 2: Install Homebrew ----------------------------------------------------
+# Step 1: Install Homebrew ----------------------------------------------------
 
 echo ""
 
@@ -227,17 +204,20 @@ if ! command -v brew &>/dev/null; then
     # Set up Homebrew in the shell only after installation
     echo "eval \"$($HOMEBREW_BIN shellenv)\"" >> $HOME/.zprofile
     eval "$($HOMEBREW_BIN shellenv)"
+
+    # Homebrew will prompt for Xcode Command Line Tools installation if necessary
 else
-    color_echo $GREEN "Homebrew already installed."
+    color_echo $GREEN "Homebrew already installed, updating..."
+    brew update && brew upgrade || { color_echo $RED "Failed to update Homebrew."; exit 1; }
 fi
 
-# Step 3: Install Git (if not already installed by Xcode Command Line Tools) ---
+# Step 2: Install Git (if not already installed by Xcode Command Line Tools) ---
 if ! command -v git &>/dev/null; then
     color_echo $BLUE "Installing Git..."
     brew install git || { color_echo $RED "Failed to install Git."; exit 1; }
 fi
 
-# Step 4: Installation of software --------------------------------------------
+# Step 3: Installation of software --------------------------------------------
 
 echo ""
 
@@ -323,7 +303,7 @@ install_app "Java" \
     "mkdir -p $HOME/Library/Java/JavaVirtualMachines && curl -L $JDK_URL | tar xz -C $HOME/Library/Java/JavaVirtualMachines" \
     "[ ! -d \"$HOME/Library/Java/JavaVirtualMachines/jdk-21.0.1.jdk\" ]"
 
-# Step 5: Clone scripts repository -------------------------------------------
+# Step 4: Clone scripts repository -------------------------------------------
 
 echo ""
 
@@ -348,7 +328,7 @@ else
     fi
 fi
 
-# Step 6: Clone .dotfiles repository -------------------------------------------
+# Step 5: Clone .dotfiles repository -------------------------------------------
 
 echo ""
 
@@ -366,7 +346,7 @@ else
     echo ""
 fi
 
-# Step 7: Install software from Brewfile ---------------------------------------
+# Step 6: Install software from Brewfile ---------------------------------------
 
 # Confirmation prompt for Brewfile installation
 color_echo $YELLOW "Do you want to proceed with installing software from Brewfile? (y/n)"
@@ -384,7 +364,7 @@ echo ""
 # Install Neovim if Brewfile installation was unsuccessful
 install_neovim
 
-# Step 8: Create symlinks (Idempotent) ----------------------------------------
+# Step 7: Create symlinks (Idempotent) ----------------------------------------
 
 echo ""
 
@@ -413,7 +393,7 @@ create_symlink "$DOTFILES_DIR/configs/zsh/.zshrc" "$HOME/.zshrc"
 create_symlink "$DOTFILES_DIR/configs/zsh/starship.toml" "$HOME/.config/starship.toml"
 create_symlink "/opt/homebrew/bin/gdu-go" "/opt/homebrew/bin/gdu"
 
-# Step 9: Install NVM, Node.js, & npm -----------------------------------------
+# Step 8: Install NVM, Node.js, & npm -----------------------------------------
 
 echo ""
 
@@ -425,16 +405,19 @@ echo ""
 if [ ! -d "$HOME/.nvm" ]; then
     # Install NVM if it's not installed
     color_echo $BLUE "Installing Node Version Manager (nvm)..."
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash || { color_echo $RED "Failed to install nvm."; exit 1; }
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash || { color_echo $RED "Failed to install nvm."; exit 1; }
 
     # Run the following to use it in the same shell session:
     export NVM_DIR="$HOME/.nvm"
     [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
-    # For Zsh completion, you would need a Zsh-specific completion script
-    # [ -s "path/to/zsh-completion-script" ] && . "path/to/zsh-completion-script" # Optional: This loads nvm Zsh completion
 
 else
-    color_echo $GREEN "NVM already installed."
+    color_echo $GREEN "NVM already installed, visit 'https://github.com/nvm-sh/nvm#installing-and-updating' to update to the latest version."
+    
+    # Run the following to use it in the same shell session:
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+
 fi
 
 echo ""
@@ -445,7 +428,44 @@ if ! command -v node &>/dev/null; then
     color_echo $BLUE "Installing Node.js..."
     nvm install node || { color_echo $RED "Failed to install Node.js."; exit 1; }
 else
-    color_echo $GREEN "Node.js already installed."
+    color_echo $GREEN "Node.js already installed, checking for updates..."
+
+    # Get the current version of Node.js
+    CURRENT_NODE_VERSION=$(nvm current | sed 's/\x1b\[[0-9;]*m//g')
+
+    # Get the latest LTS Node.js version and strip ANSI escape codes
+    LATEST_LTS_VERSION=$(nvm ls-remote --lts | tail -1 | awk '{ print $2 }' | sed 's/\x1b\[[0-9;]*m//g')
+
+    # Debug: Print versions for checking
+    echo "Current Node version:${PURPLE} ${CURRENT_NODE_VERSION} ${NC}"
+    echo "Latest LTS version:${PURPLE} ${LATEST_LTS_VERSION} ${NC}"
+
+    if [ "$CURRENT_NODE_VERSION" != "$LATEST_LTS_VERSION" ]; then
+        # Install the latest LTS Node.js version and reinstall packages from the current version
+        nvm install --lts --reinstall-packages-from="$CURRENT_NODE_VERSION" || { color_echo $RED "Failed to update Node.js."; exit 1; }
+
+        # Switch to the latest Node.js version
+        nvm use --lts || { color_echo $RED "Failed to switch to the latest Node.js version."; exit 1; }
+
+        # Check the new current version after update
+        NEW_NODE_VERSION=$(nvm current | sed 's/\x1b\[[0-9;]*m//g')
+
+        # Uninstall the old version if it's different from the new version
+        if [ "$NEW_NODE_VERSION" != "$CURRENT_NODE_VERSION" ]; then
+            color_echo $BLUE "Uninstalling the old version of Node.js ${PURPLE}${CURRENT_NODE_VERSION}${NC}..."
+            nvm uninstall "$CURRENT_NODE_VERSION" || { color_echo $RED "Failed to uninstall the old version of Node.js."; exit 1; }
+        fi
+
+    else
+        color_echo $YELLOW "Already on the latest LTS version of Node.js."
+    fi
+
+
+    # Update global npm packages
+    color_echo $GREEN "Updating global npm packages..."
+    npm update -g || { color_echo $RED "Failed to update global npm packages."; exit 1; }
+
+    color_echo $GREEN "Node.js is up to date."
 fi
 
 echo ""
@@ -509,7 +529,7 @@ else
     color_echo $GREEN " * TypeScript already installed."
 fi
 
-# Step 10: Install Nerd Font --------------------------------------------------
+# Step 9: Install Nerd Font --------------------------------------------------
 
 echo ""
 
@@ -517,29 +537,38 @@ centered_color_echo $ORANGE "<-------------- Configuration of Nerd Fonts -------
 
 echo ""
 
-FONT_NAME="FiraCode"
-FONT_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/$FONT_NAME.zip"
+# JetBrainsMonoNerdFont-Regular.ttf
+# FiraCodeNerdFont-Regular.ttf
 
-# Confirmation prompt for font installation
-color_echo $YELLOW "Do you want to proceed installing $FONT_NAME Nerd Font? (y/n)"
-echo -n "Enter choice: > "
-read -r font_confirmation
-if [ "$font_confirmation" != "y" ] && [ "$font_confirmation" != "Y" ]; then
-    color_echo $RED "Font installation aborted."
+FONT_NAME="JetBrainsMono"
+FONT_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/$FONT_NAME.zip"
+FONT_DIR="$HOME/Library/Fonts"
+FONT_FILE="$FONT_DIR/${FONT_NAME}NerdFont-Regular.ttf"
+
+# Check if the font is already installed
+if [ -f "$FONT_FILE" ]; then
+    color_echo $GREEN "$FONT_NAME Nerd Font is already installed."
 else
-    color_echo $BLUE "Installing $FONT_NAME Nerd Font..."
-    FONT_DIR="$HOME/Library/Fonts"
-    if [ ! -d "$FONT_DIR" ]; then
-        color_echo $BLUE "Creating font directory..."
-        mkdir -p "$FONT_DIR"
+    # Confirmation prompt for font installation
+    color_echo $YELLOW "Do you want to proceed installing $FONT_NAME Nerd Font? (y/n)"
+    echo -n "Enter choice: > "
+    read -r font_confirmation
+    if [ "$font_confirmation" != "y" ] && [ "$font_confirmation" != "Y" ]; then
+        color_echo $RED "Font installation aborted."
+    else
+        color_echo $BLUE "Installing $FONT_NAME Nerd Font..."
+        if [ ! -d "$FONT_DIR" ]; then
+            color_echo $BLUE "Creating font directory..."
+            mkdir -p "$FONT_DIR"
+        fi
+        curl -L $FONT_URL -o "$FONT_DIR/$FONT_NAME.zip" || { color_echo $RED "Failed to download $FONT_NAME Nerd Font."; exit 1; }
+        unzip "$FONT_DIR/$FONT_NAME.zip" -d "$FONT_DIR" || { color_echo $RED "Failed to unzip $FONT_NAME Nerd Font."; exit 1; }
+        rm "$FONT_DIR/$FONT_NAME.zip"
+        color_echo $GREEN "$FONT_NAME Nerd Font installation complete."
     fi
-    curl -L $FONT_URL -o "$FONT_DIR/$FONT_NAME.zip" || { color_echo $RED "Failed to download $FONT_NAME Nerd Font."; exit 1; }
-    unzip "$FONT_DIR/$FONT_NAME.zip" -d "$FONT_DIR" || { color_echo $RED "Failed to unzip $FONT_NAME Nerd Font."; exit 1; }
-    rm "$FONT_DIR/$FONT_NAME.zip"
-    color_echo $GREEN "$FONT_NAME Nerd Font installation complete."
 fi
 
-# Step 11: Configure Neovim with AstroNvim -----------------------------------
+# Step 10: Configure Neovim with AstroNvim -----------------------------------
 
 echo ""
 
@@ -604,7 +633,7 @@ else
     git_clone_fallback "git@github.com:av1155/astronvim_config.git" "https://github.com/av1155/astronvim_config.git" "$HOME/.config/nvim/lua/user"
 fi
 
-# Step 12: Install AstroNvim Dependencies ------------------------------------
+# Step 11: Install AstroNvim Dependencies ------------------------------------
 
 echo ""
 
@@ -763,9 +792,8 @@ if command -v nvim &> /dev/null; then
     # Check if user configuration directory exists
     if [ -d "$HOME/.config/nvim/lua/user" ]; then
         color_echo $GREEN "Neovim user configuration directory found."
-
         # Prompt for initializing plugins
-        color_echo $YELLOW "Do you want to initialize Neovim plugins now? This will run 'nvim --headless -c quitall' (y/n)"
+        color_echo $YELLOW "Do you want to initialize Neovim plugins now? This will run '${PURPLE}nvim --headless -c quitall${YELLOW}' (y/n)${NC}"
         echo -n "> "
         read -r choice
         case "$choice" in
@@ -788,7 +816,7 @@ else
     color_echo $YELLOW "Neovim is not installed. Skipping plugin initialization."
 fi
 
-# Step 13: Create TODO List of Apps to Download -------------------------------
+# Step 12: Create TODO List of Apps to Download -------------------------------
 
 echo ""
 
