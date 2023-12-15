@@ -1,92 +1,85 @@
 [
-  // General Commands
   {
-      "command": "projectManager.listGitProjects#sideBarGit",
-      "key": "cmd+o"
+    "command": "projectManager.listGitProjects#sideBarGit",
+    "key": "cmd+o"
   },
   {
-      "command": "workbench.action.toggleSidebarVisibility",
-      "key": "ctrl+e"
+    "command": "workbench.action.toggleSidebarVisibility",
+    "key": "ctrl+e"
   },
   {
-      "command": "saveAll",
-      "key": "cmd+s"
+    "command": "saveAll",
+    "key": "cmd+s"
   },
   {
-      "command": "workbench.action.splitEditor",
-      "key": "cmd+d"
+    "command": "workbench.action.splitEditor",
+    "key": "cmd+d"
   },
   {
-      "command": "turboConsoleLog.displayLogMessage",
-      "key": "cmd+i"
+    "command": "turboConsoleLog.displayLogMessage",
+    "key": "cmd+i"
   },
   {
-      "command": "workbench.action.toggleZenMode",
-      "key": "cmd+z"
+    "command": "workbench.action.toggleZenMode",
+    "key": "cmd+z"
   },
   {
-      "command": "editor.action.selectAll",
-      "key": "cmd+a"
+    "command": "editor.action.selectAll",
+    "key": "cmd+a"
   },
   {
-      "command": "workbench.action.terminal.toggleTerminal",
-      "key": "ctrl+\\",
-      "when": "terminal.active"
-  },
-
-  // Editor Commands
-  {
-      "command": "expand_region",
-      "key": "ctrl+=",
-      "when": "editorTextFocus"
+    "command": "workbench.action.terminal.toggleTerminal",
+    "key": "ctrl+\\",
+    "when": "terminal.active"
   },
   {
-      "command": "undo_expand_region",
-      "key": "ctrl+-",
-      "when": "editorTextFocus && editorHasSelection"
+    "command": "expand_region",
+    "key": "ctrl+=",
+    "when": "editorTextFocus"
   },
   {
-      "command": "editor.action.addSelectionToNextFindMatch",
-      "key": "ctrl+n",
-      "when": "editorFocus"
-  },
-
-  // File Explorer Commands
-  {
-      "command": "workbench.files.action.focusFilesExplorer",
-      "key": "ctrl+e",
-      "when": "editorTextFocus"
+    "command": "undo_expand_region",
+    "key": "ctrl+-",
+    "when": "editorTextFocus && editorHasSelection"
   },
   {
-      "command": "explorer.newFile",
-      "key": "a",
-      "when": "filesExplorerFocus && !inputFocus"
+    "command": "editor.action.addSelectionToNextFindMatch",
+    "key": "ctrl+n",
+    "when": "editorFocus"
   },
   {
-      "command": "renameFile",
-      "key": "r",
-      "when": "filesExplorerFocus && !inputFocus"
+    "command": "workbench.files.action.focusFilesExplorer",
+    "key": "ctrl+e",
+    "when": "editorTextFocus"
   },
   {
-      "command": "filesExplorer.copy",
-      "key": "c",
-      "when": "filesExplorerFocus && !inputFocus"
+    "command": "explorer.newFile",
+    "key": "a",
+    "when": "filesExplorerFocus && !inputFocus"
   },
   {
-      "command": "filesExplorer.paste",
-      "key": "p",
-      "when": "filesExplorerFocus && !inputFocus"
+    "command": "renameFile",
+    "key": "r",
+    "when": "filesExplorerFocus && !inputFocus"
   },
   {
-      "command": "deleteFile",
-      "key": "d",
-      "when": "filesExplorerFocus && !inputFocus"
+    "command": "filesExplorer.copy",
+    "key": "c",
+    "when": "filesExplorerFocus && !inputFocus"
   },
-
-  // Terminal Commands
   {
-      "command": "-workbench.action.terminal.toggleTerminal",
-      "key": "ctrl+`",
-      "when": "terminal.active"
+    "command": "filesExplorer.paste",
+    "key": "p",
+    "when": "filesExplorerFocus && !inputFocus"
+  },
+  {
+    "command": "deleteFile",
+    "key": "d",
+    "when": "filesExplorerFocus && !inputFocus"
+  },
+  {
+    "command": "-workbench.action.terminal.toggleTerminal",
+    "key": "ctrl+`",
+    "when": "terminal.active"
   }
 ]
