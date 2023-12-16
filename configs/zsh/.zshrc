@@ -96,6 +96,8 @@ fi
 # Add the following line in `~/.config/nvim/lua/user/options.lua` to set the dynamic Python executable for pynvim
 # python3_host_prog = "$NVIM_PYTHON_PATH",
 
+# ChatGPT Configuration: Set
+export OPENAI_API_KEY=$(bash ~/.dotfiles/configs/zsh/openai_api_key.sh)
 
 # <-------------------- NVM INITIALIZATION -------------------->
 
