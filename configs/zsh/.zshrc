@@ -104,6 +104,16 @@ export NVM_DIR="$HOME/.nvm"
 # [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # Commented out as not needed for Zsh
 
 
+# <==================== CS50 Library Configuration ====================>
+
+# Setting up environment variables for the CS50 library
+export LIBRARY_PATH=/usr/local/lib
+export C_INCLUDE_PATH=/usr/local/include
+export LD_LIBRARY_PATH=/usr/local/lib   # For Linux systems
+export DYLD_LIBRARY_PATH=/usr/local/lib # For macOS systems
+
+
+
 # <-------------------- CUSTOM FUNCTIONS -------------------->
 
 # fcd: A function to interactively navigate directories using find, fzf, and colorls.
