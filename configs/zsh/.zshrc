@@ -113,7 +113,6 @@ export LD_LIBRARY_PATH=/usr/local/lib   # For Linux systems
 export DYLD_LIBRARY_PATH=/usr/local/lib # For macOS systems
 
 
-
 # <-------------------- CUSTOM FUNCTIONS -------------------->
 
 # fcd: A function to interactively navigate directories using find, fzf, and colorls.
