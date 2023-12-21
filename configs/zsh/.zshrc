@@ -107,10 +107,10 @@ export NVM_DIR="$HOME/.nvm"
 # <==================== CS50 Library Configuration ====================>
 
 # Setting up environment variables for the CS50 library
-export LIBRARY_PATH=/usr/local/lib
-export C_INCLUDE_PATH=/usr/local/include
-export LD_LIBRARY_PATH=/usr/local/lib   # For Linux systems
-export DYLD_LIBRARY_PATH=/usr/local/lib # For macOS systems
+export LIBRARY_PATH=~/cs50lib
+export C_INCLUDE_PATH=~/cs50lib
+export LD_LIBRARY_PATH=~/cs50lib   # For Linux systems
+export DYLD_LIBRARY_PATH=~/cs50lib # For macOS systems
 
 
 # <-------------------- CUSTOM FUNCTIONS -------------------->

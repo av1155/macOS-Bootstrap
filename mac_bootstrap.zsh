@@ -377,6 +377,7 @@ color_echo $BLUE "Creating symlinks..."
 # Symlinks go here:
 # create_symlink "$DOTFILES_DIR/configs/.original_file" "$HOME/.linked_file"
 create_symlink "$DOTFILES_DIR/configs/colorls" "$HOME/.config/colorls"
+create_symlink "$DOTFILES_DIR/configs/cs50lib" "$HOME/cs50lib"
 create_symlink "$DOTFILES_DIR/configs/formatting_files/.clang-format" "$HOME/.clang-format"
 create_symlink "$DOTFILES_DIR/configs/formatting_files/.prettierrc.json" "$HOME/.config/.prettierrc.json"
 create_symlink "$DOTFILES_DIR/configs/git/.gitconfig" "$HOME/.gitconfig"
@@ -413,7 +414,7 @@ if [ ! -d "$HOME/.nvm" ]; then
 
 else
     color_echo $GREEN "NVM already installed, visit 'https://github.com/nvm-sh/nvm#installing-and-updating' to update to the latest version."
-    
+
     # Run the following to use it in the same shell session:
     export NVM_DIR="$HOME/.nvm"
     [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm

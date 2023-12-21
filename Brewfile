@@ -22,8 +22,6 @@ brew "coursier"
 brew "cowsay"
 # Get, unpack, build, and install modules from CPAN
 brew "cpanminus"
-# .NET Core
-brew "dotnet"
 # Modern, maintained replacement for ls
 brew "eza"
 # Simple, fast and user-friendly alternative to find
@@ -50,10 +48,8 @@ brew "julia"
 brew "luarocks"
 # Java-based project management
 brew "maven"
-# Interpreted, interactive, object-oriented programming language
-brew "python@3.11"
-# Cross platform, open source .NET development framework
-brew "mono"
+# Remote terminal application
+brew "mosh"
 # Fast, highly customisable system info script
 brew "neofetch"
 # Ambitious Vim-fork focused on extensibility and agility
@@ -66,6 +62,8 @@ brew "ollama", restart_service: true
 brew "php"
 # Bundle a Python application and all its dependencies
 brew "pyinstaller"
+# Interpreted, interactive, object-oriented programming language
+brew "python@3.11"
 # Search tool like grep and The Silver Searcher
 brew "ripgrep"
 # Powerful, clean, object-oriented scripting language
@@ -114,6 +112,8 @@ cask "cinebench"
 cask "discord"
 # App to build and share containerized applications and microservices
 cask "docker"
+# Developer platform
+cask "dotnet-sdk"
 # Clipboard manager for developers
 cask "flycut"
 # Web browser
@@ -126,8 +126,6 @@ cask "iina"
 cask "iterm2"
 # JetBrains tools manager
 cask "jetbrains-toolbox"
-# Interface for reading and syncing eBooks
-cask "kindle"
 # Utility that shows the latest app updates
 cask "latest"
 # Clipboard manager
@@ -162,6 +160,8 @@ cask "sony-ps-remote-play"
 cask "spotify"
 # System monitor for the menu bar
 cask "stats"
+# SSH client
+cask "termius"
 # Unpacks archive files
 cask "the-unarchiver"
 # To-do & task list manager
@@ -206,8 +206,8 @@ vscode "ms-python.vscode-pylance"
 vscode "ms-toolsai.jupyter"
 vscode "ms-toolsai.jupyter-keymap"
 vscode "ms-toolsai.jupyter-renderers"
-vscode "ms-toolsai.vscode-jupyter-cell-tags"
 vscode "ms-toolsai.vscode-jupyter-slideshow"
+vscode "ms-vscode-remote.remote-containers"
 vscode "ms-vscode.cmake-tools"
 vscode "ms-vscode.cpptools"
 vscode "ms-vscode.cpptools-extension-pack"
