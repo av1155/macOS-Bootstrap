@@ -364,10 +364,11 @@ command -v fd &>/dev/null && command -v fzf &>/dev/null && \
 # Sourced + Aliased Scripts
 [ -f ~/scripts/JavaProject.zsh ] && { source ~/scripts/JavaProject.zsh; alias jp="javaproject"; }
 [ -f ~/scripts/JavaCompiler/JavaCompiler.zsh ] && source ~/scripts/JavaCompiler/JavaCompiler.zsh
+[ -f ~/scripts/imgp.sh ] && alias imgp="~/scripts/imgp.sh"
 
 # Weather
-alias forecast="curl \"https://wttr.in/coral-gables?1&F&q\""
-alias weather="curl \"https://wttr.in/coral-gables?format=1\""
+alias wf="curl \"https://wttr.in/Coral+Gables?1&F&Q\""
+alias ww="curl \"https://wttr.in/Coral+Gables?format=2\""
 
 
 # <-------------------- FZF INITIALIZATION -------------------->
@@ -391,7 +392,7 @@ fi
 
 
 # # <-------------------- NEOFETCH INITIALIZATION -------------------->
-#
+
 # command -v neofetch &>/dev/null && neofetch
 
 
