@@ -97,7 +97,6 @@ fi
 # <=================== NEOFETCH & WEATHER INITIALIZATION ====================>
 
 command -v neofetch &>/dev/null && neofetch
-command -v curl &>/dev/null && curl 'https://wttr.in/Coral+Gables?format=2'
 
 
 # <==================== END OF .ZPROFILE FILE =====================>

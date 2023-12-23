@@ -113,6 +113,10 @@ export LD_LIBRARY_PATH=~/cs50lib   # For Linux systems
 export DYLD_LIBRARY_PATH=~/cs50lib # For macOS systems
 
 
+# <==================== PRETTIER CONFIGURATION ====================>
+
+export PRETTIERD_DEFAULT_CONFIG=~/.dotfiles/configs/formatting_files/.prettierrc.json
+
 # <-------------------- CUSTOM FUNCTIONS -------------------->
 
 # fcd: A function to interactively navigate directories using find, fzf, and colorls.
@@ -361,10 +365,21 @@ command -v fd &>/dev/null && command -v fzf &>/dev/null && \
     command -v bat &>/dev/null && command -v nvim &>/dev/null && \
     alias f="fd --type f --hidden --exclude .git | fzf --preview 'bat --color=always {1}' | xargs nvim"
 
-# Sourced + Aliased Scripts
+# Sourced + Aliased Scripts ------------------------------------------------------->
 [ -f ~/scripts/JavaProject.zsh ] && { source ~/scripts/JavaProject.zsh; alias jp="javaproject"; }
 [ -f ~/scripts/JavaCompiler/JavaCompiler.zsh ] && source ~/scripts/JavaCompiler/JavaCompiler.zsh
 [ -f ~/scripts/imgp.sh ] && alias imgp="~/scripts/imgp.sh"
+
+# GPA Calculator
+if [ -d "$HOME/Developer/GPA-Calculator" ] && command -v node >/dev/null 2>&1; then
+    alias gpa="node $HOME/Developer/GPA-Calculator/index.js"
+elif [ -d "$HOME/Developer/GPA-Calculator" ]; then
+    echo "GPA Calculator directory found, but Node.js is not installed."
+else
+    echo "GPA Calculator directory does not exist."
+fi
+
+# End of Sourced + Aliased Scripts ------------------------------------------------>
 
 # Weather
 alias wf="curl \"https://wttr.in/Coral+Gables?1&F&Q\""
