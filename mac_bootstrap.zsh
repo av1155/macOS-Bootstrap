@@ -383,6 +383,7 @@ create_symlink "$DOTFILES_DIR/configs/formatting_files/.prettierrc.json" "$HOME/
 create_symlink "$DOTFILES_DIR/configs/git/.gitconfig" "$HOME/.gitconfig"
 create_symlink "$DOTFILES_DIR/configs/git/.gitignore_global" "$HOME/.gitignore_global"
 create_symlink "$DOTFILES_DIR/configs/intelliJ_IDEA/.ideavimrc" "$HOME/.ideavimrc"
+create_symlink "$DOTFILES_DIR/configs/kitty" "$HOME/.config/kitty"
 create_symlink "$DOTFILES_DIR/configs/lazygit/config.yml" "$HOME/Library/Application Support/lazygit/config.yml"
 create_symlink "$DOTFILES_DIR/configs/neofetch/config.conf" "$HOME/.config/neofetch/config.conf"
 create_symlink "$DOTFILES_DIR/configs/ssh/config" "$HOME/.ssh/config"
