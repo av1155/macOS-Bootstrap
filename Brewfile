@@ -36,6 +36,8 @@ brew "gdu"
 brew "gh"
 # Distributed revision control system
 brew "git"
+# Render markdown on the CLI
+brew "glow"
 # Open source programming language to build simple/reliable/efficient software
 brew "go"
 # Open-source build automation tool based on the Groovy and Kotlin DSL
@@ -76,6 +78,8 @@ brew "starship"
 brew "tmux"
 # Vi 'workalike' with many additional features
 brew "vim"
+# Simple terminal image viewer written in Rust
+brew "viu"
 # Internet file retriever
 brew "wget"
 # Next-generation plugin manager for zsh
@@ -126,6 +130,8 @@ cask "iina"
 cask "iterm2"
 # JetBrains tools manager
 cask "jetbrains-toolbox"
+# GPU-based terminal emulator
+cask "kitty"
 # Utility that shows the latest app updates
 cask "latest"
 # Clipboard manager
