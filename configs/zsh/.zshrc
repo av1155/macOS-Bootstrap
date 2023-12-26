@@ -117,6 +117,24 @@ export DYLD_LIBRARY_PATH=~/cs50lib # For macOS systems
 
 export PRETTIERD_DEFAULT_CONFIG=~/.dotfiles/configs/formatting_files/.prettierrc.json
 
+
+# <==================== TERMINAL DETECTION ====================>
+
+# Set a custom flag if in Kitty terminal
+if [[ "$KITTY_WINDOW_ID" =~ ^[0-9]+$ ]]; then
+    export IS_KITTY=1
+else
+    export IS_KITTY=0
+fi
+
+# Set a custom flag if in iTerm2
+if [ "$TERM_PROGRAM" = "iTerm.app" ]; then
+    export IS_ITERM2=1
+else
+    export IS_ITERM2=0
+fi
+
+
 # <-------------------- CUSTOM FUNCTIONS -------------------->
 
 # fcd: A function to interactively navigate directories using find, fzf, and colorls.
