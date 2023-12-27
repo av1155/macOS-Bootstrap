@@ -5,6 +5,7 @@ IndentWidth: 4
 BreakBeforeBraces: Allman
 ColumnLimit: 120
 AlignArrayOfStructures: Left
+SpacesInParentheses: true
 
 # Language specific configs:
 
