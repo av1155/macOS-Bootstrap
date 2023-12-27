@@ -54,7 +54,7 @@
     "telnet"
   ],
   "Non-ASCII Ligatures" : true,
-  "Scrollback Lines" : 1000,
+  "Scrollback Lines" : 0,
   "Brighten Bold Text" : true,
   "Flashing Bell" : false,
   "Cursor Guide Color" : {
@@ -437,7 +437,7 @@
   },
   "Smart Cursor Color" : false,
   "Ambiguous Double Width" : false,
-  "Blur Radius" : 30.065500332446799,
+  "Blur Radius" : 64,
   "Cursor Type" : 2,
   "Ansi 0 Color" : {
     "Red Component" : 0.08235294371843338,
@@ -460,7 +460,7 @@
   "Command" : "",
   "Terminal Type" : "xterm-256color",
   "Horizontal Spacing" : 1,
-  "Option Key Sends" : 2,
+  "Option Key Sends" : 0,
   "Only The Default BG Color Uses Transparency" : false,
   "Minimum Contrast" : 0,
   "Custom Icon Path" : "\/Users\/andreaventi\/Desktop\/Screenshot 2023-11-27 at 12.48.55 PM.png",
@@ -479,7 +479,7 @@
     "Alpha Component" : 1,
     "Green Component" : 0.81176471710205078
   },
-  "Transparency" : 0.20235206117021276,
+  "Transparency" : 0.25013297872340434,
   "Initial Text" : "",
   "Background Color" : {
     "Red Component" : 0.10196078568696976,
