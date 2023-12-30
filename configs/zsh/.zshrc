@@ -407,9 +407,15 @@ else
 fi
 
 
-# # <-------------------- NEOFETCH INITIALIZATION -------------------->
+# <-------------------- NEOFETCH INITIALIZATION -------------------->
 
 # command -v neofetch &>/dev/null && neofetch
+
+
+# <--------------- HEROKU AUTOCOMPLETE INITIALIZATION -------------->
+
+# heroku autocomplete setup
+HEROKU_AC_ZSH_SETUP_PATH=/Users/andreaventi/Library/Caches/heroku/autocomplete/zsh_setup && test -f $HEROKU_AC_ZSH_SETUP_PATH && source $HEROKU_AC_ZSH_SETUP_PATH;
 
 
 # <-------------------- ITERM2 SHELL INTEGRATION ------------------->
