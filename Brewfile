@@ -1,3 +1,4 @@
+tap "heroku/brew"
 tap "homebrew/bundle"
 tap "homebrew/services"
 tap "jesseduffield/lazygit"
@@ -14,6 +15,8 @@ brew "autojump"
 brew "bat"
 # Yet another cross-platform graphical process/system monitor
 brew "bottom"
+# Cross-platform make
+brew "cmake"
 # Console Matrix
 brew "cmatrix"
 # Pure Scala Artifact Fetching
@@ -46,6 +49,8 @@ brew "gradle"
 brew "jq"
 # Fast, Dynamic Programming Language
 brew "julia"
+# Parsing Expression Grammars For Lua
+brew "lpeg"
 # Package manager for the Lua programming language
 brew "luarocks"
 # Java-based project management
@@ -84,6 +89,8 @@ brew "viu"
 brew "wget"
 # Next-generation plugin manager for zsh
 brew "zplug"
+# Everything you need to get started with Heroku
+brew "heroku/brew/heroku"
 # A simple terminal UI for git commands, written in Go
 brew "jesseduffield/lazygit/lazygit"
 # Tetris in your terminal
