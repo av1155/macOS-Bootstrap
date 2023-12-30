@@ -44,6 +44,8 @@ venv/
 .mypy_cache/
 pip-log.txt
 pip-delete-this-directory.txt
+/*_session/
+flask_session/
 
 # Java #
 ########
