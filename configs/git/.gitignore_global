@@ -61,7 +61,7 @@ build/
 # Logs and databases #
 ######################
 *.log
-*.sql
+# *.sql
 *.sqlite
 
 # Version Control Systems #
