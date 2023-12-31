@@ -370,6 +370,7 @@ command -v fd &>/dev/null && command -v fzf &>/dev/null && \
 [ -f ~/scripts/JavaProject.zsh ] && { source ~/scripts/JavaProject.zsh; alias jp="javaproject"; }
 [ -f ~/scripts/JavaCompiler/JavaCompiler.zsh ] && source ~/scripts/JavaCompiler/JavaCompiler.zsh
 [ -f ~/scripts/imgp.sh ] && alias imgp="~/scripts/imgp.sh"
+[ -f ~/scripts/sqlurl.sh ] && alias sqlurl="~/scripts/sqlurl.sh"
 
 # GPA Calculator
 if [ -d "$HOME/Developer/GPA-Calculator" ] && command -v node >/dev/null 2>&1; then
