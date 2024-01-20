@@ -67,6 +67,8 @@ brew "numpy"
 brew "ollama", restart_service: true
 # General-purpose scripting language
 brew "php"
+# Object-relational database system
+brew "postgresql@14", restart_service: true
 # Bundle a Python application and all its dependencies
 brew "pyinstaller"
 # Interpreted, interactive, object-oriented programming language
@@ -115,6 +117,8 @@ cask "anki"
 cask "appcleaner"
 # Display management tool
 cask "betterdisplay"
+# Web browser focusing on privacy
+cask "brave-browser"
 # Tool to list all active shortcuts of the current application
 cask "cheatsheet"
 # Hardware benchmarking utility
