@@ -7,7 +7,6 @@
   "security.workspace.trust.untrustedFiles": "open",
   "editor.minimap.enabled": false,
   "workbench.settings.editor": "json",
-  "workbench.startupEditor": "readme",
   "zenMode.hideLineNumbers": false,
   "window.density.editorTabHeight": "compact",
   "editor.wordWrap": "on",
@@ -51,9 +50,6 @@
   "[markdown]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "[prisma]": {
-    "editor.defaultFormatter": "Prisma.prisma"
-  },
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
@@ -86,14 +82,10 @@
     "--profile",
     "black"
   ],
-  "cSpell.userWords": [
-    "marbella",
-    "Venti"
-  ],
+
   "console-ninja.featureSet": "Community",
   "redhat.telemetry.enabled": false,
   "errorLens.fontStyleItalic": true,
-  "everforest.italicKeywords": true,
   "explorer.confirmDelete": false,
   "explorer.confirmDragAndDrop": false,
   "extensions.autoUpdate": "onlyEnabledExtensions",
@@ -134,122 +126,4 @@
   "typescript.preferences.importModuleSpecifier": "relative",
   "typescript.updateImportsOnFileMove.enabled": "always",
   "update.showReleaseNotes": false,
-  "vim.foldfix": true,
-  "vim.highlightedyank.color": "rgba(230, 97, 89, 0.7)",
-  "vim.highlightedyank.enable": true,
-  "vim.highlightedyank.textColor": "white",
-  "vim.hlsearch": true,
-  "vim.leader": "<space>",
-  "vim.normalModeKeyBindingsNonRecursive": [
-    {
-      "before": [
-        "leader",
-        "r"
-      ],
-      "commands": [
-        "editor.action.rename"
-      ]
-    },
-    {
-      "before": [
-        "leader",
-        "w"
-      ],
-      "commands": [
-        ":w!"
-      ]
-    },
-    {
-      "before": [
-        "leader",
-        "q"
-      ],
-      "commands": [
-        ":q!"
-      ]
-    },
-    {
-      "before": [
-        "leader",
-        "x"
-      ],
-      "commands": [
-        ":x!"
-      ]
-    },
-    {
-      "after": [
-        "g",
-        "g",
-        "V",
-        "G"
-      ],
-      "before": [
-        "<c-a>"
-      ]
-    },
-    {
-      "before": [
-        "<leader>",
-        "k"
-      ],
-      "commands": [
-        "editor.action.showHover"
-      ]
-    },
-    {
-      "before": [
-        "[",
-        "d"
-      ],
-      "commands": [
-        "editor.action.marker.prev"
-      ]
-    },
-    {
-      "before": [
-        "]",
-        "d"
-      ],
-      "commands": [
-        "editor.action.marker.next"
-      ]
-    },
-    {
-      "before": [
-        "<leader>",
-        "c",
-        "a"
-      ],
-      "commands": [
-        "editor.action.quickFix"
-      ]
-    },
-    {
-      "after": [
-        "^"
-      ],
-      "before": [
-        "H"
-      ]
-    },
-    {
-      "after": [
-        "$"
-      ],
-      "before": [
-        "L"
-      ]
-    },
-    {
-      "before": [
-        "leader",
-        "i"
-      ],
-      "commands": [
-        "extension.toggleBool"
-      ]
-    }
-  ],
-  "vim.useSystemClipboard": true
 }
