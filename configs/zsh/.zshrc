@@ -367,10 +367,11 @@ command -v fd &>/dev/null && command -v fzf &>/dev/null && \
     alias f="fd --type f --hidden --exclude .git | fzf --preview 'bat --color=always {1}' | xargs nvim"
 
 # Sourced + Aliased Scripts ------------------------------------------------------->
-[ -f ~/scripts/JavaProject.zsh ] && { source ~/scripts/JavaProject.zsh; alias jp="javaproject"; }
-[ -f ~/scripts/JavaCompiler/JavaCompiler.zsh ] && source ~/scripts/JavaCompiler/JavaCompiler.zsh
-[ -f ~/scripts/imgp.sh ] && alias imgp="~/scripts/imgp.sh"
-[ -f ~/scripts/sqlurl.sh ] && alias sqlurl="~/scripts/sqlurl.sh"
+[ -f ~/scripts/scripts/JavaProject.zsh ] && { source ~/scripts/scripts/JavaProject.zsh; alias jp="javaproject"; }
+[ -f ~/scripts/scripts/JavaCompiler/JavaCompiler.zsh ] && source ~/scripts/scripts/JavaCompiler/JavaCompiler.zsh
+[ -f ~/scripts/scripts/imgp.sh ] && alias imgp="~/scripts/scripts/imgp.sh"
+[ -f ~/scripts/scripts/sqlurl.sh ] && alias sqlurl="~/scripts/scripts/sqlurl.sh"
+[ -f ~/scripts/scripts/nvim_surround_usage.sh ] && alias vs="~/scripts/scripts/nvim_surround_usage.sh"
 
 # GPA Calculator
 if [ -d "$HOME/Developer/GPA-Calculator" ] && command -v node >/dev/null 2>&1; then
