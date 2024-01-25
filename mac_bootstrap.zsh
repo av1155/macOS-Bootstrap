@@ -747,7 +747,7 @@ fi
 echo ""
 echo -n " ${GREEN}*${NC} "
 # Install colorls
-install_app "colorls" "gem install colorls" "! gem list colorls -i &>/dev/null"
+install_app "colorls" "gem install colorls" "gem list colorls -i &>/dev/null"
 
 # Install Composer for PHP development ---------------------------------------
 
