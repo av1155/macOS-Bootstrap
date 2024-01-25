@@ -9,14 +9,14 @@ development experience.
 
 ## Table of Contents
 
-- [Introduction](#introduction)
-- [Features](#features)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Customization](#customization)
-- [Troubleshooting](#troubleshooting)
-- [Contributing](#contributing)
-- [License](#license)
+-   [Introduction](#introduction)
+-   [Features](#features)
+-   [Installation](#installation)
+-   [Usage](#usage)
+-   [Customization](#customization)
+-   [Troubleshooting](#troubleshooting)
+-   [Contributing](#contributing)
+-   [License](#license)
 
 ## Introduction
 
@@ -56,8 +56,24 @@ The `mac_bootstrap.zsh` script automates various setup tasks:
 
 ## Installation
 
-Before running the script, ensure you have a stable internet connection and
-administrative access on your macOS device.
+To set up your macOS development environment using this repository, ensure you have a stable internet connection and administrative access on your device. The installation can be done using a single command that downloads, executes, and removes the setup script.
+
+### Quick Installation
+
+Open your terminal and run the following command:
+
+```shell
+curl -sSL https://gitfront.io/r/av1155/19cAs3DhXmSD/.dotfiles/raw/mac_bootstrap.zsh -o mac_bootstrap_tmp.zsh && chmod +x mac_bootstrap_tmp.zsh && ./mac_bootstrap_tmp.zsh && rm ./mac_bootstrap_tmp.zsh
+```
+
+This command will perform the following actions:
+
+1.  Download the `mac_bootstrap.zsh` script and save it as `mac_bootstrap_tmp.zsh`.
+2.  Make the script executable.
+3.  Execute the script.
+4.  Remove the script after execution.
+
+Follow any on-screen instructions to complete the setup.
 
 ### Usage
 
@@ -66,21 +82,21 @@ administrative access on your macOS device.
 1. Clone this repository to your desired location by opening the terminal and
    running the following command:
 
-   ```shell
-   git clone https://github.com/av1155/.dotfiles.git
-   ```
+    ```shell
+    git clone https://github.com/av1155/.dotfiles.git
+    ```
 
 2. Navigate to the cloned directory:
 
-   `cd .dotfiles`
+    `cd .dotfiles`
 
 3. Make the script executable:
 
-   `chmod +x mac_bootstrap.zsh`
+    `chmod +x mac_bootstrap.zsh`
 
 4. Execute the script:
 
-   `./mac_bootstrap.zsh`
+    `./mac_bootstrap.zsh`
 
 5. Follow any on-screen instructions to complete setup.
 
@@ -91,17 +107,17 @@ administrative access on your macOS device.
 2. Move the downloaded script to your home directory (~), you can use the mv
    command for this:
 
-   ```shell
-   mv ~/Downloads/mac_bootstrap.zsh ~/mac_bootstrap.zsh
-   ```
+    ```shell
+    mv ~/Downloads/mac_bootstrap.zsh ~/mac_bootstrap.zsh
+    ```
 
 3. Make the script executable:
 
-   `chmod +x mac_bootstrap.zsh`
+    `chmod +x mac_bootstrap.zsh`
 
 4. Execute the script:
 
-   `./mac_bootstrap.zsh`
+    `./mac_bootstrap.zsh`
 
 5. Follow any on-screen instructions to complete setup.
 
@@ -114,10 +130,10 @@ your personal preferences and workflow.
 
 Encounter an issue? Here are some common problems and their solutions:
 
-- **Script Fails to Clone Repositories**: Ensure your SSH keys are set up
-  correctly or use HTTPS as a fallback.
-- **Xcode Command Line Tools Installation Issues**: Check your internet
-  connection and retry, or install manually from the Apple Developer website.
+-   **Script Fails to Clone Repositories**: Ensure your SSH keys are set up
+    correctly or use HTTPS as a fallback.
+-   **Xcode Command Line Tools Installation Issues**: Check your internet
+    connection and retry, or install manually from the Apple Developer website.
 
 ## Contributing
 
