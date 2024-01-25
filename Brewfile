@@ -21,8 +21,6 @@ brew "cmake"
 brew "cmatrix"
 # Pure Scala Artifact Fetching
 brew "coursier"
-# Configurable talking characters in ASCII art
-brew "cowsay"
 # Get, unpack, build, and install modules from CPAN
 brew "cpanminus"
 # Modern, maintained replacement for ls
