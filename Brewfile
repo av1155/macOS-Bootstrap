@@ -2,6 +2,7 @@ tap "heroku/brew"
 tap "homebrew/bundle"
 tap "homebrew/services"
 tap "jesseduffield/lazygit"
+tap "jstkdng/programs"
 tap "samtay/tui"
 # Cryptography and SSL/TLS Toolkit
 brew "openssl@3"
@@ -27,6 +28,8 @@ brew "cpanminus"
 brew "eza"
 # Simple, fast and user-friendly alternative to find
 brew "fd"
+# Package for scientific computing with Python
+brew "numpy"
 # Play, record, convert, and stream audio and video
 brew "ffmpeg"
 # Command-line fuzzy finder written in Go
@@ -37,18 +40,24 @@ brew "gdu"
 brew "gh"
 # Distributed revision control system
 brew "git"
+# Git extension for versioning large files
+brew "git-lfs"
 # Render markdown on the CLI
 brew "glow"
 # Open source programming language to build simple/reliable/efficient software
 brew "go"
 # Open-source build automation tool based on the Groovy and Kotlin DSL
 brew "gradle"
+# Tools and libraries to manipulate images in many formats
+brew "imagemagick"
 # Lightweight and flexible command-line JSON processor
 brew "jq"
 # Fast, Dynamic Programming Language
 brew "julia"
 # Parsing Expression Grammars For Lua
 brew "lpeg"
+# Powerful, lightweight programming language (v5.1.5)
+brew "lua@5.1"
 # Package manager for the Lua programming language
 brew "luarocks"
 # Java-based project management
@@ -59,8 +68,6 @@ brew "mosh"
 brew "neofetch"
 # Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
-# Package for scientific computing with Python
-brew "numpy"
 # Create, run, and share large language models (LLMs)
 brew "ollama", restart_service: true
 # General-purpose scripting language
@@ -93,6 +100,8 @@ brew "zplug"
 brew "heroku/brew/heroku"
 # A simple terminal UI for git commands, written in Go
 brew "jesseduffield/lazygit/lazygit"
+# Drop in replacement for ueberzug written in C++
+brew "jstkdng/programs/ueberzugpp"
 # Tetris in your terminal
 brew "samtay/tui/tetris"
 # Password manager that keeps all passwords secure behind one password
@@ -135,6 +144,8 @@ cask "google-chrome"
 cask "grammarly-desktop"
 # Free and open-source media player
 cask "iina"
+# Tool to optimize images to a smaller size
+cask "imageoptim"
 # Terminal emulator as alternative to Apple's Terminal app
 cask "iterm2"
 # JetBrains tools manager
@@ -194,21 +205,22 @@ cask "zoom"
 vscode "adpyke.codesnap"
 vscode "alefragnani.project-manager"
 vscode "batisteo.vscode-django"
-vscode "Catppuccin.catppuccin-vsc"
-vscode "ChakrounAnas.turbo-console-log"
+vscode "catppuccin.catppuccin-vsc"
+vscode "chakrounanas.turbo-console-log"
 vscode "donjayamanne.python-environment-manager"
 vscode "eamodio.gitlens"
 vscode "esbenp.prettier-vscode"
 vscode "formulahendry.auto-rename-tag"
 vscode "formulahendry.code-runner"
-vscode "GitHub.codespaces"
-vscode "GitHub.copilot"
-vscode "GitHub.copilot-chat"
-vscode "KevinRose.vsc-python-indent"
+vscode "github.codespaces"
+vscode "github.copilot"
+vscode "github.copilot-chat"
+vscode "kevinrose.vsc-python-indent"
 vscode "kisstkondoros.vscode-gutter-preview"
 vscode "liviuschera.noctis"
 vscode "ms-azuretools.vscode-docker"
 vscode "ms-python.black-formatter"
+vscode "ms-python.debugpy"
 vscode "ms-python.isort"
 vscode "ms-python.python"
 vscode "ms-python.vscode-pylance"
@@ -223,19 +235,19 @@ vscode "ms-vscode.cpptools-extension-pack"
 vscode "ms-vscode.cpptools-themes"
 vscode "njpwerner.autodocstring"
 vscode "pflannery.vscode-versionlens"
-vscode "PKief.material-icon-theme"
+vscode "pkief.material-icon-theme"
 vscode "redhat.java"
 vscode "richie5um2.vscode-sort-json"
-vscode "ritwickdey.LiveServer"
+vscode "ritwickdey.liveserver"
 vscode "silesky.toggle-boolean"
 vscode "tomoki1207.pdf"
 vscode "twxs.cmake"
 vscode "usernamehw.errorlens"
-vscode "VisualStudioExptTeam.intellicode-api-usage-examples"
-vscode "VisualStudioExptTeam.vscodeintellicode"
+vscode "visualstudioexptteam.intellicode-api-usage-examples"
+vscode "visualstudioexptteam.vscodeintellicode"
 vscode "vscjava.vscode-java-debug"
 vscode "vscjava.vscode-java-dependency"
 vscode "vscjava.vscode-java-pack"
 vscode "vscjava.vscode-java-test"
 vscode "vscjava.vscode-maven"
-vscode "WallabyJs.console-ninja"
+vscode "wallabyjs.console-ninja"

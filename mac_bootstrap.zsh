@@ -251,7 +251,7 @@ install_app "Visual Studio Code" "brew install --cask visual-studio-code" "! bre
 install_app "JetBrains Toolbox" "brew install --cask jetbrains-toolbox" "! brew list --cask | grep -q jetbrains-toolbox && [ ! -d '/Applications/JetBrains Toolbox.app' ]"
 
 # After Oh My Zsh installation, insert a reminder to run the script again
-echo "Once Oh My Zsh has been installed, rerun the script to finish the setup process."
+color_echo $YELLOW "Once Oh My Zsh has been installed, rerun the script to finish the setup process."
 
 # Install Oh My Zsh
 install_app "Oh My Zsh" "sh -c \"\$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\"" "[ ! -d '$HOME/.oh-my-zsh' ]"
@@ -462,10 +462,16 @@ else
         color_echo $YELLOW "Already on the latest LTS version of Node.js."
     fi
 
-
-    # Update global npm packages
-    color_echo $GREEN "Updating global npm packages..."
-    npm update -g || { color_echo $RED "Failed to update global npm packages."; exit 1; }
+    # Prompt for updating global npm packages
+    color_echo $YELLOW "Do you want to update global npm packages? (y/n)"
+    echo -n "> "
+    read -r update_choice
+    if [ "$update_choice" = "y" ]; then
+        color_echo $GREEN "Updating global npm packages..."
+        npm update -g || { color_echo $RED "Failed to update global npm packages."; exit 1; }
+    else
+        color_echo $BLUE "Skipping global npm package updates."
+    fi
 
     color_echo $GREEN "Node.js is up to date."
 fi
@@ -742,12 +748,24 @@ else
     color_echo $GREEN " * Non-Homebrew Ruby detected. Please ensure Ruby from Homebrew is correctly set up."
 fi
 
-# END OF RUBY ASTRONVIM SETUP <<<
-
-echo ""
 echo -n " ${GREEN}*${NC} "
 # Install colorls
 install_app "colorls" "gem install colorls" "gem list colorls -i &>/dev/null"
+
+# Verify Lua 5.1 and LuaRocks are installed
+if command -v lua5.1 &>/dev/null && command -v luarocks &>/dev/null; then
+    color_echo $GREEN " * Lua 5.1 and LuaRocks are installed."
+
+    # Install Magick LuaRock
+    color_echo $YELLOW " * Installing Magick LuaRock..."
+    luarocks --local --lua-version=5.1 install magick || { color_echo $RED "Failed to install Magick LuaRock."; exit 1; }
+
+    color_echo $GREEN " * Magick LuaRock installed successfully."
+else
+    color_echo $RED " * Lua 5.1 or LuaRocks is not installed. Please install Lua 5.1 and LuaRocks first."
+fi
+
+# END OF RUBY ASTRONVIM SETUP <<<
 
 # Install Composer for PHP development ---------------------------------------
 
