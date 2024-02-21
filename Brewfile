@@ -132,7 +132,7 @@ cask "cheatsheet"
 cask "cinebench"
 # Voice and text chat software
 cask "discord"
-# App to build and share containerized applications and microservices
+# App to build and share containerised applications and microservices
 cask "docker"
 # Developer platform
 cask "dotnet-sdk"
@@ -144,7 +144,7 @@ cask "google-chrome"
 cask "grammarly-desktop"
 # Free and open-source media player
 cask "iina"
-# Tool to optimize images to a smaller size
+# Tool to optimise images to a smaller size
 cask "imageoptim"
 # Terminal emulator as alternative to Apple's Terminal app
 cask "iterm2"
@@ -172,10 +172,12 @@ cask "middleclick"
 cask "miniforge"
 # Tool to control external monitor brightness & volume
 cask "monitorcontrol"
-# App to write, plan, collaborate, and get organized
+# App to write, plan, collaborate, and get organised
 cask "notion"
 # Verify system files structure, run miscellaneous maintenance and more
 cask "onyx"
+# Environment for statistical computing and graphics
+cask "r"
 # Move and resize windows using keyboard shortcuts or snap areas
 cask "rectangle"
 # Screenshot measurement and annotation tool
@@ -200,6 +202,8 @@ cask "vitalsource-bookshelf"
 cask "warp"
 # Native desktop client for WhatsApp
 cask "whatsapp"
+# Multiplayer code editor
+cask "zed"
 # Video communication and virtual meeting platform
 cask "zoom"
 vscode "adpyke.codesnap"
