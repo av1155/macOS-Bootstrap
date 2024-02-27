@@ -128,8 +128,9 @@ export PRETTIERD_DEFAULT_CONFIG=~/.dotfiles/configs/formatting_files/.prettierrc
 if command -v find &>/dev/null && command -v fzf &>/dev/null && command -v colorls &>/dev/null; then
     fcd() {
         local depth="${1:-7}"  # Default depth is 7, but can be overridden by first argument
+        local ignore_path="/Users/andreaventi/Library/CloudStorage/SynologyDrive-OnDemandSync/Photos"
         local dir
-        dir=$(find * -type d -maxdepth "$depth" 2>/dev/null | fzf --preview 'colorls --tree=2 --sd --gs --color=always {}' +m) && cd "$dir" || return
+        dir=$(find * -type d -maxdepth "$depth" ! -path "$ignore_path/*" 2>/dev/null | fzf --preview 'colorls --tree=2 --sd --gs --color=always {}' +m) && cd "$dir" || return
     }
 fi
 
