@@ -14,6 +14,8 @@ brew "asciiquarium"
 brew "autojump"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
+# Secure and free password manager for all of your devices
+brew "bitwarden-cli"
 # Yet another cross-platform graphical process/system monitor
 brew "bottom"
 # Cross-platform make
