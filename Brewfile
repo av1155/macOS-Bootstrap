@@ -10,6 +10,8 @@ brew "openssl@3"
 brew "perl"
 # Aquarium animation in ASCII art
 brew "asciiquarium"
+# ChatGPT in the terminal
+brew "ata"
 # Shell extension to jump to frequently used directories
 brew "autojump"
 # Clone of cat(1) with syntax highlighting and Git integration
@@ -62,6 +64,8 @@ brew "lpeg"
 brew "lua@5.1"
 # Package manager for the Lua programming language
 brew "luarocks"
+# Mac App Store command-line interface
+brew "mas"
 # Java-based project management
 brew "maven"
 # Remote terminal application
@@ -86,6 +90,8 @@ brew "ripgrep"
 brew "ruby"
 # Safe, concurrent, practical language
 brew "rust"
+# Command-line interface for https://speedtest.net bandwidth tests
+brew "speedtest-cli"
 # Cross-shell prompt for astronauts
 brew "starship"
 # Terminal multiplexer
@@ -124,6 +130,8 @@ cask "alt-tab"
 cask "anki"
 # Application uninstaller
 cask "appcleaner"
+# Chromium based browser
+cask "arc"
 # Display management tool
 cask "betterdisplay"
 # Web browser focusing on privacy
@@ -178,6 +186,8 @@ cask "monitorcontrol"
 cask "notion"
 # Verify system files structure, run miscellaneous maintenance and more
 cask "onyx"
+# Quick Look generator for Markdown files
+cask "qlmarkdown"
 # Environment for statistical computing and graphics
 cask "r"
 # Move and resize windows using keyboard shortcuts or snap areas
@@ -208,6 +218,22 @@ cask "whatsapp"
 cask "zed"
 # Video communication and virtual meeting platform
 cask "zoom"
+mas "1Blocker", id: 1365531024
+mas "1Password for Safari", id: 1569813296
+mas "Bitwarden", id: 1352778147
+mas "CleanMyMac X", id: 1339170533
+mas "Color Picker", id: 1545870783
+mas "com.fushao.sudoku", id: 1448585397
+mas "Dropover", id: 1355679052
+mas "Encrypto", id: 935235287
+mas "Final Cut Pro", id: 424389933
+mas "Goodnotes", id: 1444383602
+mas "Grammarly for Safari", id: 1462114288
+mas "Noir", id: 1592917505
+mas "Steam Link", id: 1246969117
+mas "TestFlight", id: 899247664
+mas "Unsplash Wallpapers", id: 1284863847
+mas "Xcode", id: 497799835
 vscode "adpyke.codesnap"
 vscode "alefragnani.project-manager"
 vscode "batisteo.vscode-django"
