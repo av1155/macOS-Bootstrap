@@ -797,43 +797,55 @@ else
     color_echo $GREEN " * Composer installed successfully."
 fi
 
-# Initialize Neovim plugins ---------------------------------------------------
+# NeoVim-Configuration ---------------------------------------------------------
 
 echo ""
 
-centered_color_echo $ORANGE "<-------------- Initializing Neovim Plugins -------------->"
+centered_color_echo $ORANGE "<-------------- Setting Up AstroNvim v4+ -------------->"
 
 echo ""
+
+# Check if the Neovim configuration directory exists
+if [ -d "$HOME/.config/nvim" ]; then
+    color_echo $YELLOW "An existing Neovim configuration has been detected."
+    color_echo $YELLOW "Do you want to keep the current Neovim configuration and skip the new setup? (y/n)${NC}"
+    echo -n "> "
+    read -r keep_conf
+
+    if [ "$keep_conf" != "y" ] && [ "$keep_conf" != "Y" ]; then
+        # Backing up existing Neovim configurations
+        color_echo $BLUE "Backing up existing Neovim configurations..."
+        mv ~/.config/nvim ~/.config/nvim.bak
+        mv ~/.local/share/nvim ~/.local/share/nvim.bak
+        mv ~/.local/state/nvim ~/.local/state/nvim.bak
+        mv ~/.cache/nvim ~/.cache/nvim.bak
+        color_echo $GREEN "Backup completed."
+
+        # Cloning the new configuration repository
+        color_echo $BLUE "Cloning the new AstroNvim configuration..."
+        git clone git@github.com:av1155/NeoVim-Configuration.git ~/.config/nvim
+        color_echo $GREEN "Clone completed."
+    else
+        color_echo $GREEN "Keeping the existing configuration. No changes made."
+    fi
+else
+    color_echo $GREEN "No existing Neovim configuration found. Proceeding with setup..."
+
+    # Cloning the new configuration repository
+    color_echo $BLUE "Cloning the new AstroNvim configuration..."
+    git clone git@github.com:av1155/NeoVim-Configuration.git ~/.config/nvim
+    color_echo $GREEN "Clone completed."
+fi
 
 # Check if Neovim is installed
 if command -v nvim &> /dev/null; then
-    color_echo $GREEN "Neovim is installed."
+    color_echo $GREEN "Neovim is installed. Running Neovim in headless mode to initialize..."
 
-    # Check if user configuration directory exists
-    if [ -d "$HOME/.config/nvim/lua/user" ]; then
-        color_echo $GREEN "Neovim user configuration directory found."
-        # Prompt for initializing plugins
-        color_echo $YELLOW "Do you want to initialize Neovim plugins now? This will run '${PURPLE}nvim --headless -c quitall${YELLOW}' (y/n)${NC}"
-        echo -n "> "
-        read -r choice
-        case "$choice" in
-            y|Y )
-                color_echo $BLUE "Initializing Neovim plugins..."
-                nvim --headless -c 'quitall'
-                color_echo $GREEN "Neovim plugins initialized."
-                ;;
-            n|N )
-                color_echo $GREEN "Skipping plugin initialization."
-                ;;
-            * )
-                color_echo $RED "Invalid choice. Skipping plugin initialization."
-                ;;
-        esac
-    else
-        color_echo $YELLOW "Neovim user configuration directory does not exist. Skipping plugin initialization."
-    fi
+    # Start Neovim in headless mode and then exit
+    nvim --headless -c 'quitall'
+    color_echo $GREEN "Neovim has been initialized in headless mode."
 else
-    color_echo $YELLOW "Neovim is not installed. Skipping plugin initialization."
+    color_echo $YELLOW "Neovim is not installed. Please install Neovim to proceed."
 fi
 
 # Step 12: Create TODO List of Apps to Download -------------------------------
