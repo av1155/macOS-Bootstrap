@@ -576,72 +576,7 @@ else
     fi
 fi
 
-# Step 10: Configure Neovim with AstroNvim -----------------------------------
-
-echo ""
-
-centered_color_echo $ORANGE "<-------------- AstroNvim Configuration -------------->"
-
-echo ""
-
-color_echo $BLUE "Installing AstroNvim..."
-# Check if ~/.config/nvim exists
-if [ -d "$HOME/.config/nvim" ]; then
-    color_echo $YELLOW "AstroNvim configuration already exists. Do you want to proceed with the AstroNvim installation? (y/n)"
-    echo -n "> "
-    read -r choice
-    case "$choice" in
-        y|Y )
-            color_echo $BLUE "Proceeding with AstroNvim installation..."
-            # Install AstroNvim
-            color_echo $BLUE "Installing AstroNvim..."
-            [ -d "$HOME/.config/nvim" ] && mv "$HOME/.config/nvim" "$HOME/.config/nvim.bak"
-            [ -d "$HOME/.local/share/nvim" ] && mv "$HOME/.local/share/nvim" "$HOME/.local/share/nvim.bak"
-            [ -d "$HOME/.local/state/nvim" ] && mv "$HOME/.local/state/nvim" "$HOME/.local/state/nvim.bak"
-            [ -d "$HOME/.cache/nvim" ] && mv "$HOME/.cache/nvim" "$HOME/.cache/nvim.bak"
-            git clone --depth 1 https://github.com/AstroNvim/AstroNvim ~/.config/nvim
-            ;;
-        n|N )
-            color_echo $GREEN "Skipping AstroNvim installation."
-            ;;
-        * )
-            color_echo $RED "Invalid choice. Exiting."
-            exit 1
-            ;;
-    esac
-else
-    # If ~/.config/nvim doesn't exist, proceed with cloning
-    git clone --depth 1 https://github.com/AstroNvim/AstroNvim ~/.config/nvim
-fi
-
-echo ""
-
-color_echo $BLUE "Installing AstroNvim user configuration..."
-# Check if ~/.config/nvim/lua/user exists
-if [ -d "$HOME/.config/nvim/lua/user" ]; then
-    color_echo $YELLOW "AstroNvim user configuration directory already exists. Do you want to replace it with a new configuration? (y/n)"
-    echo -n "> "
-    read -r choice
-    case "$choice" in
-        y|Y )
-            color_echo $BLUE "Replacing existing user configuration..."
-            rm -rf "$HOME/.config/nvim/lua/user"
-            git_clone_fallback "git@github.com:av1155/astronvim_config.git" "https://github.com/av1155/astronvim_config.git" "$HOME/.config/nvim/lua/user"
-            ;;
-        n|N )
-            color_echo $GREEN "Keeping existing user configuration."
-            ;;
-        * )
-            color_echo $RED "Invalid choice. Exiting."
-            exit 1
-            ;;
-    esac
-else
-    # If ~/.config/nvim/lua/user doesn't exist, proceed with cloning
-    git_clone_fallback "git@github.com:av1155/astronvim_config.git" "https://github.com/av1155/astronvim_config.git" "$HOME/.config/nvim/lua/user"
-fi
-
-# Step 11: Install AstroNvim Dependencies ------------------------------------
+# Step 10: Install AstroNvim Dependencies ------------------------------------
 
 echo ""
 

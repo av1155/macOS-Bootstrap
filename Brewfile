@@ -228,7 +228,6 @@ mas "Dropover", id: 1355679052
 mas "Encrypto", id: 935235287
 mas "Final Cut Pro", id: 424389933
 mas "Goodnotes", id: 1444383602
-mas "Grammarly for Safari", id: 1462114288
 mas "Noir", id: 1592917505
 mas "Steam Link", id: 1246969117
 mas "TestFlight", id: 899247664
