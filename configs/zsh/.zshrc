@@ -373,7 +373,7 @@ command -v fd &>/dev/null && command -v fzf &>/dev/null && \
 [ -f ~/scripts/scripts/imgp.sh ] && alias imgp="~/scripts/scripts/imgp.sh"
 [ -f ~/scripts/scripts/sqlurl.sh ] && alias sqlurl="~/scripts/scripts/sqlurl.sh"
 [ -f ~/scripts/scripts/nvim_surround_usage.sh ] && alias vs="~/scripts/scripts/nvim_surround_usage.sh"
-[ -f ~/scripts/scripts/package_updater.sh ] && alias upall="~/scripts/scripts/package_updater.sh"
+[ -f ~/scripts/scripts/package_updater.zsh ] && alias upall="~/scripts/scripts/package_updater.zsh"
 
 # GPA Calculator
 if [ -d "$HOME/Developer/GPA-Calculator" ] && command -v node >/dev/null 2>&1; then
