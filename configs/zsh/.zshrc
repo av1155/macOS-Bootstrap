@@ -429,3 +429,5 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 
 # <-------------------- END OF .ZSHRC FILE -------------------->
 eval "$(gh copilot alias -- zsh)"
+
+PATH=~/.console-ninja/.bin:$PATH
