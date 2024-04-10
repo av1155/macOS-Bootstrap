@@ -369,7 +369,7 @@ command -v fd &>/dev/null && command -v fzf &>/dev/null && \
 
 # Sourced + Aliased Scripts ------------------------------------------------------->
 [ -f ~/scripts/scripts/JavaProject.zsh ] && { source ~/scripts/scripts/JavaProject.zsh; alias jp="javaproject"; }
-[ -f ~/scripts/scripts/JavaCompiler/JavaCompiler.zsh ] && alias jcr="~/scripts/scripts/JavaCompiler/JavaCompiler.zsh"
+[ -f ~/scripts/scripts/JavaProjectManager/JavaProjectManager.zsh ] && alias jcr="~/scripts/scripts/JavaProjectManager/JavaProjectManager.zsh"
 [ -f ~/scripts/scripts/imgp.sh ] && alias imgp="~/scripts/scripts/imgp.sh"
 [ -f ~/scripts/scripts/sqlurl.sh ] && alias sqlurl="~/scripts/scripts/sqlurl.sh"
 [ -f ~/scripts/scripts/nvim_surround_usage.sh ] && alias vs="~/scripts/scripts/nvim_surround_usage.sh"
@@ -414,6 +414,11 @@ fi
 # <-------------------- NEOFETCH INITIALIZATION -------------------->
 
 # command -v neofetch &>/dev/null && neofetch
+
+
+# <----------------- CUSTOM ENVIRONMENT VARIABLES ------------------>
+
+export EDITOR='nvim'
 
 
 # <--------------- HEROKU AUTOCOMPLETE INITIALIZATION -------------->
