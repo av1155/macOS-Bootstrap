@@ -1,3 +1,4 @@
+tap "av1155/scripts", "https://github.com/av1155/scripts"
 tap "heroku/brew"
 tap "homebrew/bundle"
 tap "homebrew/services"
@@ -104,6 +105,8 @@ brew "viu"
 brew "wget"
 # Next-generation plugin manager for zsh
 brew "zplug"
+# A versatile command-line utility for Java developers to compile and run Java files from the terminal.
+brew "av1155/scripts/javaprojectmanager"
 # Everything you need to get started with Heroku
 brew "heroku/brew/heroku"
 # A simple terminal UI for git commands, written in Go
