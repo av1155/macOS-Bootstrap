@@ -431,8 +431,20 @@ HEROKU_AC_ZSH_SETUP_PATH=/Users/andreaventi/Library/Caches/heroku/autocomplete/z
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
+# <-------------------- GH COPILOT INITIALIZATION -------------------->
 
-# <-------------------- END OF .ZSHRC FILE -------------------->
 eval "$(gh copilot alias -- zsh)"
 
+
+# <-------------------- CUSTOM PATHS -------------------->
+
 PATH=~/.console-ninja/.bin:$PATH
+
+
+# <-------------------- JAVA CLASSPATH CONFIGURATION -------------------->
+
+CLASSPATH_PREFIX="/Users/andreaventi/.dotfiles/configs/javaClasspath"
+export CLASSPATH="$CLASSPATH:$CLASSPATH_PREFIX/jsoup-1.8.3.jar"
+
+
+# <-------------------- END OF .ZSHRC FILE -------------------->
