@@ -443,8 +443,16 @@ PATH=~/.console-ninja/.bin:$PATH
 
 # <-------------------- JAVA CLASSPATH CONFIGURATION -------------------->
 
+# Define the base directory where the jars are stored
 CLASSPATH_PREFIX="/Users/andreaventi/.dotfiles/configs/javaClasspath"
-export CLASSPATH="$CLASSPATH:$CLASSPATH_PREFIX/jsoup-1.8.3.jar"
+
+# Clear existing java classpath entries
+export CLASSPATH=""
+
+# Add each jar file found in the directory and its subdirectories to the CLASSPATH
+for jar in $(find "$CLASSPATH_PREFIX" -name '*.jar'); do
+  export CLASSPATH="$CLASSPATH:$jar"
+done
 
 
 # <-------------------- END OF .ZSHRC FILE -------------------->
