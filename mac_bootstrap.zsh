@@ -289,10 +289,10 @@ install_app "Powerlevel10k" "git clone --depth=1 https://github.com/romkatv/powe
 ARCH="$(uname -m)"
 if [ "$ARCH" = "x86_64" ]; then
     # Intel architecture (x86_64)
-    JDK_URL="https://download.oracle.com/java/21/latest/jdk-21_macos-x64_bin.tar.gz"
+    JDK_URL="https://download.oracle.com/java/21/archive/jdk-21.0.2_macos-x64_bin.tar.gz"
 elif [ "$ARCH" = "arm64" ]; then
     # ARM architecture (Apple Silicon)
-    JDK_URL="https://download.oracle.com/java/21/latest/jdk-21_macos-aarch64_bin.tar.gz"
+    JDK_URL="https://download.oracle.com/java/21/archive/jdk-21.0.2_macos-aarch64_bin.tar.gz"
 else
     echo "Unsupported architecture: $ARCH"
     exit 1
@@ -301,7 +301,7 @@ fi
 # Install Java
 install_app "Java" \
     "mkdir -p $HOME/Library/Java/JavaVirtualMachines && curl -L $JDK_URL | tar xz -C $HOME/Library/Java/JavaVirtualMachines" \
-    "[ ! -d \"$HOME/Library/Java/JavaVirtualMachines/jdk-21.0.1.jdk\" ]"
+    "[ ! -d \"$HOME/Library/Java/JavaVirtualMachines/jdk-21.0.2.jdk\" ]"
 
 # Step 4: Clone scripts repository -------------------------------------------
 
