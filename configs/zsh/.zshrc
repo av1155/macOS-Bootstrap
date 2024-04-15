@@ -368,7 +368,7 @@ command -v fd &>/dev/null && command -v fzf &>/dev/null && \
     alias f="fd --type f --hidden --exclude .git | fzf --preview 'bat --color=always {1}' | xargs nvim"
 
 # Sourced + Aliased Scripts ------------------------------------------------------->
-[ -f ~/scripts/scripts/JavaProject.zsh ] && { source ~/scripts/scripts/JavaProject.zsh; alias jp="javaproject"; }
+[ -f ~/scripts/scripts/MavenJavaProjectInitializer.zsh ] && { source ~/scripts/scripts/MavenJavaProjectInitializer.zsh; alias jp="javaproject"; }
 [ -f ~/scripts/scripts/JavaProjectManager/JavaProjectManager.zsh ] && alias jcrt="~/scripts/scripts/JavaProjectManager/JavaProjectManager.zsh"
 [ -f ~/scripts/scripts/imgp.sh ] && alias imgp="~/scripts/scripts/imgp.sh"
 [ -f ~/scripts/scripts/sqlurl.sh ] && alias sqlurl="~/scripts/scripts/sqlurl.sh"
