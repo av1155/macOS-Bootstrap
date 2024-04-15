@@ -71,6 +71,8 @@ brew "mas"
 brew "maven"
 # Remote terminal application
 brew "mosh"
+# SMTP client that can be used as an SMTP plugin for Mutt
+brew "msmtp"
 # Fast, highly customisable system info script
 brew "neofetch"
 # Ambitious Vim-fork focused on extensibility and agility
@@ -105,7 +107,7 @@ brew "viu"
 brew "wget"
 # Next-generation plugin manager for zsh
 brew "zplug"
-# A versatile command-line utility for Java developers to compile and run Java files from the terminal.
+# Easily compile and run Java files, manage cleanup, and view syntax-highlighted errors through a user-friendly fuzzy-finding menu.
 brew "av1155/scripts/javaprojectmanager"
 # Everything you need to get started with Heroku
 brew "heroku/brew/heroku"
@@ -151,6 +153,8 @@ cask "docker"
 cask "dotnet-sdk"
 # Clipboard manager for developers
 cask "flycut"
+# Desktop client for GitHub repositories
+cask "github"
 # Web browser
 cask "google-chrome"
 # Grammarly for desktop
