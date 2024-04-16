@@ -21,9 +21,6 @@ if command -v brew >/dev/null 2>&1; then
     # GIT
     export PATH="$(brew --prefix git)/bin:$PATH"
 
-    # JAVA
-    export PATH="$(brew --prefix java)/bin:$PATH"
-
     # DOTNET
     export PATH="$(brew --prefix dotnet)/bin:$PATH"
 
@@ -52,17 +49,9 @@ if [ ! -d "$GOBIN" ]; then
     mkdir -p "$GOBIN"
 fi
 
-
-# <-------------------- JAVA CONFIGURATION -------------------->
-
-# Explicitly set JAVA_HOME to the Homebrew installed OpenJDK
-export JAVA_HOME="/opt/homebrew/opt/openjdk/libexec/openjdk.jdk/Contents/Home"
-
-# For compilers to find OpenJDK you may need to set:
-export CPPFLAGS="-I/opt/homebrew/opt/openjdk/include"
-
-
-# <================== OTHER CONFIGURATIONS ==================>
+# JAVA
+export JAVA_HOME="$(/usr/libexec/java_home)"
+export PATH=$JAVA_HOME/bin:$PATH
 
 # Added by Toolbox App
 export PATH="$PATH:~/Library/Application Support/JetBrains/Toolbox/scripts"
