@@ -53,6 +53,9 @@ fi
 export JAVA_HOME="$(/usr/libexec/java_home)"
 export PATH=$JAVA_HOME/bin:$PATH
 
+# For compilers to find OpenJDK you may need to set:
+export CPPFLAGS="-I/opt/homebrew/opt/openjdk/include"
+
 # Added by Toolbox App
 export PATH="$PATH:~/Library/Application Support/JetBrains/Toolbox/scripts"
 
