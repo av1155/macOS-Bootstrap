@@ -431,6 +431,7 @@ HEROKU_AC_ZSH_SETUP_PATH=/Users/andreaventi/Library/Caches/heroku/autocomplete/z
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
+
 # <-------------------- GH COPILOT INITIALIZATION -------------------->
 
 eval "$(gh copilot alias -- zsh)"
