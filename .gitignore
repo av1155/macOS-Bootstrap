@@ -1,7 +1,20 @@
+!*/colorls/*
+!*/cs50lib/*
+!*/formatting_files/*
+!*/git/*
+!*/iTerm2_Profile/*
+!*/intelliJ_IDEA/*
+!*/javaClasspath/*
+!*/kitty/*
+!*/lazygit/*
+!*/neofetch/*
+!*/ssh/*
+!*/tmux/*
+!*/vscode/*
+!*/tmux/*
+!*/zsh/*
+
 # Secrets
 openai_api_key.sh
 bw_password
-
-# Java
-!jsoup-1.8.3.jar
-
+.DS_Store

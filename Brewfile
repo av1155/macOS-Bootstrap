@@ -45,6 +45,8 @@ brew "gdu"
 brew "gh"
 # Distributed revision control system
 brew "git"
+# Syntax-highlighting pager for git and diff output
+brew "git-delta"
 # Git extension for versioning large files
 brew "git-lfs"
 # Render markdown on the CLI
@@ -97,6 +99,8 @@ brew "rust"
 brew "speedtest-cli"
 # Cross-shell prompt for astronauts
 brew "starship"
+# Official tldr client written in Rust
+brew "tlrc"
 # Terminal multiplexer
 brew "tmux"
 # Vi 'workalike' with many additional features

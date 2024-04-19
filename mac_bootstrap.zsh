@@ -393,6 +393,8 @@ create_symlink "$DOTFILES_DIR/configs/vscode/keybindings.json" "$HOME/Library/Ap
 create_symlink "$DOTFILES_DIR/configs/zsh/.zprofile" "$HOME/.zprofile"
 create_symlink "$DOTFILES_DIR/configs/zsh/.zshrc" "$HOME/.zshrc"
 create_symlink "$DOTFILES_DIR/configs/zsh/starship.toml" "$HOME/.config/starship.toml"
+create_symlink "$DOTFILES_DIR/configs/zsh/fzf-git.sh" "$HOME/fzf-git.sh"
+create_symlink "$DOTFILES_DIR/configs/zsh/bat-themes" "$HOME/.config/bat/themes"
 create_symlink "/opt/homebrew/bin/gdu-go" "/opt/homebrew/bin/gdu"
 
 # Step 8: Install NVM, Node.js, & npm -----------------------------------------
@@ -464,7 +466,7 @@ else
 
     # Prompt for updating global npm packages
     color_echo $YELLOW "Do you want to update global npm packages? (y/n)"
-    echo -n "> "
+    echo -n "Enter choice: > "
     read -r update_choice
     if [ "$update_choice" = "y" ]; then
         color_echo $GREEN "Updating global npm packages..."
@@ -743,11 +745,14 @@ echo ""
 # Check if the Neovim configuration directory exists
 if [ -d "$HOME/.config/nvim" ]; then
     color_echo $YELLOW "An existing Neovim configuration has been detected."
-    color_echo $YELLOW "Do you want to keep the current Neovim configuration and skip the new setup? (y/n)${NC}"
-    echo -n "> "
+    color_echo $YELLOW "Do you want to replace the current Neovim configuration? (y/n)${NC}"
+    echo -n "Enter choice: > "
     read -r keep_conf
 
-    if [ "$keep_conf" != "y" ] && [ "$keep_conf" != "Y" ]; then
+    if [ "$keep_conf" != "y" ] || [ "$keep_conf" != "Y" ]; then
+        color_echo $GREEN "Keeping the existing configuration. No changes made."
+
+    else
         # Backing up existing Neovim configurations
         color_echo $BLUE "Backing up existing Neovim configurations..."
         mv ~/.config/nvim ~/.config/nvim.bak
@@ -760,8 +765,6 @@ if [ -d "$HOME/.config/nvim" ]; then
         color_echo $BLUE "Cloning the new AstroNvim configuration..."
         git clone git@github.com:av1155/NeoVim-Configuration.git ~/.config/nvim
         color_echo $GREEN "Clone completed."
-    else
-        color_echo $GREEN "Keeping the existing configuration. No changes made."
     fi
 else
     color_echo $GREEN "No existing Neovim configuration found. Proceeding with setup..."
