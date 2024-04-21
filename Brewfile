@@ -13,8 +13,6 @@ brew "perl"
 brew "asciiquarium"
 # ChatGPT in the terminal
 brew "ata"
-# Shell extension to jump to frequently used directories
-brew "autojump"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
 # Secure and free password manager for all of your devices
@@ -75,6 +73,8 @@ brew "maven"
 brew "mosh"
 # SMTP client that can be used as an SMTP plugin for Mutt
 brew "msmtp"
+# Netwide Assembler (NASM) is an 80x86 assembler
+brew "nasm"
 # Fast, highly customisable system info script
 brew "neofetch"
 # Ambitious Vim-fork focused on extensibility and agility
@@ -99,6 +99,8 @@ brew "rust"
 brew "speedtest-cli"
 # Cross-shell prompt for astronauts
 brew "starship"
+# Programmatically correct mistyped console commands
+brew "thefuck"
 # Official tldr client written in Rust
 brew "tlrc"
 # Terminal multiplexer
@@ -109,6 +111,8 @@ brew "vim"
 brew "viu"
 # Internet file retriever
 brew "wget"
+# Shell extension to navigate your filesystem faster
+brew "zoxide"
 # Next-generation plugin manager for zsh
 brew "zplug"
 # Easily compile and run Java files, manage cleanup, and view syntax-highlighted errors through a user-friendly fuzzy-finding menu.
