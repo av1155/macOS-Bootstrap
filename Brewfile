@@ -83,6 +83,8 @@ brew "neovim"
 brew "ollama", restart_service: true
 # General-purpose scripting language
 brew "php"
+# Python dependency management tool
+brew "pipenv"
 # Object-relational database system
 brew "postgresql@14", restart_service: true
 # Bundle a Python application and all its dependencies
