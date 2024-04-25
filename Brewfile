@@ -5,6 +5,7 @@ tap "homebrew/services"
 tap "jesseduffield/lazygit"
 tap "jstkdng/programs"
 tap "samtay/tui"
+tap "supabase/tap"
 # Cryptography and SSL/TLS Toolkit
 brew "openssl@3"
 # Highly capable, feature-rich programming language
@@ -127,6 +128,8 @@ brew "jesseduffield/lazygit/lazygit"
 brew "jstkdng/programs/ueberzugpp"
 # Tetris in your terminal
 brew "samtay/tui/tetris"
+# Supabase CLI
+brew "supabase/tap/supabase"
 # Password manager that keeps all passwords secure behind one password
 cask "1password"
 # Command-line interface for 1Password
@@ -255,6 +258,7 @@ vscode "alefragnani.project-manager"
 vscode "batisteo.vscode-django"
 vscode "catppuccin.catppuccin-vsc"
 vscode "chakrounanas.turbo-console-log"
+vscode "denoland.vscode-deno"
 vscode "donjayamanne.python-environment-manager"
 vscode "eamodio.gitlens"
 vscode "esbenp.prettier-vscode"
