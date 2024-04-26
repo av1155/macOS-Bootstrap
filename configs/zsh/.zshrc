@@ -393,9 +393,9 @@ command -v fd &>/dev/null && command -v fzf &>/dev/null && \
 [ -f ~/scripts/scripts/package_updater.zsh ] && alias upall="~/scripts/scripts/package_updater.zsh"
 
 # GPA Calculator
-if [ -d "$HOME/Developer/GPA-Calculator" ] && command -v node >/dev/null 2>&1; then
-    alias gpa="node $HOME/Developer/GPA-Calculator/index.js"
-elif [ -d "$HOME/Developer/GPA-Calculator" ]; then
+if [ -d "$HOME/Developer/DevPlayground/GitHubProjects/GPA-Calculator" ] && command -v node >/dev/null 2>&1; then
+    alias gpa="node $HOME/Developer/DevPlayground/GitHubProjects/GPA-Calculator/index.js"
+elif [ -d "$HOME/Developer/DevPlayground/GitHubProjects/GPA-Calculator" ]; then
     echo "GPA Calculator directory found, but Node.js is not installed."
 else
     echo "GPA Calculator directory does not exist."
