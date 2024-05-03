@@ -126,4 +126,8 @@
   "typescript.preferences.importModuleSpecifier": "relative",
   "typescript.updateImportsOnFileMove.enabled": "always",
   "update.showReleaseNotes": false,
+  "gitlens.hovers.currentLine.over": "line",
+  "gitlens.currentLine.pullRequests.enabled": false,
+  "gitlens.currentLine.enabled": false,
+  "workbench.startupEditor": "none",
 }
