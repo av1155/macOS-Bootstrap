@@ -25,7 +25,7 @@
   "editor.cursorSurroundingLines": 5,
   "editor.fontWeight": "300",
   "editor.inlineSuggest.enabled": true,
-  "editor.lineNumbers": "relative",
+  "editor.lineNumbers": "on",
   "editor.linkedEditing": true,
   "editor.smoothScrolling": true,
   "editor.stickyScroll.enabled": true,
