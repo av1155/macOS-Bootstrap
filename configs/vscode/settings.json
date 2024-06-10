@@ -78,10 +78,7 @@
   "code-runner.showExecutionMessage": false,
   "code-runner.clearPreviousOutput": true,
   "code-runner.enableAppInsights": false,
-  "isort.args": [
-    "--profile",
-    "black"
-  ],
+  "isort.args": ["--profile", "black"],
 
   "console-ninja.featureSet": "Community",
   "redhat.telemetry.enabled": false,
@@ -97,9 +94,7 @@
   "prettier.singleAttributePerLine": true,
   "prettier.singleQuote": true,
   "prettier.trailingComma": "all",
-  "projectManager.git.baseFolders": [
-    "$home/workspace"
-  ],
+  "projectManager.git.baseFolders": ["$home/workspace"],
   "projectManager.sortList": "Recent",
   "sortJSON.orderOverride": [
     "name",
@@ -129,5 +124,7 @@
   "gitlens.hovers.currentLine.over": "line",
   "gitlens.currentLine.pullRequests.enabled": false,
   "gitlens.currentLine.enabled": false,
-  "workbench.startupEditor": "none",
+  "github.copilot.editor.enableAutoCompletions": true,
+  "terminal.integrated.env.linux": {},
+  "workbench.startupEditor": "none"
 }

@@ -271,6 +271,7 @@ plugins=(
     # zsh-autosuggestions
     web-search
     zsh-syntax-highlighting
+    kitty
 )
 
 # Source Oh My Zsh

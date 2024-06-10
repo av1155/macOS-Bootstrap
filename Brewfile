@@ -32,8 +32,6 @@ brew "cpanminus"
 brew "eza"
 # Simple, fast and user-friendly alternative to find
 brew "fd"
-# Package for scientific computing with Python
-brew "numpy"
 # Play, record, convert, and stream audio and video
 brew "ffmpeg"
 # Command-line fuzzy finder written in Go
@@ -80,6 +78,8 @@ brew "nasm"
 brew "neofetch"
 # Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
+# Package for scientific computing with Python
+brew "numpy"
 # Create, run, and share large language models (LLMs)
 brew "ollama", restart_service: true
 # General-purpose scripting language
@@ -92,6 +92,8 @@ brew "postgresql@14", restart_service: true
 brew "pyinstaller"
 # Interpreted, interactive, object-oriented programming language
 brew "python@3.11"
+# Generic machine emulator and virtualizer
+brew "qemu"
 # Search tool like grep and The Silver Searcher
 brew "ripgrep"
 # Powerful, clean, object-oriented scripting language
@@ -172,8 +174,6 @@ cask "github"
 cask "google-chrome"
 # Grammarly for desktop
 cask "grammarly-desktop"
-# Free and open-source media player
-cask "iina"
 # Tool to optimise images to a smaller size
 cask "imageoptim"
 # Terminal emulator as alternative to Apple's Terminal app
@@ -226,6 +226,8 @@ cask "termius"
 cask "the-unarchiver"
 # To-do & task list manager
 cask "ticktick"
+# Virtual machines UI using QEMU
+cask "utm"
 # Open-source code editor
 cask "visual-studio-code"
 # Access etextbooks
