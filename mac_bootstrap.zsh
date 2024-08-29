@@ -22,15 +22,6 @@ color_echo() {
 	echo -e "${color}${message}${NC}"
 }
 
-# Confirmation prompt for starting the script
-color_echo $YELLOW "Do you want to proceed with the BootStrap Setup Script?"
-echo -n "-> [y/N]: "
-read -r confirmation
-if [ "$confirmation" != "y" ] && [ "$confirmation" != "Y" ]; then
-	color_echo $RED "BootStrap Setup Script aborted."
-	exit 1
-fi
-
 # Function to calculate padding for centering text
 calculate_padding() {
 	local text="$1"
@@ -48,15 +39,71 @@ centered_color_echo() {
 	echo -e "${color}${padding}${message}${padding}${NC}"
 }
 
-# Function to attempt to clone using SSH, fallback to HTTPS if SSH fails
+# Function to check if SSH is set up
+is_ssh_configured() {
+	if ssh -T git@github.com 2>&1 | grep -q "successfully authenticated"; then
+		return 0
+	else
+		return 1
+	fi
+}
+
+# Function to prompt for PAT if HTTPS cloning fails
+prompt_for_pat() {
+	local https_url="$1"
+	local clone_directory="$2"
+
+	color_echo $YELLOW "SSH and HTTPS authentication failed. Please provide a GitHub Personal Access Token (PAT) for HTTPS cloning."
+	echo -n "Enter your GitHub PAT Token (hidden input): "
+	read -r -s pat
+	echo ""
+
+	local pat_clone_url=${https_url/https:\/\//https:\/\/$pat@}
+	git clone "$pat_clone_url" "$clone_directory"
+}
+
 git_clone_fallback() {
 	local ssh_url="$1"
 	local https_url="$2"
 	local clone_directory="$3"
-	git clone "$ssh_url" "$clone_directory" || git clone "$https_url" "$clone_directory" || {
-		color_echo $RED "Failed to clone repository."
-		exit 1
-	}
+	local retries=3
+	local count=0
+
+	# Attempt SSH cloning first
+	color_echo $BLUE "Attempting to clone repository using SSH..."
+	if is_ssh_configured; then
+		while [ $count -lt $retries ]; do
+			git clone "$ssh_url" "$clone_directory" && return 0
+			count=$((count + 1))
+			color_echo $YELLOW "Attempt $count/$retries failed using SSH. Retrying in 5 seconds..."
+			sleep 3
+		done
+	else
+		color_echo $YELLOW "SSH is not configured or failed. Falling back to HTTPS."
+	fi
+
+	# Attempt HTTPS cloning if SSH fails
+	color_echo $BLUE "Attempting to clone repository using HTTPS..."
+	count=0
+	while [ $count -lt $retries ]; do
+		git clone "$https_url" "$clone_directory" && return 0
+		count=$((count + 1))
+		color_echo $YELLOW "Attempt $count/$retries failed using HTTPS. Retrying in 5 seconds..."
+		sleep 3
+	done
+
+	# Attempt HTTPS with PAT cloning if both SSH and HTTPS fail
+	color_echo $YELLOW "Both SSH and HTTPS failed. Falling back to HTTPS with PAT."
+	count=0
+	while [ $count -lt $retries ]; do
+		prompt_for_pat "$https_url" "$clone_directory" && return 0
+		count=$((count + 1))
+		color_echo $YELLOW "Attempt $count/$retries failed using HTTPS with PAT. Retrying in 5 seconds..."
+		sleep 3
+	done
+
+	color_echo $RED "Failed to clone repository after $retries attempts."
+	exit 1
 }
 
 # Function to create a symlink
@@ -189,6 +236,15 @@ install_neovim() {
 
 # END OF FUNCTIONS ------------------------------------------------------------
 
+# Confirmation prompt for starting the script
+color_echo $YELLOW "Do you want to proceed with the BootStrap Setup Script?"
+echo -n "-> [y/N]: "
+read -r confirmation
+if [ "$confirmation" != "y" ] && [ "$confirmation" != "Y" ]; then
+	color_echo $RED "BootStrap Setup Script aborted."
+	exit 1
+fi
+
 # Step 1: Install Homebrew ----------------------------------------------------
 
 echo ""
@@ -255,23 +311,8 @@ echo ""
 # Example:
 # install_app "Visual Studio Code" "brew install --cask visual-studio-code" "! brew list --cask | grep -q visual-studio-code && [ ! -d '/Applications/Visual Studio Code.app' ]"
 
-# Install Rectangle
-install_app "Rectangle" "brew install --cask rectangle" "! brew list rectangle &>/dev/null"
-
 # Install Zplug
 install_app "Zplug" "brew install zplug" "! brew list zplug &>/dev/null"
-
-# Install iTerm2
-install_app "iTerm2" "brew install --cask iterm2" "! brew list --cask | grep -q iterm2 && [ ! -d '/Applications/iTerm.app' ]"
-
-# Install Google Chrome
-install_app "Google Chrome" "brew install --cask google-chrome" "! brew list --cask | grep -q google-chrome && [ ! -d '/Applications/Google Chrome.app' ]"
-
-# Install Visual Studio Code
-install_app "Visual Studio Code" "brew install --cask visual-studio-code" "! brew list --cask | grep -q visual-studio-code && [ ! -d '/Applications/Visual Studio Code.app' ]"
-
-# Install JetBrains Toolbox
-install_app "JetBrains Toolbox" "brew install --cask jetbrains-toolbox" "! brew list --cask | grep -q jetbrains-toolbox && [ ! -d '/Applications/JetBrains Toolbox.app' ]"
 
 # After Oh My Zsh installation, insert a reminder to run the script again
 color_echo $YELLOW "Once Oh My Zsh has been installed, rerun the script to finish the setup process."
@@ -294,18 +335,6 @@ if [ -d "$HOME/.oh-my-zsh" ]; then
 else
 	color_echo $RED "Oh My Zsh is not installed. Please install Oh My Zsh first."
 fi
-
-# # Flag to check if Miniforge3 was not installed
-# MINIFORGE_NOT_INSTALLED=$(command -v conda &>/dev/null; echo $?)
-
-# Install Miniforge3
-install_app "Miniforge3" "brew install miniforge" "! command -v conda &>/dev/null"
-
-# # If Miniforge3 was not installed and is installed now, initialize conda for zsh
-# if [ $MINIFORGE_NOT_INSTALLED -ne 0 ] && command -v conda &>/dev/null; then
-#     echo "Initializing conda for zsh..."
-#     conda init "$(basename "${SHELL}")"
-# fi
 
 # Install Powerlevel10k Theme
 install_app "Powerlevel10k" "git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k" "[ ! -d '$HOME/powerlevel10k' ]"
@@ -389,11 +418,7 @@ echo ""
 DOTFILES_DIR="$HOME/.dotfiles"
 if [ ! -d "$DOTFILES_DIR" ]; then
 	color_echo $BLUE "Cloning .dotfiles repository..."
-	git clone "https://github.com/av1155/.dotfiles.git" "$DOTFILES_DIR" ||
-		{
-			color_echo $RED "Failed to clone .dotfiles repository."
-			exit 1
-		}
+	git_clone_fallback "git@github.com:av1155/.dotfiles.git" "https://github.com/av1155/.dotfiles.git" "$DOTFILES_DIR"
 else
 	color_echo $GREEN "The '.dotfiles' directory already exists in '$DOTFILES_DIR'. Skipping clone of repository."
 	echo ""
@@ -511,6 +536,31 @@ create_symlink "$DOTFILES_DIR/configs/zsh/fzf-git.sh" "$HOME/fzf-git.sh"
 create_symlink "$DOTFILES_DIR/configs/zsh/bat-themes" "$HOME/.config/bat/themes"
 create_symlink "/opt/homebrew/bin/gdu-go" "/opt/homebrew/bin/gdu"
 
+# Set up bat themes by building the cache
+color_echo $BLUE "\nBuilding bat cache for themes..."
+bat cache --build
+
+# Inform the user about setting up GitHub Copilot CLI
+color_echo $YELLOW "\nSetting up GitHub Copilot CLI..."
+
+# Check if already logged in to GitHub CLI
+if ! gh auth status >/dev/null 2>&1; then
+	color_echo $RED "Not logged in to GitHub. Please log in."
+	gh auth login
+else
+	color_echo $GREEN "Already logged in to GitHub."
+fi
+
+# Set up gh for GitHub CLI
+# Check if gh-copilot is already installed
+if ! gh extension list | grep -q "gh-copilot"; then
+	color_echo $BLUE "Installing gh-copilot extension..."
+	gh extension install github/gh-copilot
+	gh copilot config
+else
+	color_echo $GREEN "gh-copilot extension is already installed."
+fi
+
 # Step 8: Install NVM, Node.js, & npm -----------------------------------------
 
 echo ""
@@ -523,7 +573,7 @@ echo ""
 if [ ! -d "$HOME/.nvm" ]; then
 	# Install NVM if it's not installed
 	color_echo $BLUE "Installing Node Version Manager (nvm)..."
-	curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash || {
+	curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash || {
 		color_echo $RED "Failed to install nvm."
 		exit 1
 	}
@@ -926,9 +976,20 @@ if [ -d "$HOME/.config/nvim" ]; then
 		mv ~/.cache/nvim ~/.cache/nvim.bak
 		color_echo $GREEN "Backup completed."
 
+		# Ask the user if they want to delete the backed-up .local/share/nvim and .local/state/nvim directories
+		color_echo $YELLOW "The backup of .local/share/nvim and .local/state/nvim may take up significant space."
+		echo -n "Would you like to delete the backed-up .local/share/nvim.bak and .local/state/nvim.bak directories to save space? \n-> [y/N]: "
+		read -r delete_choice
+		if [ "$delete_choice" = "y" ] || [ "$delete_choice" = "Y" ]; then
+			rm -rf ~/.local/share/nvim.bak ~/.local/state/nvim.bak
+			color_echo $GREEN "The backed-up .local/share/nvim.bak and .local/state/nvim.bak directories have been deleted."
+		else
+			color_echo $BLUE "The backed-up directories have been retained."
+		fi
+
 		# Cloning the new configuration repository
 		color_echo $BLUE "Cloning the new AstroNvim configuration..."
-		git clone git@github.com:av1155/NeoVim-Configuration.git ~/.config/nvim
+		git_clone_fallback "git@github.com:av1155/NeoVim-Configuration.git" "https://github.com/av1155/NeoVim-Configuration.git" "$HOME/.config/nvim"
 		color_echo $GREEN "Clone completed."
 	fi
 else
@@ -936,7 +997,7 @@ else
 
 	# Cloning the new configuration repository
 	color_echo $BLUE "Cloning the new AstroNvim configuration..."
-	git clone git@github.com:av1155/NeoVim-Configuration.git ~/.config/nvim
+	git_clone_fallback "git@github.com:av1155/NeoVim-Configuration.git" "https://github.com/av1155/NeoVim-Configuration.git" "$HOME/.config/nvim"
 	color_echo $GREEN "Clone completed."
 fi
 
@@ -1006,6 +1067,6 @@ centered_color_echo $ORANGE "<-------------- Thank You! -------------->"
 
 echo "" # Print a blank line
 
-color_echo $PURPLE "🚀 Installation successful! Your development environment is now supercharged and ready for lift-off. Please restart your computer to finalize the setup. Happy coding! 🚀"
+color_echo $PURPLE "🚀 Installation successful! Your development environment is now supercharged and ready for lift-off. Please restart your computer to finalize the setup. Happy coding! ����"
 
 # -----------------------------------------------------------------------------
