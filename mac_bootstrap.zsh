@@ -399,6 +399,68 @@ else
 	echo ""
 fi
 
+# Step 5.1: Check and Prompt for Cloning CondaBackup repository ---------------------------------------
+
+echo ""
+
+centered_color_echo $ORANGE "<-------------- CondaBackup Repository Configuration -------------->"
+
+echo ""
+
+CONDA_BACKUP_DIR="$HOME/CondaBackup"
+if [ ! -d "$CONDA_BACKUP_DIR" ]; then
+	color_echo $YELLOW "The CondaBackup directory does not exist. Do you want to clone the CondaBackup repository? (y/n)"
+	echo -n "Enter choice: > "
+	read -r clone_choice
+	if [ "$clone_choice" = "y" ] || [ "$clone_choice" = "Y" ]; then
+		color_echo $BLUE "Cloning CondaBackup repository..."
+		git clone "https://github.com/av1155/CondaBackup.git" "$CONDA_BACKUP_DIR" ||
+			{
+				color_echo $RED "Failed to clone CondaBackup repository."
+				exit 1
+			}
+	else
+		color_echo $BLUE "Skipping cloning of CondaBackup repository."
+	fi
+else
+	color_echo $GREEN "The 'CondaBackup' directory already exists. Skipping clone of repository."
+	echo ""
+fi
+
+# Step 5.2: Prompt for Restoring Conda environments ---------------------------------------
+
+echo ""
+
+centered_color_echo $ORANGE "<-------------- Restoring Conda Environments -------------->"
+
+echo ""
+
+color_echo $YELLOW "Do you want to restore Conda environments from the backup? (y/n)"
+echo -n "Enter choice: > "
+read -r restore_choice
+if [ "$restore_choice" = "y" ] || [ "$restore_choice" = "Y" ]; then
+	restore_conda_environments() {
+		BACKUP_DIR="${HOME}/CondaBackup"
+
+		if [ -d "$BACKUP_DIR" ]; then
+			echo_color $BLUE "Restoring Conda environments from $BACKUP_DIR..."
+			for yml_file in "$BACKUP_DIR"/*.yml; do
+				env_name=$(basename "$yml_file" .yml)
+				echo_color $GREEN "\nRestoring environment $env_name..."
+				conda env create --name "$env_name" --file "$yml_file"
+			done
+			echo_color $GREEN "All Conda environments have been restored."
+			echo_color $ORANGE "====================================================================================\n"
+		else
+			echo_color $RED "Backup directory $BACKUP_DIR not found. Skipping..."
+		fi
+	}
+
+	restore_conda_environments
+else
+	color_echo $BLUE "Skipping Conda environment restoration."
+fi
+
 # Step 6: Install software from Brewfile ---------------------------------------
 
 # Confirmation prompt for Brewfile installation
