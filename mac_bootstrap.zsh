@@ -625,7 +625,7 @@ echo ""
 # FiraCodeNerdFont-Regular.ttf
 
 FONT_NAME="JetBrainsMono"
-FONT_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/$FONT_NAME.zip"
+FONT_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/$FONT_NAME.zip"
 FONT_DIR="$HOME/Library/Fonts"
 FONT_FILE="$FONT_DIR/${FONT_NAME}NerdFont-Regular.ttf"
 
@@ -904,7 +904,6 @@ echo ""
 # Define the list of apps
 app_list=(
 	"Bartender 5.app"
-	"CalcBar.app"
 	"CleanMyMac X.app"
 	"Color Picker.app"
 	"Dropover.app"
@@ -914,8 +913,6 @@ app_list=(
 	"1Blocker.app"
 	"1Password for Safari.app"
 	"LockDown Browser.app"
-	"Magnet.app"
-	"OneMenu.app"
 	"Ryujinx.app"
 )
 
