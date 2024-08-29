@@ -44,6 +44,8 @@ brew "gh"
 brew "git"
 # Syntax-highlighting pager for git and diff output
 brew "git-delta"
+# Quickly rewrite git repository history
+brew "git-filter-repo"
 # Git extension for versioning large files
 brew "git-lfs"
 # Render markdown on the CLI
@@ -162,8 +164,6 @@ cask "cheatsheet"
 cask "cinebench"
 # Voice and text chat software
 cask "discord"
-# App to build and share containerised applications and microservices
-cask "docker"
 # Developer platform
 cask "dotnet-sdk"
 # Clipboard manager for developers
@@ -245,23 +245,23 @@ mas "1Password for Safari", id: 1569813296
 mas "Bitwarden", id: 1352778147
 mas "CleanMyMac X", id: 1339170533
 mas "Color Picker", id: 1545870783
-mas "com.fushao.sudoku", id: 1448585397
 mas "Dropover", id: 1355679052
 mas "Encrypto", id: 935235287
 mas "Final Cut Pro", id: 424389933
 mas "Goodnotes", id: 1444383602
 mas "Noir", id: 1592917505
+mas "Sequel Ace", id: 1518036000
 mas "Steam Link", id: 1246969117
-mas "TestFlight", id: 899247664
-mas "Unsplash Wallpapers", id: 1284863847
 mas "Xcode", id: 497799835
 vscode "adpyke.codesnap"
 vscode "alefragnani.project-manager"
 vscode "batisteo.vscode-django"
 vscode "catppuccin.catppuccin-vsc"
 vscode "chakrounanas.turbo-console-log"
+vscode "davidanson.vscode-markdownlint"
 vscode "denoland.vscode-deno"
 vscode "donjayamanne.python-environment-manager"
+vscode "donjayamanne.python-extension-pack"
 vscode "eamodio.gitlens"
 vscode "esbenp.prettier-vscode"
 vscode "formulahendry.auto-rename-tag"
@@ -272,7 +272,7 @@ vscode "github.copilot-chat"
 vscode "kevinrose.vsc-python-indent"
 vscode "kisstkondoros.vscode-gutter-preview"
 vscode "liviuschera.noctis"
-vscode "ms-azuretools.vscode-docker"
+vscode "ms-python.autopep8"
 vscode "ms-python.black-formatter"
 vscode "ms-python.debugpy"
 vscode "ms-python.isort"
@@ -283,6 +283,7 @@ vscode "ms-toolsai.jupyter-keymap"
 vscode "ms-toolsai.jupyter-renderers"
 vscode "ms-toolsai.vscode-jupyter-slideshow"
 vscode "ms-vscode-remote.remote-containers"
+vscode "ms-vscode-remote.remote-wsl"
 vscode "ms-vscode.cmake-tools"
 vscode "ms-vscode.cpptools"
 vscode "ms-vscode.cpptools-extension-pack"
@@ -299,9 +300,11 @@ vscode "twxs.cmake"
 vscode "usernamehw.errorlens"
 vscode "visualstudioexptteam.intellicode-api-usage-examples"
 vscode "visualstudioexptteam.vscodeintellicode"
+vscode "vscjava.vscode-gradle"
 vscode "vscjava.vscode-java-debug"
 vscode "vscjava.vscode-java-dependency"
 vscode "vscjava.vscode-java-pack"
 vscode "vscjava.vscode-java-test"
 vscode "vscjava.vscode-maven"
 vscode "wallabyjs.console-ninja"
+vscode "wholroyd.jinja"
