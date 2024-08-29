@@ -23,8 +23,8 @@ color_echo() {
 }
 
 # Confirmation prompt for starting the script
-color_echo $YELLOW "Do you want to proceed with the BootStrap Setup Script? (y/n)"
-echo -n "Enter choice: > "
+color_echo $YELLOW "Do you want to proceed with the BootStrap Setup Script?"
+echo -n "-> [y/N]: "
 read -r confirmation
 if [ "$confirmation" != "y" ] && [ "$confirmation" != "Y" ]; then
 	color_echo $RED "BootStrap Setup Script aborted."
@@ -79,8 +79,8 @@ create_symlink() {
 	fi
 
 	if [ -f "$target_file" ]; then
-		color_echo $YELLOW "Existing file found for ${PURPLE}$target_display${YELLOW}. Do you want to overwrite it? (y/n)"
-		echo -n "Enter choice: > "
+		color_echo $YELLOW "Existing file found for ${PURPLE}$target_display${YELLOW}. Do you want to overwrite it?"
+		echo -n "-> [y/N]: "
 		read -r choice
 		case "$choice" in
 		y | Y)
@@ -90,7 +90,7 @@ create_symlink() {
 				exit 1
 			}
 			;;
-		n | N)
+		n | N | "")
 			color_echo $GREEN "Skipping ${PURPLE}$target_display${GREEN}."
 			return
 			;;
@@ -122,10 +122,10 @@ install_app() {
 	if ! eval "$check_command"; then
 		color_echo $GREEN "$app_name already installed."
 	else
-		color_echo $YELLOW "Do you want to install $app_name? (y/n)"
-		echo -n "Enter choice: > "
+		color_echo $YELLOW "Do you want to install $app_name?"
+		echo -n "-> [y/N]: "
 		read -r choice
-		if [ "$choice" = "y" ]; then
+		if [ "$choice" = "y" ] || [ "$choice" = "Y" ]; then
 			color_echo $BLUE "Installing $app_name..."
 			eval "$install_command" || {
 				color_echo $RED "Failed to install $app_name."
@@ -147,10 +147,10 @@ install_neovim() {
 	if command -v nvim &>/dev/null || [ -d "$HOME/nvim-macos" ]; then
 		color_echo $GREEN "Neovim already installed."
 	else
-		color_echo $YELLOW "Do you want to install Neovim? (y/n)"
-		echo -n "Enter choice: > "
+		color_echo $YELLOW "Do you want to install Neovim?"
+		echo -n "-> [y/N]: "
 		read -r choice
-		if [ "$choice" = "y" ]; then
+		if [ "$choice" = "y" ] || [ "$choice" = "Y" ]; then
 			# Install dependencies
 			color_echo $BLUE "Installing dependencies for Neovim..."
 			brew install gettext || {
@@ -364,12 +364,12 @@ echo ""
 # Check if the "scripts" repository already exists in the specified directory
 SCRIPTS_REPO_DIRECTORY="$HOME/scripts"
 if [ -d "$SCRIPTS_REPO_DIRECTORY" ]; then
-	color_echo $GREEN "The scripts repository already exists in '$SCRIPTS_REPO_DIRECTORY'."
+	color_echo $GREEN "The 'scripts' directory already exists in '$SCRIPTS_REPO_DIRECTORY'. Skipping clone of repository."
 else
 	# Ask the user if they want to clone the "scripts" repository
-	color_echo $YELLOW "The scripts repository does not exist in '$SCRIPTS_REPO_DIRECTORY'."
-	color_echo $YELLOW "Do you want to clone the scripts repository? (y/n)"
-	echo -n "Enter choice: > "
+	color_echo $YELLOW "The 'scripts' directory does not exist in '$SCRIPTS_REPO_DIRECTORY'."
+	color_echo $YELLOW "Do you want to clone the scripts repository?"
+	echo -n "-> [y/N]: "
 	read -r scripts_clone_choice
 	if [ "$scripts_clone_choice" = "y" ] || [ "$scripts_clone_choice" = "Y" ]; then
 		git_clone_fallback "git@github.com:av1155/scripts.git" "https://github.com/av1155/scripts.git" "$SCRIPTS_REPO_DIRECTORY"
@@ -395,77 +395,14 @@ if [ ! -d "$DOTFILES_DIR" ]; then
 			exit 1
 		}
 else
-	color_echo $GREEN "The '.dotfiles' directory already exists. Skipping clone of repository."
+	color_echo $GREEN "The '.dotfiles' directory already exists in '$DOTFILES_DIR'. Skipping clone of repository."
 	echo ""
 fi
 
-# Step 5.1: Check and Prompt for Cloning CondaBackup repository ---------------------------------------
+# Install software from Brewfile -----------------------------------------------
 
-echo ""
-
-centered_color_echo $ORANGE "<-------------- CondaBackup Repository Configuration -------------->"
-
-echo ""
-
-CONDA_BACKUP_DIR="$HOME/CondaBackup"
-if [ ! -d "$CONDA_BACKUP_DIR" ]; then
-	color_echo $YELLOW "The CondaBackup directory does not exist. Do you want to clone the CondaBackup repository? (y/n)"
-	echo -n "Enter choice: > "
-	read -r clone_choice
-	if [ "$clone_choice" = "y" ] || [ "$clone_choice" = "Y" ]; then
-		color_echo $BLUE "Cloning CondaBackup repository..."
-		git clone "https://github.com/av1155/CondaBackup.git" "$CONDA_BACKUP_DIR" ||
-			{
-				color_echo $RED "Failed to clone CondaBackup repository."
-				exit 1
-			}
-	else
-		color_echo $BLUE "Skipping cloning of CondaBackup repository."
-	fi
-else
-	color_echo $GREEN "The 'CondaBackup' directory already exists. Skipping clone of repository."
-	echo ""
-fi
-
-# Step 5.2: Prompt for Restoring Conda environments ---------------------------------------
-
-echo ""
-
-centered_color_echo $ORANGE "<-------------- Restoring Conda Environments -------------->"
-
-echo ""
-
-color_echo $YELLOW "Do you want to restore Conda environments from the backup? (y/n)"
-echo -n "Enter choice: > "
-read -r restore_choice
-if [ "$restore_choice" = "y" ] || [ "$restore_choice" = "Y" ]; then
-	restore_conda_environments() {
-		BACKUP_DIR="${HOME}/CondaBackup"
-
-		if [ -d "$BACKUP_DIR" ]; then
-			echo_color $BLUE "Restoring Conda environments from $BACKUP_DIR..."
-			for yml_file in "$BACKUP_DIR"/*.yml; do
-				env_name=$(basename "$yml_file" .yml)
-				echo_color $GREEN "\nRestoring environment $env_name..."
-				conda env create --name "$env_name" --file "$yml_file"
-			done
-			echo_color $GREEN "All Conda environments have been restored."
-			echo_color $ORANGE "====================================================================================\n"
-		else
-			echo_color $RED "Backup directory $BACKUP_DIR not found. Skipping..."
-		fi
-	}
-
-	restore_conda_environments
-else
-	color_echo $BLUE "Skipping Conda environment restoration."
-fi
-
-# Step 6: Install software from Brewfile ---------------------------------------
-
-# Confirmation prompt for Brewfile installation
-color_echo $YELLOW "Do you want to proceed with installing software from Brewfile? (y/n)"
-echo -n "Enter choice: > "
+color_echo $YELLOW "Do you want to proceed with installing software from Brewfile?"
+echo -n "-> [y/N]: "
 read -r brewfile_confirmation
 if [ "$brewfile_confirmation" != "y" ] && [ "$brewfile_confirmation" != "Y" ]; then
 	color_echo $RED "Brewfile installation aborted."
@@ -479,8 +416,67 @@ else
 fi
 
 echo ""
+
 # Install Neovim if Brewfile installation was unsuccessful
 install_neovim
+
+# Step 5.1: Check and Prompt for Cloning CondaBackup repository ---------------------------------------
+
+echo ""
+
+centered_color_echo $ORANGE "<-------------- CondaBackup Repository Configuration -------------->"
+
+echo ""
+
+CONDA_BACKUP_DIR="$HOME/CondaBackup"
+if [ ! -d "$CONDA_BACKUP_DIR" ]; then
+	color_echo $YELLOW "The 'CondaBackup' directory does not exist. Do you want to clone the CondaBackup repository?"
+	echo -n "-> [y/N]: "
+	read -r clone_choice
+	if [ "$clone_choice" = "y" ] || [ "$clone_choice" = "Y" ]; then
+		color_echo $BLUE "Cloning CondaBackup repository..."
+		git clone "https://github.com/av1155/CondaBackup.git" "$CONDA_BACKUP_DIR" ||
+			{
+				color_echo $RED "Failed to clone CondaBackup repository."
+				exit 1
+			}
+	else
+		color_echo $BLUE "Skipping cloning of CondaBackup repository."
+	fi
+else
+	color_echo $GREEN "The 'CondaBackup' directory already exists in '$CONDA_BACKUP_DIR'. Skipping clone of repository."
+fi
+
+# Step 5.2: Prompt for Restoring Conda environments ---------------------------------------
+
+echo ""
+
+centered_color_echo $ORANGE "<-------------- Restoring Conda Environments -------------->"
+
+echo ""
+
+color_echo $YELLOW "Do you want to restore Conda environments from the backup?"
+echo -n "-> [y/N]: "
+read -r restore_choice
+if [ "$restore_choice" = "y" ] || [ "$restore_choice" = "Y" ]; then
+	BACKUP_DIR="${HOME}/CondaBackup"
+
+	if [ -d "$BACKUP_DIR" ]; then
+		color_echo $BLUE "Restoring Conda environments from $BACKUP_DIR..."
+		for yml_file in "$BACKUP_DIR"/*.yml; do
+			env_name=$(basename "$yml_file" .yml)
+			color_echo $GREEN "\nRestoring environment $env_name..."
+			conda env create --name "$env_name" --file "$yml_file"
+		done
+		color_echo $GREEN "All Conda environments have been restored."
+		color_echo $ORANGE "====================================================================================\n"
+	else
+		color_echo $RED "Backup directory $BACKUP_DIR not found. Skipping..."
+	fi
+
+else
+	color_echo $BLUE "Skipping Conda environment restoration."
+fi
 
 # Step 7: Create symlinks (Idempotent) ----------------------------------------
 
@@ -598,8 +594,8 @@ else
 	fi
 
 	# Prompt for updating global npm packages
-	color_echo $YELLOW "Do you want to update global npm packages? (y/n)"
-	echo -n "Enter choice: > "
+	color_echo $YELLOW "Do you want to update global npm packages?"
+	echo -n "-> [y/N]: "
 	read -r update_choice
 	if [ "$update_choice" = "y" ]; then
 		color_echo $GREEN "Updating global npm packages..."
@@ -696,8 +692,8 @@ if [ -f "$FONT_FILE" ]; then
 	color_echo $GREEN "$FONT_NAME Nerd Font is already installed."
 else
 	# Confirmation prompt for font installation
-	color_echo $YELLOW "Do you want to proceed installing $FONT_NAME Nerd Font? (y/n)"
-	echo -n "Enter choice: > "
+	color_echo $YELLOW "Do you want to proceed installing $FONT_NAME Nerd Font?"
+	echo -n "-> [y/N]: "
 	read -r font_confirmation
 	if [ "$font_confirmation" != "y" ] && [ "$font_confirmation" != "Y" ]; then
 		color_echo $RED "Font installation aborted."
@@ -914,8 +910,8 @@ echo ""
 # Check if the Neovim configuration directory exists
 if [ -d "$HOME/.config/nvim" ]; then
 	color_echo $YELLOW "An existing Neovim configuration has been detected."
-	color_echo $YELLOW "Do you want to replace the current Neovim configuration? (y/n)${NC}"
-	echo -n "Enter choice: > "
+	color_echo $YELLOW "Do you want to replace the current Neovim configuration?${NC}"
+	echo -n "-> [y/N]: "
 	read -r keep_conf
 
 	if [ "$keep_conf" != "y" ] || [ "$keep_conf" != "Y" ]; then
@@ -981,16 +977,11 @@ app_list=(
 # Define the path of the text file
 desktop_path="$HOME/Desktop/apps_to_download.txt"
 
-# Check if the file already exists
-if [ ! -f "$desktop_path" ]; then
-	# File does not exist, create the file and write the app list
-	printf "%s\n" "${app_list[@]}" >"$desktop_path"
-	# Print a message to inform the user
-	color_echo $BLUE "A TODO list of apps to download has been created on your desktop: $desktop_path"
-else
-	# File already exists, print a different message
-	color_echo $RED "The file already exists on your desktop: $desktop_path"
-fi
+# Always create or overwrite the file and write the app list
+printf "%s\n" "${app_list[@]}" >"$desktop_path"
+
+# Print a message to inform the user
+color_echo $BLUE "A TODO list of apps to download has been created/updated on your desktop: $desktop_path"
 
 # -----------------------------------------------------------------------------
 
