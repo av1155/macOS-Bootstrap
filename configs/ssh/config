@@ -3,6 +3,7 @@ Host *
     AddKeysToAgent yes
     UseKeychain yes
     IdentityFile ~/.ssh/id_ed25519
+    SetEnv TERM=xterm-256color
 
 # Host specific settings
 Host github.com
