@@ -11,6 +11,10 @@ Thumbs.db
 *.tmp
 Icon\r
 
+# Environment files
+*.env
+*.envrc
+
 # IDE and Editor folders #
 ###########################
 .vscode/

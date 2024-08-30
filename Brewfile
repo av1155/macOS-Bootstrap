@@ -28,6 +28,8 @@ brew "cmatrix"
 brew "coursier"
 # Get, unpack, build, and install modules from CPAN
 brew "cpanminus"
+# Load/unload environment variables based on $PWD
+brew "direnv"
 # Modern, maintained replacement for ls
 brew "eza"
 # Simple, fast and user-friendly alternative to find
@@ -156,24 +158,16 @@ cask "appcleaner"
 cask "arc"
 # Display management tool
 cask "betterdisplay"
-# Web browser focusing on privacy
-cask "brave-browser"
 # Tool to list all active shortcuts of the current application
 cask "cheatsheet"
-# Hardware benchmarking utility
-cask "cinebench"
 # Voice and text chat software
 cask "discord"
 # Developer platform
 cask "dotnet-sdk"
 # Clipboard manager for developers
 cask "flycut"
-# Desktop client for GitHub repositories
-cask "github"
 # Web browser
 cask "google-chrome"
-# Grammarly for desktop
-cask "grammarly-desktop"
 # Tool to optimise images to a smaller size
 cask "imageoptim"
 # Terminal emulator as alternative to Apple's Terminal app
@@ -200,8 +194,6 @@ cask "microsoft-teams"
 cask "middleclick"
 # Minimal installer for conda specific to conda-forge
 cask "miniforge"
-# Tool to control external monitor brightness & volume
-cask "monitorcontrol"
 # App to write, plan, collaborate, and get organised
 cask "notion"
 # Verify system files structure, run miscellaneous maintenance and more
@@ -230,14 +222,10 @@ cask "ticktick"
 cask "utm"
 # Open-source code editor
 cask "visual-studio-code"
-# Access etextbooks
-cask "vitalsource-bookshelf"
 # Rust-based terminal
 cask "warp"
 # Native desktop client for WhatsApp
 cask "whatsapp"
-# Multiplayer code editor
-cask "zed"
 # Video communication and virtual meeting platform
 cask "zoom"
 mas "1Blocker", id: 1365531024

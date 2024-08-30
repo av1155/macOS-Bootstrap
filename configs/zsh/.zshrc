@@ -272,6 +272,7 @@ plugins=(
     web-search
     zsh-syntax-highlighting
     kitty
+    direnv
 )
 
 # Source Oh My Zsh
