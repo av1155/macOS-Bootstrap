@@ -32,9 +32,7 @@ The `mac_bootstrap.zsh` script automates various setup tasks:
    macOS, this step ensures that compilers and Git are available on your
    machine (installed by Homebrew).
 
-2. **Smart Repository Cloning**: Utilizes a robust cloning mechanism that tries
-   SSH first, falls back to HTTPS, and finally prompts for a GitHub Personal
-   Access Token (PAT) if all else fails.
+2. **Smart Repository Cloning**: It utilizes a robust cloning mechanism that initially tries SSH, and then switches to HTTPS with a Personal Access Token (PAT) if needed. If SSH fails, the user will be prompted for a PAT token.
 
 3. **Symlink Creation**: Sets up symbolic links for essential configuration
    files, linking them from the repository to your home directory for easy
@@ -148,7 +146,7 @@ your personal preferences and workflow. You can also modify the script to:
 Encounter an issue? Here are some common problems and their solutions:
 
 -   **Script Fails to Clone Repositories**: The script tries SSH first, then
-    HTTPS, and finally HTTPS with a GitHub Personal Access Token (PAT). If all
+    HTTPS with a GitHub Personal Access Token (PAT). If all
     methods fail, ensure your SSH keys are set up correctly or generate a PAT
     from your GitHub account and provide it when prompted.
 

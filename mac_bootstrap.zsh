@@ -53,7 +53,7 @@ prompt_for_pat() {
 	local https_url="$1"
 	local clone_directory="$2"
 
-	color_echo $YELLOW "SSH and HTTPS authentication failed. Please provide a GitHub Personal Access Token (PAT) for HTTPS cloning."
+	color_echo $YELLOW "Please provide a GitHub Personal Access Token (PAT) for HTTPS cloning."
 	echo -n "Enter your GitHub PAT Token (hidden input): "
 	read -r -s pat
 	echo ""
@@ -70,39 +70,31 @@ git_clone_fallback() {
 	local count=0
 
 	# Attempt SSH cloning first
-	color_echo $BLUE "Attempting to clone repository using SSH..."
+	color_echo $BLUE "\nAttempting to clone repository using SSH..."
 	if is_ssh_configured; then
 		while [ $count -lt $retries ]; do
 			git clone "$ssh_url" "$clone_directory" && return 0
 			count=$((count + 1))
-			color_echo $YELLOW "Attempt $count/$retries failed using SSH. Retrying in 5 seconds..."
-			sleep 3
+			if [ $count -lt $retries ]; then
+				color_echo $YELLOW "Attempt $count/$retries failed using SSH. Retrying in 3 seconds..."
+				sleep 3
+			fi
 		done
-	else
-		color_echo $YELLOW "SSH is not configured or failed. Falling back to HTTPS."
 	fi
 
-	# Attempt HTTPS cloning if SSH fails
-	color_echo $BLUE "Attempting to clone repository using HTTPS..."
-	count=0
-	while [ $count -lt $retries ]; do
-		git clone "$https_url" "$clone_directory" && return 0
-		count=$((count + 1))
-		color_echo $YELLOW "Attempt $count/$retries failed using HTTPS. Retrying in 5 seconds..."
-		sleep 3
-	done
-
 	# Attempt HTTPS with PAT cloning if both SSH and HTTPS fail
-	color_echo $YELLOW "Both SSH and HTTPS failed. Falling back to HTTPS with PAT."
+	color_echo $YELLOW "\nSSH is not configured or failed. Falling back to HTTPS with PAT."
 	count=0
 	while [ $count -lt $retries ]; do
 		prompt_for_pat "$https_url" "$clone_directory" && return 0
 		count=$((count + 1))
-		color_echo $YELLOW "Attempt $count/$retries failed using HTTPS with PAT. Retrying in 5 seconds..."
-		sleep 3
+		if [ $count -lt $retries ]; then
+			color_echo $YELLOW "\nAttempt $count/$retries failed using HTTPS with PAT. Retrying in 3 seconds..."
+			sleep 3
+		fi
 	done
 
-	color_echo $RED "Failed to clone repository after $retries attempts."
+	color_echo $RED "\nFailed to clone repository after $retries attempts. Please check your network connection or credentials and try again."
 	exit 1
 }
 
@@ -238,11 +230,15 @@ install_neovim() {
 
 # Confirmation prompt for starting the script
 color_echo $YELLOW "Do you want to proceed with the BootStrap Setup Script?"
-echo -n "-> [y/N]: "
+echo -n "-> [Y/n]: "
 read -r confirmation
-if [ "$confirmation" != "y" ] && [ "$confirmation" != "Y" ]; then
+if [ "$confirmation" != "n" ] && [ "$confirmation" != "N" ]; then
+	color_echo $GREEN "Starting BootStrap Setup Script..."
+
+else # Exit if the user does not confirm
 	color_echo $RED "BootStrap Setup Script aborted."
 	exit 1
+
 fi
 
 # Step 1: Install Homebrew ----------------------------------------------------
@@ -374,7 +370,7 @@ if [ ! -d "$HOME/Library/Java/JavaVirtualMachines/$JDK_DIR_NAME" ]; then
 	mv "$EXTRACT_LOCATION/$JDK_DIR_NAME" "$HOME/Library/Java/JavaVirtualMachines/"
 	color_echo $GREEN "Java installed successfully."
 else
-	color_echo $BLUE "Java is already installed. No action taken."
+	color_echo $BLUE "Java is already installed. No action taken, residual files have been removed."
 	# Remove the extracted JDK if already installed
 	rm -rf "$EXTRACT_LOCATION/$JDK_DIR_NAME"
 fi
