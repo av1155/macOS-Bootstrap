@@ -68,6 +68,8 @@ brew "lpeg"
 brew "lua@5.1"
 # Package manager for the Lua programming language
 brew "luarocks"
+# Text-based web browser
+brew "lynx"
 # Mac App Store command-line interface
 brew "mas"
 # Java-based project management
