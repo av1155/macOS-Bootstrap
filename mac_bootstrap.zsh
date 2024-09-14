@@ -307,8 +307,8 @@ echo ""
 # Example:
 # install_app "Visual Studio Code" "brew install --cask visual-studio-code" "! brew list --cask | grep -q visual-studio-code && [ ! -d '/Applications/Visual Studio Code.app' ]"
 
-# Install Zplug
-install_app "Zplug" "brew install zplug" "! brew list zplug &>/dev/null"
+# # Install Zplug # Handled by .zshrc now
+# install_app "Zplug" "brew install zplug" "! brew list zplug &>/dev/null"
 
 # After Oh My Zsh installation, insert a reminder to run the script again
 color_echo $YELLOW "Once Oh My Zsh has been installed, rerun the script to finish the setup process."

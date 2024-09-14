@@ -94,6 +94,8 @@ brew "php"
 brew "pipenv"
 # Object-relational database system
 brew "postgresql@14", restart_service: true
+# Theme for zsh
+brew "powerlevel10k"
 # Bundle a Python application and all its dependencies
 brew "pyinstaller"
 # Interpreted, interactive, object-oriented programming language
@@ -124,8 +126,6 @@ brew "viu"
 brew "wget"
 # Shell extension to navigate your filesystem faster
 brew "zoxide"
-# Next-generation plugin manager for zsh
-brew "zplug"
 # Easily compile and run Java files, manage cleanup, and view syntax-highlighted errors through a user-friendly fuzzy-finding menu.
 brew "av1155/scripts/javaprojectmanager"
 # Everything you need to get started with Heroku

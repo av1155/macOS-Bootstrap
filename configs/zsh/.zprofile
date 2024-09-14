@@ -1,6 +1,5 @@
 # <======================== .ZPROFILE FILE ========================>
 
-
 # <============ HOMEBREW PATH + DYNAMIC PATH DETECTION ============>
 
 # Set PATH, MANPATH, etc., for Homebrew.
@@ -9,7 +8,6 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 if command -v brew >/dev/null 2>&1; then
     HOMEBREW_PATH=$(brew --prefix)
 fi
-
 
 # <================== DYNAMIC PATH CONFIGURATION ==================>
 # Check if Homebrew is installed
@@ -62,7 +60,6 @@ export PATH="$PATH:~/Library/Application Support/JetBrains/Toolbox/scripts"
 # DOTNET
 export DOTNET_ROOT="$HOMEBREW_PATH/opt/dotnet/libexec"
 
-
 # <================== PERL & RUBY INITIALIZATION ==================>
 
 # Initialize Perl local::lib environment ------------------------------------>
@@ -96,10 +93,8 @@ if [ -d "$homebrew_gem_bin" ]; then
 fi
 # <<< END RUBY INITIALIZATION
 
-
 # <=================== NEOFETCH & WEATHER INITIALIZATION ====================>
 
-command -v neofetch &>/dev/null && neofetch
-
+# command -v neofetch &>/dev/null && neofetch
 
 # <==================== END OF .ZPROFILE FILE =====================>
