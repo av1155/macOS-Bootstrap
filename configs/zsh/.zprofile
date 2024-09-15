@@ -7,8 +7,6 @@ case "$(uname -s)" in
 Darwin) # macOS
 
     # <============ HOMEBREW PATH + DYNAMIC PATH DETECTION ============>
-
-    # Set PATH, MANPATH, etc., for Homebrew.
     eval "$(/opt/homebrew/bin/brew shellenv)"
 
     if command -v brew &>/dev/null; then
