@@ -180,6 +180,7 @@ source $(dirname $(gem which colorls))/tab_complete.sh
 
 
 # <-------------------- CONDA INITIALIZATION ------------------>
+export AUTO_ACTIVATE_CONDA=false # Set to true to auto-activate the base environment
 
 # Set the Conda executable path
 CONDA_EXEC_PATH="$CONDA_PATH/bin/conda"
@@ -198,8 +199,11 @@ if [ -f "$CONDA_EXEC_PATH" ]; then
         fi
     fi
 
-    # Conda auto-activation
-    "$CONDA_EXEC_PATH" config --set auto_activate_base true
+    if [ "$AUTO_ACTIVATE_CONDA" = "true" ]; then
+        "$CONDA_EXEC_PATH" config --set auto_activate_base true
+    else
+        "$CONDA_EXEC_PATH" config --set auto_activate_base false
+    fi
 else
     echo "Conda executable not found at $CONDA_EXEC_PATH"
 fi
@@ -317,7 +321,7 @@ alias ls='eza -1 -A --git --icons=auto --sort=name --group-directories-first' # 
 alias  l='eza -A -lh --git --icons=auto --sort=name --group-directories-first' # long list
 alias la='eza -lha --git --icons=auto --sort=name --group-directories-first' # long list all
 alias ld='eza -A -lhD --git --icons=auto --sort=name' # long list dirs
-alias lt='eza -A --git --icons=auto --tree --level=2' # list folder as tree
+alias lt='eza -A --git --icons=auto --tree --level=2 --ignore-glob .git' # list folder as tree
 
 # # Colorls
 # alias ls="colorls -A --gs --sd"                   # Lists most files, directories first, with git status.
@@ -561,16 +565,20 @@ _fzf_comprun() {
 if [[ "$(uname -msn)" == "Darwin MacBook-M1-Pro-16.local arm64" ]]; then
     # macOS (macbook pro m1 16")
     FONT_SIZE="15"
+    BACKGROUND_OPACITY="0.7"
+
 elif [[ "$(uname -msn)" == "Linux archlinux x86_64" ]]; then
     # Arch Linux (hyprland)
     FONT_SIZE="9.5"
+    BACKGROUND_OPACITY="0.8"
 else
     # Fallback
     FONT_SIZE="12"
+    BACKGROUND_OPACITY="0.7"
 fi
 
 # Create the dynamic kitty config file
-echo "font_size $FONT_SIZE" > ~/.config/kitty/dynamic.conf
+printf "font_size %s\nbackground_opacity %s" "$FONT_SIZE" "$BACKGROUND_OPACITY" > ~/.dotfiles/.config/kitty/dynamic.conf
 
 # Define the base directory where the jars are stored
 JAVA_CLASSPATH_PREFIX="$HOME/.dotfiles/configs/javaClasspath"
