@@ -36,8 +36,8 @@ Darwin) # macOS
     fi
 
     # JAVA
-    export JAVA_HOME="$(/usr/libexec/java_home)"
-    path+=("$JAVA_HOME/bin")
+    export JAVA_HOME=$(/usr/libexec/java_home)
+    export PATH=$JAVA_HOME/bin:$PATH
 
     # For compilers to find OpenJDK you may need to set:
     export CPPFLAGS="-I/opt/homebrew/opt/openjdk/include"
@@ -80,6 +80,8 @@ Darwin) # macOS
         export PATH="$homebrew_gem_bin:$PATH"
     fi
     # <<< END RUBY INITIALIZATION
+
+    PATH=~/.console-ninja/.bin:$PATH
     ;;
 
 Linux)
@@ -87,7 +89,10 @@ Linux)
     case "$(uname -m)" in
     x86_64) # 64-bit
         ;;
-    aarch64) # ARM 64-bit
+    aarch64) # ARM 64-bit (Raspberry Pi 5 or similar)
+        # Add /snap/bin to the path for Raspberry Pi
+        PATH+=:/snap/bin
+        export PATH
         ;;
     esac
 

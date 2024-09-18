@@ -1,68 +1,97 @@
 # <------------------- SYSTEM DETECTION ------------------->
 # Identify the operating system and architecture
 
-case "$(uname -s)" in
+OS=$(uname -s)
+ARCHITECTURE=$(uname -m)
+KERNEL_INFO=$(uname -r)
+HOSTNAME=$(uname -n)
+
+case "$OS" in
 Darwin) # macOS
-    if command -v brew &>/dev/null; then
-        HOMEBREW_PATH=$(brew --prefix)
-        if [ ! -d "$HOMEBREW_PATH/share/powerlevel10k" ]; then
-            brew install powerlevel10k
-        fi
+
+    # homebrew
+    if ! command -v brew &>/dev/null; then
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        eval "$(/opt/homebrew/bin/brew shellenv)"
     fi
-    CONDA_PATH="$HOMEBREW_PATH/Caskroom/miniforge/base"
+    HOMEBREW_PATH=$(brew --prefix)
+
+    # Oh-my-zsh
+    [ ! -d "$HOME/.oh-my-zsh" ] && sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
     export ZSH="$HOME/.oh-my-zsh"
+
+    # powerlevel10k
+    [ ! -d "$HOMEBREW_PATH/share/powerlevel10k" ] && brew install powerlevel10k
     POWERLEVEL10K_DIR="$HOME/powerlevel10k"
-    AUR_HELPER_NOT_AVAILABLE=true
+
+    # miniforge3
+    ! command -v conda &>/dev/null && brew install miniforge
+    CONDA_PATH="$HOMEBREW_PATH/Caskroom/miniforge/base"
     ;;
 
 Linux)
-    if [[ "$(uname -m)" == "aarch64" ]]; then
-        # Raspberry Pi 5 or other ARM-based systems
-        CONDA_PATH="$HOME/miniforge3"
-        export ZSH="/usr/share/oh-my-zsh"
-        POWERLEVEL10K_DIR="/usr/share/zsh-theme-powerlevel10k"
-        if [ ! -d "$POWERLEVEL10K_DIR" ]; then
-            git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k
-        fi
-        AUR_HELPER_NOT_AVAILABLE=true
+    if grep -qi "microsoft" /proc/version && [ ! -f "/etc/arch-release" ]; then
+        # WSL detected and it's not Arch Linux
 
-    elif [[ "$(uname -m)" == "x86_64" ]]; then
-        # Arch Linux (x86_64)
+        # Oh-my-zsh
+        [ ! -d "$HOME/.oh-my-zsh" ] && sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+        export ZSH="$HOME/.oh-my-zsh"
+
+        # powerlevel10k
+        POWERLEVEL10K_DIR="$HOME/powerlevel10k"
+        [ ! -d "$POWERLEVEL10K_DIR" ] && git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k
+
+        # miniforge3
+        if [ ! -d "$HOME/miniforge3" ]; then
+            curl -L -O "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh"
+            bash "Miniforge3-$(uname)-$(uname -m).sh"
+        fi
         CONDA_PATH="$HOME/miniforge3"
-        export ZSH="/usr/share/oh-my-zsh"
-        POWERLEVEL10K_DIR="/usr/share/zsh-theme-powerlevel10k"
+
+    elif [[ "$ARCHITECTURE" == "aarch64" ]]; then 
+        # Raspberry Pi 5 or other ARM-based Linux systems
+
+        # Oh-my-zsh
+        [ ! -d "$HOME/.oh-my-zsh" ] && sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+        export ZSH="$HOME/.oh-my-zsh"
+
+        # powerlevel10k
+        POWERLEVEL10K_DIR="$HOME/powerlevel10k"
+        [ ! -d "$POWERLEVEL10K_DIR" ] && git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k
+
+        # miniforge3
+        if [ ! -d "$HOME/miniforge3" ]; then
+            curl -L -O "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh"
+            bash "Miniforge3-$(uname)-$(uname -m).sh"
+        fi
+        CONDA_PATH="$HOME/miniforge3"
+
+    elif [[ -f "/etc/arch-release" || "$KERNEL_INFO" =~ "arch" || "$HOSTNAME" == "archlinux" ]]; then
+        # Arch Linux
 
         # Install paru if not installed
         if ! command -v paru &>/dev/null; then
             sudo pacman -S --needed base-devel
             git clone https://aur.archlinux.org/paru.git
-            cd paru
+            cd paru || return
             makepkg -si
-            cd ~
+            cd ~ || return
         fi
 
-        # Only install Powerlevel10k if it's not installed
-        if [ ! -d "$POWERLEVEL10K_DIR" ]; then
-            paru -S --noconfirm zsh-theme-powerlevel10k-git
+        # Oh-my-zsh
+        [ ! -d "/usr/share/oh-my-zsh" ] && paru -S --noconfirm oh-my-zsh-git
+        export ZSH="/usr/share/oh-my-zsh"
+
+        # powerlevel10k
+        POWERLEVEL10K_DIR="/usr/share/zsh-theme-powerlevel10k"
+        [ ! -d "$POWERLEVEL10K_DIR" ] && paru -S --noconfirm zsh-theme-powerlevel10k-git
+
+        # miniforge3
+        if [ ! -d "$HOME/miniforge3" ]; then
+            curl -L -O "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh"
+            bash "Miniforge3-$(uname)-$(uname -m).sh"
         fi
-    fi
-    ;;
-
-CYGWIN* | MINGW32* | MSYS* | MINGW*) # Windows (WSL or native)
-    CONDA_PATH="$HOME/miniforge3"
-    export ZSH="$HOME/.oh-my-zsh"
-    POWERLEVEL10K_DIR="$HOME/.oh-my-zsh/themes/powerlevel10k"
-    if [ ! -d "$POWERLEVEL10K_DIR" ]; then
-        git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k
-    fi
-    AUR_HELPER_NOT_AVAILABLE=true
-    ;;
-
-*)
-    # Any other OS
-    POWERLEVEL10K_DIR="$HOME/powerlevel10k"
-    if [ ! -d "$POWERLEVEL10K_DIR" ]; then
-        git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k
+        CONDA_PATH="$HOME/miniforge3"
     fi
     ;;
 esac
@@ -126,34 +155,40 @@ source $ZSH/oh-my-zsh.sh
 
 
 # <------------------ Auto Start Tmux Session ------------------>
-if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then
-  # Check if any tmux sessions are running
-  if ! tmux list-sessions &>/dev/null; then
-    # No sessions exist, create or attach to "main"
-    exec tmux new-session -s main
-  else
-    # Check if "main" exists
-    if tmux has-session -t main &>/dev/null; then
-      # If "main" exists, attach to it unless it's already attached
-      if ! tmux list-clients -t main | grep -q .; then
-        exec tmux attach-session -t main
+
+# Skip terminal-specific commands if run by IntelliJ
+if [ -z "$INTELLIJ_ENVIRONMENT_READER" ]; then
+    # Only run this code if it's an interactive shell (not when loaded by IntelliJ)
+    
+    if command -v tmux &> /dev/null && [ -n "$PS1" ] && [ -t 1 ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then
+      # Check if any tmux sessions are running
+      if ! tmux list-sessions &>/dev/null; then
+        # No sessions exist, create or attach to "main"
+        exec tmux new-session -s main
+      else
+        # Check if "main" exists
+        if tmux has-session -t main &>/dev/null; then
+          # If "main" exists, attach to it unless it's already attached
+          if ! tmux list-clients -t main | grep -q .; then
+            exec tmux attach-session -t main
+          fi
+        else
+          # "main" session has been killed, recreate it
+          exec tmux new-session -s main
+        fi
+
+        # If "main" is already attached or unavailable, create a new session with incrementing name
+        new_session_name=$(tmux list-sessions -F "#S" | grep -E 'session[0-9]*' | awk -F 'session' '{print $2}' | sort -n | tail -n1)
+        
+        if [ -z "$new_session_name" ]; then
+          new_session_name=1
+        else
+          new_session_name=$((new_session_name + 1))
+        fi
+        
+        exec tmux new-session -s "session$new_session_name"
       fi
-    else
-      # "main" session has been killed, recreate it
-      exec tmux new-session -s main
     fi
-    
-    # If "main" is already attached or unavailable, create a new session with incrementing name
-    new_session_name=$(tmux list-sessions -F "#S" | grep -E 'session[0-9]*' | awk -F 'session' '{print $2}' | sort -n | tail -n1)
-    
-    if [ -z "$new_session_name" ]; then
-      new_session_name=1
-    else
-      new_session_name=$((new_session_name + 1))
-    fi
-    
-    exec tmux new-session -s "session$new_session_name"
-  fi
 fi
 
 # fastfetch if installed
@@ -176,7 +211,7 @@ if ! gem which colorls &>/dev/null; then
 fi
 
 # colorls tab completion
-source $(dirname $(gem which colorls))/tab_complete.sh
+source "$(dirname "$(gem which colorls)")/tab_complete.sh"
 
 
 # <-------------------- CONDA INITIALIZATION ------------------>
@@ -221,7 +256,8 @@ if command -v conda &>/dev/null; then
             export NVIM_PYTHON_PATH="$CONDA_PREFIX/bin/python"
         else
             # Fallback to system Python (Python 3) if Conda is not active
-            local system_python_path=$(which python3)
+            local system_python_path
+            system_python_path=$(which python3)
             if [[ -z "$system_python_path" ]]; then
                 echo "Python is not installed. Please install Python to use with Neovim."
             else
@@ -263,20 +299,6 @@ fi
 
 
 # <-------------------- ALIASES -------------------->
-
-# Detect the operating system and set aliases accordingly (EXAMPLE)
-case "$(uname -s)" in
-Darwin) # macOS
-    alias ls='ls -G'
-    ;;
-Linux) # Linux
-    alias ls='eza -1 -A --git --icons=auto --sort=name --group-directories-first'
-    ;;
-CYGWIN* | MINGW32* | MSYS* | MINGW*) # Windows
-    alias ls='ls --color=auto'
-    ;;
-esac
-
 # General
 alias mkdir='mkdir -p' # Always mkdir a path
 alias c='clear'
@@ -330,7 +352,7 @@ alias lt='eza -A --git --icons=auto --tree --level=2 --ignore-glob .git' # list 
 # alias lt="colorls --tree=3 --sd --gs --hyperlink" # Tree view of directories with git status and hyperlinks.
 
 # Pacman and AUR helpers (Linux-specific)
-if [[ "$(uname -s)" == "Linux" && "$AUR_HELPER_NOT_AVAILABLE" != true ]]; then
+if [[ -f "/etc/arch-release" || "$KERNEL_INFO" =~ "arch" || "$HOSTNAME" == "archlinux" ]]; then
     alias un='$aurhelper -Rns' # uninstall package
     alias up='$aurhelper -Syu' # update system/package/aur
     alias pl='$aurhelper -Qs' # list installed package
@@ -392,56 +414,59 @@ alias tc="clear; tmux clear-history; clear" # Tmux Clear pane
 #Display Pokemon
 #pokemon-colorscripts --no-title -r 1,3,6
 
-# Command Not Found Handler
-# In case a command is not found, try to find the package that has it
-function command_not_found_handler {
-    local purple='\e[1;35m' bright='\e[0;1m' green='\e[1;32m' reset='\e[0m'
-    printf 'zsh: command not found: %s\n' "$1"
-    local entries=( ${(f)"$(/usr/bin/pacman -F --machinereadable -- "/usr/bin/$1")"} )
-    if (( ${#entries[@]} )) ; then
-        printf "${bright}$1${reset} may be found in the following packages:\n"
-        local pkg
-        for entry in "${entries[@]}" ; do
-            local fields=( ${(0)entry} )
-            if [[ "$pkg" != "${fields[2]}" ]] ; then
-                printf "${purple}%s/${bright}%s ${green}%s${reset}\n" "${fields[1]}" "${fields[2]}" "${fields[3]}"
-            fi
-            printf '    /%s\n' "${fields[4]}"
-            pkg="${fields[2]}"
-        done
-    fi
-    return 127
-}
+if [[ -f "/etc/arch-release" || "$KERNEL_INFO" =~ "arch" || "$HOSTNAME" == "archlinux" ]]; then
 
-# Detect the AUR wrapper
-if pacman -Qi yay &>/dev/null ; then
-   aurhelper="yay"
-elif pacman -Qi paru &>/dev/null ; then
-   aurhelper="paru"
-fi
-
-# Function to install packages
-function in {
-    local -a inPkg=("$@")
-    local -a arch=()
-    local -a aur=()
-
-    for pkg in "${inPkg[@]}"; do
-        if pacman -Si "${pkg}" &>/dev/null ; then
-            arch+=("${pkg}")
-        else 
-            aur+=("${pkg}")
+    # Command Not Found Handler
+    # In case a command is not found, try to find the package that has it
+    function command_not_found_handler {
+        local purple='\e[1;35m' bright='\e[0;1m' green='\e[1;32m' reset='\e[0m'
+        printf 'zsh: command not found: %s\n' "$1"
+        local entries=( ${(f)"$(/usr/bin/pacman -F --machinereadable -- "/usr/bin/$1")"} )
+        if (( ${#entries[@]} )) ; then
+            printf "${bright}$1${reset} may be found in the following packages:\n"
+            local pkg
+            for entry in "${entries[@]}" ; do
+                local fields=( ${(0)entry} )
+                if [[ "$pkg" != "${fields[2]}" ]] ; then
+                    printf "${purple}%s/${bright}%s ${green}%s${reset}\n" "${fields[1]}" "${fields[2]}" "${fields[3]}"
+                fi
+                printf '    /%s\n' "${fields[4]}"
+                pkg="${fields[2]}"
+            done
         fi
-    done
+        return 127
+    }
 
-    if [[ ${#arch[@]} -gt 0 ]]; then
-        sudo pacman -S "${arch[@]}"
+    # Detect the AUR wrapper
+    if pacman -Qi yay &>/dev/null ; then
+    aurhelper="yay"
+    elif pacman -Qi paru &>/dev/null ; then
+    aurhelper="paru"
     fi
 
-    if [[ ${#aur[@]} -gt 0 ]]; then
-        ${aurhelper} -S "${aur[@]}"
-    fi
-}
+    # Function to install packages
+    function in {
+        local -a inPkg=("$@")
+        local -a arch=()
+        local -a aur=()
+
+        for pkg in "${inPkg[@]}"; do
+            if pacman -Si "${pkg}" &>/dev/null ; then
+                arch+=("${pkg}")
+            else 
+                aur+=("${pkg}")
+            fi
+        done
+
+        if [[ ${#arch[@]} -gt 0 ]]; then
+            sudo pacman -S "${arch[@]}"
+        fi
+
+        if [[ ${#aur[@]} -gt 0 ]]; then
+            ${aurhelper} -S "${aur[@]}"
+        fi
+    }
+fi
 
 # FCD: Navigate directories using fd, fzf, and colorls
 if command -v fd &>/dev/null && command -v fzf &>/dev/null && command -v colorls &>/dev/null; then
@@ -552,20 +577,26 @@ _fzf_comprun() {
 
 # <-------------------- SCRIPTS -------------------->
 
-# Sourced + Aliased Scripts ------------------------------------------------------->
-[ -f ~/scripts/scripts/JavaProjectManager/JavaProjectManager.zsh ] && alias jcr="~/scripts/scripts/JavaProjectManager/JavaProjectManager.zsh"
-[ -f ~/scripts/scripts/sqlurl.sh ] && alias sqlurl="~/scripts/scripts/sqlurl.sh"
-[ -f ~/scripts/scripts/nvim_surround_usage.sh ] && alias nvims="~/scripts/scripts/nvim_surround_usage.sh"
-[ -f ~/scripts/scripts/html-to-text.zsh ] && alias h2t="~/scripts/scripts/html-to-text.zsh"
+if [ -d ~/scripts/scripts ]; then
+    alias jcr="~/scripts/scripts/JavaProjectManager/JavaProjectManager.zsh"
+    alias sqlurl="~/scripts/scripts/sqlurl.sh"
+    alias nvims="~/scripts/scripts/nvim_surround_usage.sh"
+    alias h2t="~/scripts/scripts/html-to-text.zsh"
+    alias upall-mac="~/scripts/scripts/package_updater.zsh"
+    alias upall-rpi="~/scripts/scripts/package_updater_rpi.zsh"
+fi
 
 
 # <------------------- ENVIROMENT VARIABLES ------------------->
 
+export PRETTIERD_DEFAULT_CONFIG="$HOME/.config/.prettierrc.json"
+
 # Detect the architecture
 if [[ "$(uname -msn)" == "Darwin MacBook-M1-Pro-16.local arm64" ]]; then
     # macOS (macbook pro m1 16")
-    FONT_SIZE="15"
+    FONT_SIZE="17"
     BACKGROUND_OPACITY="0.7"
+    MACOS_OPTION_AS_ALT="left"
 
 elif [[ "$(uname -msn)" == "Linux archlinux x86_64" ]]; then
     # Arch Linux (hyprland)
@@ -584,9 +615,9 @@ if [ ! -d "$kitty_config_dir" ]; then
 fi
 
 # Create the dynamic kitty config file
-printf "font_size %s\nbackground_opacity %s" "$FONT_SIZE" "$BACKGROUND_OPACITY" > "$kitty_config_dir/dynamic.conf"
+printf "font_size %s\nbackground_opacity %s\nmacos_option_as_alt %s" "$FONT_SIZE" "$BACKGROUND_OPACITY" "$MACOS_OPTION_AS_ALT" > "$kitty_config_dir/dynamic.conf"
 
-# Define the base directory where the jars are stored
+# JAVA CLASSPATH CONFIGURATION
 JAVA_CLASSPATH_PREFIX="$HOME/.dotfiles/configs/javaClasspath"
 
 # Clear existing java classpath entries
@@ -603,7 +634,8 @@ for jar in "$JAVA_CLASSPATH_PREFIX"/*.jar; do
     fi
 done
 
-export PRETTIERD_DEFAULT_CONFIG="$HOME/.config/.prettierrc.json"
+# Finally, append the current directory to the CLASSPATH
+export CLASSPATH="$CLASSPATH:."
 
 # <-------------------CS50 Library Configuration ------------------>
 # https://github.com/cs50/libcs50
@@ -621,3 +653,13 @@ export ANTHROPIC_API_KEY
 # OpenAI API Key
 OPENAI_API_KEY=$(cat ~/.config/openai/api_key)
 export OPENAI_API_KEY
+
+# fix paru: sudo ln -s /usr/lib/libalpm.so.15 /usr/lib/libalpm.so.14
+# When paru is updated (fixed), then: sudo rm /usr/lib/libalpm.so.14
+
+# Then reinstall paru:
+# sudo pacman -S --needed base-devel
+# git clone https://aur.archlinux.org/paru.git
+# cd paru
+# makepkg -si
+
